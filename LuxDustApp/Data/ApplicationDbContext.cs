@@ -1,0 +1,20 @@
+﻿using Microsoft.EntityFrameworkCore;
+using LuxDustApp.Models;
+
+namespace LuxDustApp.Data
+{
+	public class ApplicationDbContext : DbContext
+	{
+		public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
+			: base(options)
+		{
+		}
+
+		public DbSet<User> Users { get; set; }
+		public DbSet<Profile> Profiles { get; set; }
+		public DbSet<Product> Products { get; set; }
+		public DbSet<Recommendation> Recommendations { get; set; }
+		public DbSet<Favorite> Favorites { get; set; }
+		public DbSet<Cart> Carts { get; set; }
+	}
+}
