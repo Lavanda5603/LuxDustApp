@@ -1,0 +1,111 @@
+﻿@{
+    ViewData["Title"] = "Анкета — LuxDust";
+}
+
+<div class="container">
+    <h2>Давайте познакомимся!</h2>
+    <p id="stepIndicator">Шаг 1 из 8</p>
+
+    <div style="width: 100%; background-color: #e0e0e0; height: 8px; margin-bottom: 20px;">
+        <div id="progressBar" style="width: 12.5%; background-color: #007bff; height: 8px;"></div>
+    </div>
+
+    <form id="quizForm">
+        <div class="step" data-step="1">
+            <label>1. Какой у вас тип кожи?</label>
+            <select class="form-select" id="skinType">
+                <option value="">Выберите...</option>
+                <option value="Сухая">Сухая</option>
+                <option value="Жирная">Жирная</option>
+                <option value="Комбинированная">Комбинированная</option>
+                <option value="Нормальная">Нормальная</option>
+                <option value="Чувствительная">Чувствительная</option>
+            </select>
+        </div>
+
+        <div class="step" data-step="2" style="display:none;">
+            <label>2. Сколько вам лет?</label>
+            <select class="form-select" id="age">
+                <option value="">Выберите...</option>
+                <option value="до 20">до 20</option>
+                <option value="20-30">20-30</option>
+                <option value="30-40">30-40</option>
+                <option value="40-50">40-50</option>
+                <option value="50+">50+</option>
+            </select>
+        </div>
+
+        <div class="step" data-step="3" style="display:none;">
+            <label>3. Ваш бюджет на уход в месяц</label>
+            <select class="form-select" id="budget">
+                <option value="">Выберите...</option>
+                <option value="до 1000">до 1000</option>
+                <option value="1000-3000">1000-3000</option>
+                <option value="3000-10000">3000-10000</option>
+                <option value="Без лимита">Без лимита</option>
+            </select>
+        </div>
+
+        <div class="step" data-step="4" style="display:none;">
+            <label>4. Какие проблемы вас беспокоят?</label>
+            <select class="form-select" id="problems">
+                <option value="">Выберите...</option>
+                <option value="Акне">Акне</option>
+                <option value="Пигментация">Пигментация</option>
+                <option value="Морщины">Морщины</option>
+                <option value="Купероз">Купероз</option>
+                <option value="Тусклый цвет">Тусклый цвет</option>
+                <option value="Гиперчувствительность">Гиперчувствительность</option>
+                <option value="Чёрные точки">Чёрные точки</option>
+                <option value="Сухость/Шелушение">Сухость/Шелушение</option>
+            </select>
+        </div>
+
+        <div class="step" data-step="5" style="display:none;">
+            <label>5. Есть ли у вас аллергия на компоненты?</label>
+            <select class="form-select" id="allergies">
+                <option value="">Выберите...</option>
+                <option value="Нет">Нет</option>
+                <option value="Парабены">Парабены</option>
+                <option value="Отдушки">Отдушки</option>
+                <option value="Спирт">Спирт</option>
+                <option value="Силиконы">Силиконы</option>
+            </select>
+        </div>
+
+        <div class="step" data-step="6" style="display:none;">
+            <label>6. Для какого сезона подбираете уход?</label>
+            <select class="form-select" id="season">
+                <option value="">Выберите...</option>
+                <option value="Лето">Лето</option>
+                <option value="Зима">Зима</option>
+                <option value="Демисезон">Демисезон</option>
+                <option value="Круглый год">Круглый год</option>
+            </select>
+        </div>
+
+        <div class="step" data-step="7" style="display:none;">
+            <label>7. Каким брендам доверяете?</label>
+            <input type="text" id="brands" placeholder="Например: Librederm, Avene" class="form-control">
+        </div>
+
+        <div class="step" data-step="8" style="display:none;">
+            <label>8. Какая цель ухода?</label>
+            <select class="form-select" id="goal">
+                <option value="">Выберите...</option>
+                <option value="Увлажнение">Увлажнение</option>
+                <option value="Питание">Питание</option>
+                <option value="Антивозрастной">Антивозрастной</option>
+                <option value="Очищение">Очищение</option>
+                <option value="Защита">Защита</option>
+                <option value="Восстановление">Восстановление</option>
+            </select>
+        </div>
+
+        <div style="margin-top: 20px;">
+            <button type="button" id="nextBtn" class="btn btn-primary">Продолжить</button>
+        </div>
+    </form>
+</div>
+
+<script src="~/js/quiz.js"></script>
