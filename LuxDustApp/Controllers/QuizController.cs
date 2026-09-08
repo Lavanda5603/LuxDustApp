@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using LuxDustApp.Services;
+using LuxDustApp.Models;
 
 namespace LuxDustApp.Controllers
 {
@@ -7,9 +8,9 @@ namespace LuxDustApp.Controllers
 	{
 		private readonly RecommendationService _recommendationService;
 
-		public QuizController()
+		public QuizController(RecommendationService recommendationService)
 		{
-			_recommendationService = new RecommendationService();
+			_recommendationService = recommendationService;
 		}
 
 		public IActionResult Step1()
@@ -17,10 +18,10 @@ namespace LuxDustApp.Controllers
 			return View();
 		}
 
-		public IActionResult Results()
+		[HttpPost]
+		public IActionResult Results(Profile profile)
 		{
-			var products = _recommendationService.GetRecommendations();
-
+			var products = _recommendationService.GetRecommendations(profile);
 			return View(products);
 		}
 	}

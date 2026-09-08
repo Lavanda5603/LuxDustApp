@@ -6,6 +6,7 @@
     const totalSteps = 8;
     const progressBar = document.getElementById('progressBar');
     const stepIndicator = document.getElementById('stepIndicator');
+    const quizForm = document.getElementById('quizForm');
 
     function updateStep() {
         document.querySelectorAll('.step').forEach(el => el.style.display = 'none');
@@ -35,7 +36,7 @@
             currentStep++;
             updateStep();
         } else {
-            alert('Спасибо! Ваши ответы сохранены.');
+            quizForm.submit();
         }
     });
 

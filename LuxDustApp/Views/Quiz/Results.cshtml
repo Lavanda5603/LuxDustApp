@@ -1,14 +1,31 @@
-﻿@{
-    ViewData["Title"] = "Результаты подбора";
+﻿@using LuxDustApp.Models
+@{
+    ViewData["Title"] = "Ваша подборка";
 }
+@model List<LuxDustApp.Models.Product>
 
-<h2>Ваша персональная подборка готова!</h2>
+<h2>Ваша персональная подборка</h2>
 
 @if (Model != null && Model.Any())
 {
-    <p>Первый тестовый продукт: <strong>@Model[0].Name</strong></p>
+    <div class="row">
+        @foreach (var product in Model)
+        {
+            <div class="col-md-4 mb-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">@product.Name</h5>
+                        <p class="card-text">Бренд: @product.Brand</p>
+                        <p class="card-text">Цена: @product.Price руб.</p>
+                        <p class="card-text">Тип кожи: @product.SkinType</p>
+                        <a href="#" class="btn btn-primary">Добавить в корзину</a>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
 }
 else
 {
-    <p>-/p>
+    <p>Подходящих продуктов не найдено. Попробуйте изменить параметры анкеты.</p>
 }
