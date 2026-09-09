@@ -3,10 +3,29 @@
     if (!nextBtn) return;
 
     let currentStep = 1;
-    const totalSteps = 8;
+    const totalSteps = 10;
     const progressBar = document.getElementById('progressBar');
     const stepIndicator = document.getElementById('stepIndicator');
     const quizForm = document.getElementById('quizForm');
+
+    function setupOtherOption(selectId, inputId) {
+        const select = document.getElementById(selectId);
+        const input = document.getElementById(inputId);
+        if (!select || !input) return;
+
+        select.addEventListener('change', function () {
+            if (this.value === 'Другое (...)') {
+                input.style.display = 'block';
+                input.focus();
+            } else {
+                input.style.display = 'none';
+                input.value = '';
+            }
+        });
+    }
+
+    setupOtherOption('problems', 'problemsOther');
+    setupOtherOption('allergies', 'allergiesOther');
 
     function updateStep() {
         document.querySelectorAll('.step').forEach(el => el.style.display = 'none');

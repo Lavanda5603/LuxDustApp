@@ -4,7 +4,7 @@
 
 <div class="container">
     <h2>Давайте познакомимся!</h2>
-    <p id="stepIndicator">Шаг 1 из 8</p>
+    <p id="stepIndicator">Шаг 1 из 10</p>
 
     <div style="width: 100%; background-color: #e0e0e0; height: 8px; margin-bottom: 20px;">
         <div id="progressBar" style="width: 12.5%; background-color: #007bff; height: 8px;"></div>
@@ -20,6 +20,9 @@
                 <option value="Комбинированная">Комбинированная</option>
                 <option value="Нормальная">Нормальная</option>
                 <option value="Чувствительная">Чувствительная</option>
+                <option value="Обезвоженная">Обезвоженная</option>
+                <option value="Склонная к куперозу">Склонная к куперозу</option>
+                <option value="Не знаю / хочу узнать">Не знаю / хочу узнать</option>
             </select>
         </div>
 
@@ -42,6 +45,7 @@
                 <option value="до 1000">до 1000</option>
                 <option value="1000-3000">1000-3000</option>
                 <option value="3000-10000">3000-10000</option>
+                <option value="10000-25000">10000-25000</option>
                 <option value="Без лимита">Без лимита</option>
             </select>
         </div>
@@ -58,19 +62,30 @@
                 <option value="Гиперчувствительность">Гиперчувствительность</option>
                 <option value="Чёрные точки">Чёрные точки</option>
                 <option value="Сухость/Шелушение">Сухость/Шелушение</option>
+                <option value="Расширенные поры">Расширенные поры</option>
+                <option value="Отечность (отёки)">Отечность (отёки)</option>
+                <option value="Неровный тон кожи">Неровный тон кожи</option>
+                <option value="Другое (...)">Другое (...)</option>
             </select>
+            <input type="text" id="problemsOther" name="ProblemsOther" placeholder="Введите ваш вариант..." style="display:none; margin-top:5px;" class="form-control">
         </div>
 
         <div class="step" data-step="5" style="display:none;">
-            <label>5. Есть ли у вас аллергия на компоненты?</label>
+            <label>5. Есть ли у вас аллергия на компоненты в косметике?</label>
             <select class="form-select" id="allergies" name="Allergies">
                 <option value="">Выберите...</option>
                 <option value="Нет">Нет</option>
                 <option value="Парабены">Парабены</option>
-                <option value="Отдушки">Отдушки</option>
-                <option value="Спирт">Спирт</option>
+                <option value="Отдушки (ароматизаторы)">Отдушки (ароматизаторы)</option>
+                <option value="Спирт (алкоголь)">Спирт (алкоголь)</option>
                 <option value="Силиконы">Силиконы</option>
+                <option value="Сульфаты (SLS/SLES)">Сульфаты (SLS/SLES)</option>
+                <option value="Глютен">Глютен</option>
+                <option value="Орехи и их производные">Орехи и их производные</option>
+                <option value="Эфирные масла">Эфирные масла</option>
+                <option value="Другое (...)">Другое (...)</option>
             </select>
+            <input type="text" id="allergiesOther" name="AllergiesOther" placeholder="Введите ваш вариант..." style="display:none; margin-top:5px;" class="form-control">
         </div>
 
         <div class="step" data-step="6" style="display:none;">
@@ -99,6 +114,34 @@
                 <option value="Очищение">Очищение</option>
                 <option value="Защита">Защита</option>
                 <option value="Восстановление">Восстановление</option>
+                <option value="Матирование">Матирование</option>
+                <option value="Лифтинг (подтяжка)">Лифтинг (подтяжка)</option>
+                <option value="Осветление пигментации">Осветление пигментации</option>
+                <option value="Сужение пор">Сужение пор</option>
+                <option value="Сияние / здоровый вид">Сияние / здоровый вид</option>
+                <option value="Снятие стресса и успокоение">Снятие стресса и успокоение</option>
+            </select>
+        </div>
+
+        <div class="step" data-step="9" style="display:none;">
+            <label>9. Какой у вас уровень стресса?</label>
+            <select class="form-select" id="stressLevel" name="StressLevel">
+                <option value="">Выберите...</option>
+                <option value="Низкий">Низкий</option>
+                <option value="Средний">Средний</option>
+                <option value="Высокий">Высокий</option>
+            </select>
+        </div>
+
+        <div class="step" data-step="10" style="display:none;">
+            <label>10. Как обычно выглядит ваш рацион?</label>
+            <select class="form-select" id="dietType" name="DietType">
+                <option value="">Выберите...</option>
+                <option value="Сбалансированное питание">Сбалансированное питание</option>
+                <option value="Часто ем сладкое или жирное">Часто ем сладкое или жирное</option>
+                <option value="Стараюсь питаться правильно, но срываюсь">Стараюсь питаться правильно, но срываюсь</option>
+                <option value="У меня особый режим питания">У меня особый режим питания</option>
+                <option value="Вегетарианство">Вегетарианство</option>
             </select>
         </div>
 
