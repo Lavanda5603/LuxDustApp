@@ -6,7 +6,7 @@
 		public int UserId { get; set; }
 		public int ProductId { get; set; }
 		public int Score { get; set; }
-		public DateTime RecommendedAt { get; set; } = DateTime.Now;
+		public DateTime RecommendedAt { get; set; } = DateTime.UtcNow;
 		public User User { get; set; }
 		public Product Product { get; set; }
 	}

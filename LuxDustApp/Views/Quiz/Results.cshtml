@@ -1,10 +1,9 @@
-﻿@using LuxDustApp.Models
-@{
+﻿@{
     ViewData["Title"] = "Ваша подборка";
 }
 @model List<LuxDustApp.Models.Product>
 
-<h2>Ваша персональная подборка</h2>
+<h2>Ваша персональная подборка 💄</h2>
 
 @if (Model != null && Model.Any())
 {
@@ -18,7 +17,33 @@
                         <p class="card-text">Бренд: @product.Brand</p>
                         <p class="card-text">Цена: @product.Price руб.</p>
                         <p class="card-text">Тип кожи: @product.SkinType</p>
-                        <a href="#" class="btn btn-primary">Добавить в корзину</a>
+
+                        <!-- Пояснение "Почему подходит" -->
+                        <p class="card-text" style="font-size: 14px; color: #6b4c3b;">
+                            <strong>Почему подходит:</strong>
+                            @{
+                                var reasons = new List<string>();
+
+                                if (!string.IsNullOrEmpty(product.SkinType) && product.SkinType == ViewBag.UserSkinType)
+                                    reasons.Add("тип кожи совпал");
+
+                                if (ViewBag.UserBudget != null && product.Price <= ViewBag.UserBudget)
+                                    reasons.Add("цена в бюджете");
+
+                                if (!string.IsNullOrEmpty(product.Problem) && product.Problem == ViewBag.UserProblem)
+                                    reasons.Add("решает вашу проблему");
+
+                                if (product.AllergenFree && !string.IsNullOrEmpty(ViewBag.UserAllergies) && ViewBag.UserAllergies != "Нет")
+                                    reasons.Add("без аллергенов");
+
+                                if (!string.IsNullOrEmpty(product.Season) && product.Season == ViewBag.UserSeason)
+                                    reasons.Add("подходит для сезона");
+                            }
+                            @(reasons.Any() ? string.Join(", ", reasons) : "подходит по общим параметрам")
+                        </p>
+
+                        <a href="#" class="btn btn-primary btn-sm">В корзину</a>
+                        <a href="/Quiz/AddToFavorites?productId=@product.Id" class="btn btn-outline-danger btn-sm">В избранное</a>
                     </div>
                 </div>
             </div>

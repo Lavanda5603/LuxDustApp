@@ -4,7 +4,7 @@
 
 <div class="container">
     <h2>Давайте познакомимся!</h2>
-    <p id="stepIndicator">Шаг 1 из 10</p>
+    <p id="stepIndicator">Шаг 1 из 15</p>
 
     <div style="width: 100%; background-color: #e0e0e0; height: 8px; margin-bottom: 20px;">
         <div id="progressBar" style="width: 12.5%; background-color: #007bff; height: 8px;"></div>
@@ -142,6 +142,52 @@
                 <option value="Стараюсь питаться правильно, но срываюсь">Стараюсь питаться правильно, но срываюсь</option>
                 <option value="У меня особый режим питания">У меня особый режим питания</option>
                 <option value="Вегетарианство">Вегетарианство</option>
+            </select>
+        </div>
+
+        <div class="step" data-step="11" style="display:none;">
+            <label>11. Есть ли у вас чувствительность к солнцу?</label>
+            <select class="form-select" id="sunSensitivity" name="SunSensitivity">
+                <option value="">Выберите...</option>
+                <option value="true">Да</option>
+                <option value="false">Нет</option>
+            </select>
+        </div>
+
+        <div class="step" data-step="12" style="display:none;">
+            <label>12. Склонны ли вы к отёкам по утрам?</label>
+            <select class="form-select" id="tendencyToEdema" name="TendencyToEdema">
+                <option value="">Выберите...</option>
+                <option value="true">Да</option>
+                <option value="false">Нет</option>
+            </select>
+        </div>
+
+        <div class="step" data-step="13" style="display:none;">
+            <label>13. Делаете ли вы профессиональный уход (чистки, пилинги)?</label>
+            <select class="form-select" id="hasProfessionalCare" name="HasProfessionalCare">
+                <option value="">Выберите...</option>
+                <option value="true">Да</option>
+                <option value="false">Нет</option>
+            </select>
+        </div>
+
+        <div class="step" data-step="14" style="display:none;">
+            <label>14. Какую текстуру средств вы предпочитаете?</label>
+            <select class="form-select" id="texturePreference" name="TexturePreference">
+                <option value="">Выберите...</option>
+                <option value="Лёгкая">Лёгкая (гели, флюиды)</option>
+                <option value="Плотная">Плотная (кремы, масла)</option>
+                <option value="Любая">Любая</option>
+            </select>
+        </div>
+
+        <div class="step" data-step="15" style="display:none;">
+            <label>15. Готовы ли вы к многоступенчатому уходу?</label>
+            <select class="form-select" id="readyForMultiStep" name="ReadyForMultiStep">
+                <option value="">Выберите...</option>
+                <option value="true">Да</option>
+                <option value="false">Нет</option>
             </select>
         </div>
 

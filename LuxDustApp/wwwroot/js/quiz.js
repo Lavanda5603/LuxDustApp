@@ -3,7 +3,7 @@
     if (!nextBtn) return;
 
     let currentStep = 1;
-    const totalSteps = 10;
+    const totalSteps = 15;
     const progressBar = document.getElementById('progressBar');
     const stepIndicator = document.getElementById('stepIndicator');
     const quizForm = document.getElementById('quizForm');

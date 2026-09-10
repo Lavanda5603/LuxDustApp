@@ -1,0 +1,95 @@
+﻿@{
+    ViewData["Title"] = "Личный кабинет";
+}
+
+<div class="container">
+    <h2>Личный кабинет</h2>
+
+    <div class="card mb-4">
+        <div class="card-header">
+            <h4>Ваши данные из анкеты</h4>
+        </div>
+        <div class="card-body">
+            @if (ViewBag.Profile != null)
+            {
+                var profile = (LuxDustApp.Models.Profile)ViewBag.Profile;
+                <div class="row">
+                    <div class="col-md-6">
+                        <p><strong>Тип кожи:</strong> @profile.SkinType</p>
+                        <p><strong>Возраст:</strong> @profile.Age</p>
+                        <p><strong>Бюджет:</strong> @profile.Budget руб.</p>
+                        <p><strong>Проблемы:</strong> @profile.Problems</p>
+                        <p><strong>Другое (проблемы):</strong> @profile.ProblemsOther</p>
+                        <p><strong>Аллергии:</strong> @profile.Allergies</p>
+                        <p><strong>Другое (аллергии):</strong> @profile.AllergiesOther</p>
+                        <p><strong>Сезон:</strong> @profile.Season</p>
+                    </div>
+                    <div class="col-md-6">
+                        <p><strong>Любимые бренды:</strong> @profile.FavoriteBrands</p>
+                        <p><strong>Цель ухода:</strong> @profile.Goal</p>
+                        <p><strong>Уровень стресса:</strong> @profile.StressLevel</p>
+                        <p><strong>Тип питания:</strong> @profile.DietType</p>
+                        <p><strong>Чувствительность к солнцу:</strong> @(profile.SunSensitivity ? "Да" : "Нет")</p>
+                        <p><strong>Склонность к отёкам:</strong> @(profile.TendencyToEdema ? "Да" : "Нет")</p>
+                        <p><strong>Профессиональный уход:</strong> @(profile.HasProfessionalCare ? "Да" : "Нет")</p>
+                        <p><strong>Предпочтение по текстуре:</strong> @profile.TexturePreference</p>
+                        <p><strong>Готовность к многоступенчатому уходу:</strong> @(profile.ReadyForMultiStep ? "Да" : "Нет")</p>
+                    </div>
+                </div>
+                <a href="/Quiz/Step1" class="btn btn-primary mt-3">Пройти анкету заново</a>
+            }
+            else
+            {
+                <p>Вы ещё не заполнили анкету. <a href="/Quiz/Step1">Заполнить сейчас</a></p>
+            }
+        </div>
+    </div>
+
+    <div class="card mb-4">
+        <div class="card-header">
+            <h4>История подборок</h4>
+        </div>
+        <div class="card-body">
+            @if (ViewBag.Recommendations != null && ((List<LuxDustApp.Models.Recommendation>)ViewBag.Recommendations).Any())
+            {
+                <ul>
+                    @foreach (var rec in (List<LuxDustApp.Models.Recommendation>)ViewBag.Recommendations)
+                    {
+                        <li>
+                            <strong>@rec.Product.Name</strong> — рейтинг: @rec.Score
+                            <br />
+                            <small>Дата: @rec.RecommendedAt.ToString("dd.MM.yyyy HH:mm")</small>
+                        </li>
+                    }
+                </ul>
+            }
+            else
+            {
+                <p>У вас пока нет сохранённых подборок.</p>
+            }
+        </div>
+    </div>
+
+    <div class="card mb-4">
+        <div class="card-header">
+            <h4>Избранное</h4>
+        </div>
+        <div class="card-body">
+            @if (ViewBag.Favorites != null && ((List<LuxDustApp.Models.Favorite>)ViewBag.Favorites).Any())
+            {
+                <ul>
+                    @foreach (var fav in (List<LuxDustApp.Models.Favorite>)ViewBag.Favorites)
+                    {
+                        <li>
+                            <strong>@fav.Product.Name</strong> — @fav.Product.Price руб.
+                        </li>
+                    }
+                </ul>
+            }
+            else
+            {
+                <p>У вас пока нет избранных товаров.</p>
+            }
+        </div>
+    </div>
+</div>

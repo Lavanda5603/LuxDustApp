@@ -19,17 +19,17 @@ namespace LuxDustApp.Services
 			_logger = logger;
 		}
 
-		public List<Product> GetRecommendations(Profile profile)
+		public Dictionary<Product, int> GetRecommendationsWithScores(Profile profile)
 		{
 			var allProducts = _context.Products.ToList();
 
 			if (allProducts == null || !allProducts.Any())
 			{
-				_logger.LogWarning("В базе данных нет продуктов. Добавьте их через админ-панель.");
-				return new List<Product>();
+				_logger.LogWarning("В базе данных нет продуктов.");
+				return new Dictionary<Product, int>();
 			}
 
-			var scores = new Dictionary<int, int>();
+			var scores = new Dictionary<Product, int>();
 
 			foreach (var product in allProducts)
 			{
@@ -45,16 +45,25 @@ namespace LuxDustApp.Services
 					profile.Problems.Contains(product.Problem))
 					score += 25;
 
-				if (product.AllergenFree && !string.IsNullOrEmpty(profile.Allergies))
+				if (product.AllergenFree && !string.IsNullOrEmpty(profile.Allergies) && profile.Allergies != "Нет")
 					score += 15;
 
 				if (!string.IsNullOrEmpty(product.Season) && product.Season == profile.Season)
 					score += 10;
 
-				scores[product.Id] = score;
+				if (profile.SunSensitivity && product.Name.Contains("SPF"))
+					score += 10;
+
+				if (profile.TendencyToEdema && product.Problem == "Отечность")
+					score += 10;
+
+				if (!string.IsNullOrEmpty(product.TexturePreference) && product.TexturePreference == profile.TexturePreference)
+					score += 5;
+
+				scores[product] = score;
 			}
 
-			var topProducts = allProducts.Where(p => scores.ContainsKey(p.Id)).OrderByDescending(p => scores[p.Id]).Take(5).ToList();
+			var topProducts = scores.OrderByDescending(kv => kv.Value).Take(10).ToDictionary(kv => kv.Key, kv => kv.Value);
 
 			_logger.LogInformation($"Алгоритм завершён. Найдено {topProducts.Count} продуктов.");
 

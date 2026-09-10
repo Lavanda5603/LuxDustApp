@@ -16,7 +16,12 @@
 		public string Goal { get; set; }
 		public string StressLevel { get; set; }
 		public string DietType { get; set; }
-		public DateTime UpdatedAt { get; set; } = DateTime.Now;
+		public bool SunSensitivity { get; set; }
+		public bool TendencyToEdema { get; set; }
+		public bool HasProfessionalCare { get; set; }
+		public string TexturePreference { get; set; }
+		public bool ReadyForMultiStep { get; set; }
+		public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
 		public User User { get; set; }
 	}
 }
