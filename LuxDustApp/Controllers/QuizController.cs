@@ -1,9 +1,10 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using LuxDustApp.Services;
+﻿using LuxDustApp.Data;
 using LuxDustApp.Models;
-using LuxDustApp.Data;
-using System.Linq;
+using LuxDustApp.Services;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace LuxDustApp.Controllers
 {
@@ -57,8 +58,7 @@ namespace LuxDustApp.Controllers
 		{
 			var userId = 1;
 
-			var existing = _context.Favorites
-				.FirstOrDefault(f => f.UserId == userId && f.ProductId == productId);
+			var existing = _context.Favorites.FirstOrDefault(f => f.UserId == userId && f.ProductId == productId);
 
 			if (existing == null)
 			{
@@ -73,6 +73,53 @@ namespace LuxDustApp.Controllers
 			}
 
 			return RedirectToAction("Profile", "Account");
+		}
+
+		public IActionResult AddToCart(int productId)
+		{
+			var userId = 1;
+
+			var existing = _context.Carts.FirstOrDefault(c => c.UserId == userId && c.ProductId == productId);
+
+			if (existing != null)
+			{
+				existing.Quantity += 1;
+			}
+			else
+			{
+				var cart = new Cart
+				{
+					UserId = userId,
+					ProductId = productId,
+					Quantity = 1,
+					AddedAt = System.DateTime.UtcNow
+				};
+				_context.Carts.Add(cart);
+			}
+
+			_context.SaveChanges();
+			return RedirectToAction("Cart", "Quiz");
+		}
+
+		public IActionResult Cart()
+		{
+			var userId = 1;
+
+			var cartItems = _context.Carts.Where(c => c.UserId == userId).Include(c => c.Product).ToList();
+
+			return View(cartItems);
+		}
+
+		public IActionResult RemoveFromCart(int cartId)
+		{
+			var item = _context.Carts.FirstOrDefault(c => c.Id == cartId);
+			if (item != null)
+			{
+				_context.Carts.Remove(item);
+				_context.SaveChanges();
+			}
+
+			return RedirectToAction("Cart", "Quiz");
 		}
 	}
 }

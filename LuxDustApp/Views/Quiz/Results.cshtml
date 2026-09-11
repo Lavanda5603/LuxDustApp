@@ -3,7 +3,7 @@
 }
 @model List<LuxDustApp.Models.Product>
 
-<h2>Ваша персональная подборка 💄</h2>
+<h2>Ваша персональная подборка</h2>
 
 @if (Model != null && Model.Any())
 {
@@ -42,7 +42,7 @@
                             @(reasons.Any() ? string.Join(", ", reasons) : "подходит по общим параметрам")
                         </p>
 
-                        <a href="#" class="btn btn-primary btn-sm">В корзину</a>
+                        <a href="/Quiz/AddToCart?productId=@product.Id" class="btn btn-primary btn-sm">В корзину</a>
                         <a href="/Quiz/AddToFavorites?productId=@product.Id" class="btn btn-outline-danger btn-sm">В избранное</a>
                     </div>
                 </div>
