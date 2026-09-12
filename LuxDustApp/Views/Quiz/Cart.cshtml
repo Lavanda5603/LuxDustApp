@@ -32,7 +32,7 @@
 					<td>@item.Quantity</td>
 					<td>@itemTotal руб.</td>
 					<td>
-						<a href="/Quiz/RemoveFromCart?cartId=@item.Id" class="btn btn-sm btn-danger">Удалить</a>
+						<button type="button" class="btn btn-sm btn-danger" onclick="confirmRemove(@item.Id)">Удалить</button>
 					</td>
 				</tr>
 				}
@@ -53,3 +53,5 @@
 		<p>Ваша корзина пуста. <a href="/Quiz/Step1">Пройти анкету</a> и получить подборку.</p>
 		}
 	</div>
+
+	<script src="~/js/quiz.js"></script>

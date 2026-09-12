@@ -1,0 +1,38 @@
+﻿@model LuxDustApp.Models.RegisterViewModel
+
+@{
+    ViewData["Title"] = "Регистрация";
+}
+
+<div class="container" style="max-width: 500px;">
+    <h2>Регистрация</h2>
+
+    <form method="post" action="/Account/Register">
+        <div class="mb-3">
+            <label>Имя</label>
+            <input type="text" name="Name" class="form-control" />
+            <span class="text-danger">@Html.ValidationMessage("Name")</span>
+        </div>
+
+        <div class="mb-3">
+            <label>Email</label>
+            <input type="email" name="Email" class="form-control" />
+            <span class="text-danger">@Html.ValidationMessage("Email")</span>
+        </div>
+
+        <div class="mb-3">
+            <label>Пароль</label>
+            <input type="password" name="Password" class="form-control" />
+            <span class="text-danger">@Html.ValidationMessage("Password")</span>
+        </div>
+
+        <div class="mb-3">
+            <label>Подтвердите пароль</label>
+            <input type="password" name="ConfirmPassword" class="form-control" />
+            <span class="text-danger">@Html.ValidationMessage("ConfirmPassword")</span>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Зарегистрироваться</button>
+        <a href="/Account/Login" class="btn btn-link">Уже есть аккаунт? Войти</a>
+    </form>
+</div>

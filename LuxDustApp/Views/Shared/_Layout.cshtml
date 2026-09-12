@@ -17,8 +17,21 @@
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item"><a class="nav-link" href="/">Главная</a></li>
                     <li class="nav-item"><a class="nav-link" href="/Quiz/Step1">Анкета</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/Account/Profile">Личный кабинет</a></li>
                     <li class="nav-item"><a class="nav-link" href="/Quiz/Cart">Корзина</a></li>
+                    @if (User.Identity.IsAuthenticated)
+                    {
+                    <li class="nav-item"><a class="nav-link" href="/Account/Profile">Личный кабинет</a></li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" onclick="if(confirm('Вы уверены, что хотите выйти?')) { window.location.href='/Account/Logout'; } return false;">
+                            Выйти (@User.Identity.Name)
+                        </a>
+                    </li>
+                    }
+                    else
+                    {
+                    <li class="nav-item"><a class="nav-link" href="/Account/Login">Войти</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/Account/Register">Регистрация</a></li>
+                    }
                 </ul>
             </div>
         </div>

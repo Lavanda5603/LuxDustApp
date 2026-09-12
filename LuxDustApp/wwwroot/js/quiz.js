@@ -27,6 +27,32 @@
     setupOtherOption('problems', 'problemsOther');
     setupOtherOption('allergies', 'allergiesOther');
 
+    function validateCurrentStep() {
+        const currentStepEl = document.querySelector(`.step[data-step="${currentStep}"]`);
+        if (!currentStepEl) return true;
+
+        const fields = currentStepEl.querySelectorAll('select, input[type="text"]');
+        let isValid = true;
+
+        fields.forEach(field => {
+            if (field.offsetParent === null) return;
+            if (field.hasAttribute('required') || field.tagName === 'SELECT') {
+                if (!field.value || field.value.trim() === '') {
+                    field.style.border = '2px solid red';
+                    isValid = false;
+                } else {
+                    field.style.border = '';
+                }
+            }
+        });
+
+        if (!isValid) {
+            alert('Пожалуйста, заполните все поля на этом шаге!');
+        }
+
+        return isValid;
+    }
+
     function updateStep() {
         document.querySelectorAll('.step').forEach(el => el.style.display = 'none');
 
@@ -51,6 +77,8 @@
     }
 
     nextBtn.addEventListener('click', function () {
+        if (!validateCurrentStep()) return;
+
         if (currentStep < totalSteps) {
             currentStep++;
             updateStep();
@@ -61,3 +89,23 @@
 
     updateStep();
 })();
+
+function addToCart(productId, btn) {
+    fetch('/Quiz/AddToCart?productId=' + productId)
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                btn.textContent = 'Добавлено ✓';
+                btn.disabled = true;
+            } else {
+                alert('Ошибка: ' + data.message);
+            }
+        })
+        .catch(() => alert('Не удалось добавить товар'));
+}
+
+function confirmRemove(cartId) {
+    if (confirm('Вы уверены, что хотите удалить этот товар из корзины?')) {
+        window.location.href = '/Quiz/RemoveFromCart?cartId=' + cartId;
+    }
+}

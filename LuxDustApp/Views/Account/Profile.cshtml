@@ -19,10 +19,11 @@
                         <p><strong>Возраст:</strong> @profile.Age</p>
                         <p><strong>Бюджет:</strong> @profile.Budget руб.</p>
                         <p><strong>Проблемы:</strong> @profile.Problems</p>
-                        <p><strong>Другое (проблемы):</strong> @profile.ProblemsOther</p>
-                        <p><strong>Аллергии:</strong> @profile.Allergies</p>
-                        <p><strong>Другое (аллергии):</strong> @profile.AllergiesOther</p>
-                        <p><strong>Сезон:</strong> @profile.Season</p>
+                        <p><strong>Другое (проблемы):</strong> @(profile.ProblemsOther ?? "—")</p>
+                        <p><strong>Другое (аллергии):</strong> @(profile.AllergiesOther ?? "—")</p>
+                        <p><strong>Уровень стресса:</strong> @(profile.StressLevel ?? "—")</p>
+                        <p><strong>Тип питания:</strong> @(profile.DietType ?? "—")</p>
+                        <p><strong>Предпочтение по текстуре:</strong> @(profile.TexturePreference ?? "—")</p>
                     </div>
                     <div class="col-md-6">
                         <p><strong>Любимые бренды:</strong> @profile.FavoriteBrands</p>
@@ -36,7 +37,7 @@
                         <p><strong>Готовность к многоступенчатому уходу:</strong> @(profile.ReadyForMultiStep ? "Да" : "Нет")</p>
                     </div>
                 </div>
-                <a href="/Quiz/Step1" class="btn btn-primary mt-3">Пройти анкету заново</a>
+                <a href="/Quiz/Step1" class="btn btn-primary mt-3">@(ViewBag.Profile != null ? "Изменить анкету" : "Заполнить анкету")</a>
             }
             else
             {

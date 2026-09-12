@@ -1,0 +1,33 @@
+﻿@model LuxDustApp.Models.LoginViewModel
+
+@{
+    ViewData["Title"] = "Вход";
+}
+
+<div class="container" style="max-width: 500px;">
+    <h2>Вход</h2>
+
+    <form method="post" action="/Account/Login">
+        <div class="mb-3">
+            <label>Email</label>
+            <input type="email" name="Email" class="form-control" />
+            <span class="text-danger">@Html.ValidationMessage("Email")</span>
+        </div>
+
+        <div class="mb-3">
+            <label>Пароль</label>
+            <input type="password" name="Password" class="form-control" />
+            <span class="text-danger">@Html.ValidationMessage("Password")</span>
+        </div>
+
+        @if (ViewData.ModelState[""] != null && ViewData.ModelState[""].Errors.Count > 0)
+        {
+        <div class="alert alert-danger">
+            @ViewData.ModelState[""].Errors.First().ErrorMessage
+        </div>
+        }
+
+        <button type="submit" class="btn btn-primary">Войти</button>
+        <a href="/Account/Register" class="btn btn-link">Нет аккаунта? Зарегистрироваться</a>
+    </form>
+</div>
