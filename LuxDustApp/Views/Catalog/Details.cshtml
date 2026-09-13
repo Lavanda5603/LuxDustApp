@@ -1,0 +1,22 @@
+﻿@{
+    ViewData["Title"] = "Товар";
+}
+@model LuxDustApp.Models.Product
+
+<div class="container">
+    <h2>@Model.Name</h2>
+    <p><strong>Бренд:</strong> @Model.Brand</p>
+    <p><strong>Категория:</strong> @Model.Category / @Model.SubCategory</p>
+    <p><strong>Цена:</strong> @Model.Price руб.</p>
+    <p><strong>Описание:</strong> @Model.Description</p>
+    <p><strong>Тип кожи:</strong> @Model.SkinType</p>
+    <p><strong>Проблема:</strong> @Model.Problem</p>
+    <p><strong>Сезон:</strong> @Model.Season</p>
+    <p><strong>Рейтинг:</strong> @Model.Rating</p>
+
+    <button type="button" class="btn btn-primary" onclick="addToCart(@Model.Id, this)">В корзину</button>
+    <a href="/Quiz/AddToFavorites?productId=@Model.Id" class="btn btn-outline-danger">В избранное</a>
+    <a href="/Catalog" class="btn btn-secondary">Назад в каталог</a>
+</div>
+
+<script src="~/js/quiz.js"></script>
