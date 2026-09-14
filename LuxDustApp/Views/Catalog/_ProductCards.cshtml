@@ -1,0 +1,34 @@
+﻿@model List<LuxDustApp.Models.Product>
+
+    @if (Model != null && Model.Any())
+    {
+    <div class="row">
+        @foreach (var product in Model)
+        {
+        <div class="col-md-4 mb-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">@product.Name</h5>
+                    <p class="card-text">@product.Brand</p>
+                    <p class="card-text"><strong>@product.Price руб.</strong></p>
+                    @if (product.IsNew)
+                    {
+                    <span class="badge bg-success">Новинка</span>
+                    }
+                    @if (product.IsOnSale)
+                    {
+                    <span class="badge bg-danger">Акция</span>
+                    }
+                    <br /><br />
+                    <a href="/Catalog/Details/@product.Id" class="btn btn-primary btn-sm">Подробнее</a>
+                    <button type="button" class="btn btn-outline-secondary btn-sm" onclick="addToCart(@product.Id, this)">В корзину</button>
+                </div>
+            </div>
+        </div>
+        }
+    </div>
+    }
+    else
+    {
+    <p>Товары не найдены.</p>
+    }

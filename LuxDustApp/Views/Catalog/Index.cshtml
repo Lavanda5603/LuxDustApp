@@ -7,32 +7,34 @@
         <div class="row">
             <div class="col-md-3">
                 <h4>Категории</h4>
-                <ul class="list-group mb-3">
+                <ul class="list-group">
                     @foreach (var cat in (List
                     <string>
                         )ViewBag.Categories)
                         {
-                        <li class="list-group-item @(ViewBag.CurrentCategory == cat ? " active" : "" )">
-                            <a href="/Catalog?category=@cat" style="text-decoration: none; color: inherit;">@cat</a>
-                        </li>
-                        }
-                </ul>
-
-                @if (ViewBag.Subcategories != null && ((List<string>
-                    )ViewBag.Subcategories).Any())
-                    {
-                    <h5>Подкатегории</h5>
-                    <ul class="list-group">
-                        @foreach (var sub in (List
-                        <string>
-                            )ViewBag.Subcategories)
+                        var subs = ((Dictionary<string, List<string>>)ViewBag.SubcategoriesByCategory)[cat];
+                    <li class="list-group-item p-0">
+                        <div class="d-flex justify-content-between align-items-center p-2">
+                            <a href="/Catalog?category=@cat" class="text-decoration-none text-dark flex-grow-1">@cat</a>
+                            @if (subs.Any())
                             {
-                            <li class="list-group-item @(ViewBag.CurrentSubcategory == sub ? " active" : "" )">
-                                <a href="/Catalog?category=@ViewBag.CurrentCategory&subcategory=@sub" style="text-decoration: none; color: inherit;">@sub</a>
-                            </li>
+                                <span class="text-muted" style="cursor:pointer;" onclick="toggleSubs('@cat.Replace(" ", "_")')">▼</span>
                             }
-                    </ul>
-                    }
+                        </div>
+                        @if (subs.Any())
+                        {
+                            <ul class="list-unstyled ps-3 pb-2" id="subs-@cat.Replace(" ", "_")" style="display:none;">
+                                @foreach (var sub in subs)
+                                {
+                                    <li>
+                                        <a href="/Catalog?category=@cat&subcategory=@sub" class="text-decoration-none text-secondary small">— @sub</a>
+                                    </li>
+                                }
+                            </ul>
+                        }
+                    </li>
+                }
+                </ul>
             </div>
 
             <div class="col-md-9">
@@ -51,40 +53,68 @@
                     }
                 </h2>
 
-                @if (Model != null && Model.Any())
-                {
-                <div class="row">
-                    @foreach (var product in Model)
-                    {
-                    <div class="col-md-4 mb-4">
-                        <div class="card">
-                            <div class="card-body">
-                                <h5 class="card-title">@product.Name</h5>
-                                <p class="card-text">@product.Brand</p>
-                                <p class="card-text"><strong>@product.Price руб.</strong></p>
-                                @if (product.IsNew)
-                                {
-                                <span class="badge bg-success">Новинка</span>
-                                }
-                                @if (product.IsOnSale)
-                                {
-                                <span class="badge bg-danger">Акция</span>
-                                }
-                                <br /><br />
-                                <a href="/Catalog/Details/@product.Id" class="btn btn-primary btn-sm">Подробнее</a>
-                                <button type="button" class="btn btn-outline-secondary btn-sm" onclick="addToCart(@product.Id, this)">В корзину</button>
-                            </div>
-                        </div>
+                <div class="row g-2 mb-4">
+                    <input type="hidden" id="currentCategory" value="@ViewBag.CurrentCategory" />
+                    <input type="hidden" id="currentSubcategory" value="@ViewBag.CurrentSubcategory" />
+                    <div class="col-md-5">
+                        <input type="text" id="searchInput" class="form-control" placeholder="Поиск по названию..." value="@ViewBag.CurrentSearch" autocomplete="off" />
                     </div>
-                    }
+                    <div class="col-md-3">
+                        <input type="number" id="minPrice" class="form-control" placeholder="Цена от" value="@ViewBag.MinPrice" />
+                    </div>
+                    <div class="col-md-3">
+                        <input type="number" id="maxPrice" class="form-control" placeholder="Цена до" value="@ViewBag.MaxPrice" />
+                    </div>
                 </div>
-                }
-                else
+
+                <p class="text-muted">Найдено товаров: @ViewBag.TotalItems</p>
+
+                <div id="productsContainer">
+                    @await Html.PartialAsync("_ProductCards", Model)
+                </div>
+
+                @if (ViewBag.TotalPages > 1)
                 {
-                <p>Товары не найдены.</p>
+                <nav>
+                    <ul class="pagination justify-content-center">
+                        @{
+                        int currentPage = ViewBag.CurrentPage;
+                        int totalPages = ViewBag.TotalPages;
+                        int startPage = Math.Max(1, currentPage - 2);
+                        int endPage = Math.Min(totalPages, startPage + 4);
+                        if (endPage - startPage < 4)
+                        {
+                        startPage = Math.Max(1, endPage - 4);
+                        }
+                        }
+
+                        @if (currentPage > 1)
+                        {
+                        <li class="page-item">
+                            <a class="page-link" href="/Catalog?category=@ViewBag.CurrentCategory&subcategory=@ViewBag.CurrentSubcategory&search=@ViewBag.CurrentSearch&minPrice=@ViewBag.MinPrice&maxPrice=@ViewBag.MaxPrice&page=@(currentPage - 1)">← Назад</a>
+                        </li>
+                        }
+
+                        @for (int i = startPage; i <= endPage; i++)
+                        {
+                        <li class="page-item @(i == currentPage ? " active" : "" )">
+                            <a class="page-link" href="/Catalog?category=@ViewBag.CurrentCategory&subcategory=@ViewBag.CurrentSubcategory&search=@ViewBag.CurrentSearch&minPrice=@ViewBag.MinPrice&maxPrice=@ViewBag.MaxPrice&page=@i">@i</a>
+                        </li>
+                        }
+
+                        @if (currentPage < totalPages)
+                        {
+                        <li class="page-item">
+                            <a class="page-link" href="/Catalog?category=@ViewBag.CurrentCategory&subcategory=@ViewBag.CurrentSubcategory&search=@ViewBag.CurrentSearch&minPrice=@ViewBag.MinPrice&maxPrice=@ViewBag.MaxPrice&page=@(currentPage + 1)">Вперёд →</a>
+                        </li>
+                        }
+                    </ul>
+                </nav>
                 }
             </div>
         </div>
     </div>
 
     <script src="~/js/quiz.js"></script>
+    <script src="~/js/catalog.js"></script>
+    <script src="~/js/catalog-search.js"></script>
