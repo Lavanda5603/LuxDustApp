@@ -93,4 +93,36 @@
             }
         </div>
     </div>
+
+    <div class="card mb-4">
+        <div class="card-header">
+            <h4>Мои заказы</h4>
+        </div>
+        <div class="card-body">
+            @if (ViewBag.Orders != null && ((List<LuxDustApp.Models.Order>
+                )ViewBag.Orders).Any())
+                {
+                <ul>
+                    @foreach (var order in (List
+                    <LuxDustApp.Models.Order>
+                        )ViewBag.Orders)
+                        {
+                        <li>
+                            <strong>Заказ №@order.Id</strong> — @order.TotalPrice руб.
+                            <br />
+                            <small>
+                                Дата оформления: @order.CreatedAt.ToString("dd.MM.yyyy HH:mm") |
+                                Доставка: @order.DeliveryDate.ToString("dd.MM.yyyy") @order.DeliveryTime |
+                                Статус: <strong>@order.Status</strong>
+                            </small>
+                        </li>
+                        }
+                </ul>
+                }
+                else
+                {
+                <p>У вас пока нет заказов.</p>
+                }
+        </div>
+    </div>
 </div>

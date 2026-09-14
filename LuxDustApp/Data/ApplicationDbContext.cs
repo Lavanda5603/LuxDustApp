@@ -16,5 +16,7 @@ namespace LuxDustApp.Data
 		public DbSet<Recommendation> Recommendations { get; set; }
 		public DbSet<Favorite> Favorites { get; set; }
 		public DbSet<Cart> Carts { get; set; }
+		public DbSet<Order> Orders { get; set; }
+		public DbSet<OrderItem> OrderItems { get; set; }
 	}
 }

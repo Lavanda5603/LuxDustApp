@@ -22,17 +22,54 @@ namespace LuxDustApp.Controllers
 
 		public IActionResult Profile()
 		{
-			var userId = GetUserId();
-			if (userId == null) return RedirectToAction("Login");
+			var userIdClaim = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+			if (userIdClaim == null) return RedirectToAction("Login");
+			var userId = int.Parse(userIdClaim);
 
 			var profile = _context.Profiles.FirstOrDefault(p => p.UserId == userId);
-			var recommendations = _context.Recommendations.Where(r => r.UserId == userId).Include(r => r.Product)
-				.OrderByDescending(r => r.RecommendedAt).Take(10).ToList();
-			var favorites = _context.Favorites.Where(f => f.UserId == userId).Include(f => f.Product).ToList();
+
+			var recommendations = _context.Recommendations
+				.Where(r => r.UserId == userId).Include(r => r.Product).OrderByDescending(r => r.RecommendedAt).Take(10).ToList();
+
+			var favorites = _context.Favorites
+				.Where(f => f.UserId == userId).Include(f => f.Product).ToList();
+
+			var orders = _context.Orders
+			.Where(o => o.UserId == userId).OrderByDescending(o => o.CreatedAt).ToList();
+
+			foreach (var order in orders)
+			{
+				var today = DateTime.UtcNow.Date;
+				var deliveryDate = order.DeliveryDate.Date;
+
+				if (order.DeliveryMethod == "Самовывоз")
+				{
+					if (deliveryDate < today)
+						order.Status = "Получен";
+					else if (deliveryDate == today)
+						order.Status = "Можно забирать";
+					else
+						order.Status = "Готовится к выдаче";
+				}
+				else
+				{
+					if (deliveryDate < today)
+						order.Status = "Доставлен";
+					else if (deliveryDate == today)
+						order.Status = "Курьер в пути";
+					else
+						order.Status = "В обработке";
+				}
+			}
+
+			_context.SaveChanges();
+
+			ViewBag.Orders = orders;
 
 			ViewBag.Profile = profile;
 			ViewBag.Recommendations = recommendations;
 			ViewBag.Favorites = favorites;
+			ViewBag.Orders = orders;
 			ViewBag.UserName = User.Identity.Name;
 
 			return View();

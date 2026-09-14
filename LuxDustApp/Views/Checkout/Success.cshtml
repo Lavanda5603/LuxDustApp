@@ -1,0 +1,21 @@
+﻿@{
+    ViewData["Title"] = "Заказ оформлен";
+}
+@model LuxDustApp.Models.Order
+
+<div class="container text-center mt-5">
+    <h2>Спасибо за заказ!</h2>
+    <p>Ваш заказ <strong>№@Model.Id</strong> успешно оформлен.</p>
+    <p>Способ доставки: <strong>@Model.DeliveryMethod</strong></p>
+    @if (Model.DeliveryMethod == "Курьер")
+    {
+    <p>Адрес: <strong>@Model.Address</strong></p>
+    }
+    <p>Дата: <strong>@Model.DeliveryDate.ToString("dd.MM.yyyy")</strong></p>
+    <p>Время: <strong>@Model.DeliveryTime</strong></p>
+    <p>Итого: <strong>@Model.TotalPrice руб.</strong></p>
+    <p>Статус: <strong>@Model.Status</strong></p>
+
+    <a href="/Account/Profile" class="btn btn-primary mt-3">Мои заказы</a>
+    <a href="/Catalog" class="btn btn-secondary mt-3">Продолжить покупки</a>
+</div>
