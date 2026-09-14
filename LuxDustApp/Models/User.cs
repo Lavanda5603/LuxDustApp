@@ -16,6 +16,8 @@ namespace LuxDustApp.Models
 		[Required(ErrorMessage = "Введите имя")]
 		public string Name { get; set; }
 
+		public bool IsAdmin { get; set; } = false;
+
 		public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 	}
 }

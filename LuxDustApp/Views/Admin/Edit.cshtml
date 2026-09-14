@@ -1,0 +1,118 @@
+﻿@{
+    ViewData["Title"] = "Редактировать товар";
+}
+@model LuxDustApp.Models.AdminProductViewModel
+
+<div class="container">
+    <h2>Редактировать товар</h2>
+
+    @if (!ViewData.ModelState.IsValid)
+    {
+    <div class="alert alert-danger">
+        @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+        {
+        <p>@error.ErrorMessage</p>
+        }
+    </div>
+    }
+
+    <form method="post" action="/Admin/Edit">
+        <input type="hidden" name="Id" value="@Model.Product.Id" />
+        <input type="hidden" name="CreatedAt" value="@Model.Product.CreatedAt" />
+        <input type="hidden" name="Rating" value="@Model.Product.Rating" />
+
+        <div class="mb-3">
+            <label>Название</label>
+            <input type="text" name="Name" class="form-control" value="@Model.Product.Name" required />
+        </div>
+
+        <div class="mb-3">
+            <label>Бренд</label>
+            <input type="text" name="Brand" class="form-control" list="brandsList" value="@Model.Product.Brand" required />
+            <datalist id="brandsList">
+                @foreach (var brand in Model.Brands)
+                {
+                <option value="@brand"></option>
+                }
+            </datalist>
+        </div>
+
+        <div class="mb-3">
+            <label>Категория</label>
+            <input type="text" name="Category" class="form-control" list="categoriesList" value="@Model.Product.Category" required />
+            <datalist id="categoriesList">
+                @foreach (var cat in Model.Categories)
+                {
+                <option value="@cat"></option>
+                }
+            </datalist>
+        </div>
+
+        <div class="mb-3">
+            <label>Подкатегория</label>
+            <input type="text" name="SubCategory" class="form-control" list="subcategoriesList" value="@Model.Product.SubCategory" />
+            <datalist id="subcategoriesList">
+                @foreach (var kvp in Model.SubcategoriesByCategory)
+                {
+                foreach (var sub in kvp.Value)
+                {
+                <option value="@sub" data-category="@kvp.Key"></option>
+                }
+                }
+            </datalist>
+        </div>
+
+        <div class="mb-3">
+            <label>Цена</label>
+            <input type="number" name="Price" class="form-control" step="100" min="0" value="@Model.Product.Price" required />
+        </div>
+
+        <div class="mb-3">
+            <label>Тип кожи</label>
+            <select name="SkinType" class="form-select">
+                @foreach (var skin in Model.SkinTypes)
+                {
+                <option value="@skin" selected="@(skin == Model.Product.SkinType)">@skin</option>
+                }
+            </select>
+        </div>
+
+        <div class="mb-3">
+            <label>Проблема</label>
+            <select name="Problem" class="form-select">
+                @foreach (var problem in Model.Problems)
+                {
+                <option value="@problem" selected="@(problem == Model.Product.Problem)">@problem</option>
+                }
+            </select>
+        </div>
+
+        <div class="mb-3">
+            <label>Сезон</label>
+            <select name="Season" class="form-select">
+                @foreach (var season in Model.Seasons)
+                {
+                <option value="@season" selected="@(season == Model.Product.Season)">@season</option>
+                }
+            </select>
+        </div>
+
+        <div class="mb-3">
+            <label>Описание</label>
+            <textarea name="Description" class="form-control">@Model.Product.Description</textarea>
+        </div>
+
+        <div class="mb-3 form-check">
+            <input type="checkbox" name="IsNew" value="true" class="form-check-input" id="isNewCheck" @(Model.Product.IsNew ? "checked" : "" ) />
+            <label class="form-check-label" for="isNewCheck">Новинка</label>
+        </div>
+
+        <div class="mb-3 form-check">
+            <input type="checkbox" name="IsOnSale" value="true" class="form-check-input" id="isOnSaleCheck" @(Model.Product.IsOnSale ? "checked" : "" ) />
+            <label class="form-check-label" for="isOnSaleCheck">Акция</label>
+        </div>
+
+        <button type="submit" class="btn btn-warning">Сохранить</button>
+        <a href="/Admin" class="btn btn-secondary">Назад</a>
+    </form>
+</div>

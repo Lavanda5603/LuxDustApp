@@ -1,0 +1,66 @@
+﻿@{
+    ViewData["Title"] = "Админ-панель";
+}
+@model List<LuxDustApp.Models.Product>
+
+    <div class="container">
+        <h2>Админ-панель</h2>
+
+        <div class="row mb-4">
+            <div class="col-md-4">
+                <div class="card text-center">
+                    <div class="card-body">
+                        <h5>Всего товаров</h5>
+                        <p class="display-6">@ViewBag.TotalProducts</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card text-center">
+                    <div class="card-body">
+                        <h5>Пользователей</h5>
+                        <p class="display-6">@ViewBag.TotalUsers</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card text-center">
+                    <div class="card-body">
+                        <h5>Заказов</h5>
+                        <p class="display-6">@ViewBag.TotalOrders</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <a href="/Admin/Create" class="btn btn-success mb-3">+ Добавить товар</a>
+
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>Название</th>
+                    <th>Бренд</th>
+                    <th>Цена</th>
+                    <th>Категория</th>
+                    <th>Действия</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var product in Model)
+                {
+                <tr>
+                    <td>@product.Id</td>
+                    <td>@product.Name</td>
+                    <td>@product.Brand</td>
+                    <td>@product.Price руб.</td>
+                    <td>@product.Category</td>
+                    <td>
+                        <a href="/Admin/Edit/@product.Id" class="btn btn-sm btn-warning">Редактировать</a>
+                        <a href="/Admin/Delete/@product.Id" class="btn btn-sm btn-danger" onclick="return confirm('Удалить товар?');">Удалить</a>
+                    </td>
+                </tr>
+                }
+            </tbody>
+        </table>
+    </div>

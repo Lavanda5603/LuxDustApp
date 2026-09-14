@@ -22,6 +22,10 @@
                     @if (User.Identity.IsAuthenticated)
                     {
                     <li class="nav-item"><a class="nav-link" href="/Account/Profile">Личный кабинет</a></li>
+                    @if (User.IsInRole("Admin"))
+                    {
+                    <li class="nav-item"><a class="nav-link" href="/Admin">Админка</a></li>
+                    }
                     <li class="nav-item">
                         <a class="nav-link" href="#" onclick="if(confirm('Вы уверены, что хотите выйти?')) { window.location.href='/Account/Logout'; } return false;">
                             Выйти (@User.Identity.Name)
