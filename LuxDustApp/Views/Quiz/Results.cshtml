@@ -1,49 +1,30 @@
 ﻿@{
     ViewData["Title"] = "Ваша подборка";
 }
-@model List<LuxDustApp.Models.Product>
+@model Dictionary<LuxDustApp.Models.Product, LuxDustApp.Models.RecommendationResult>
 
     <h2>Ваша персональная подборка</h2>
 
     @if (Model != null && Model.Any())
     {
     <div class="row">
-        @foreach (var product in Model)
+        @foreach (var kvp in Model)
         {
-        <div class="col-md-4 mb-4">
+        var product = kvp.Key;
+        var score = kvp.Value.Score;
+        var reasons = kvp.Value.Reasons;
+
+        <div class="col-md-6 mb-4">
             <div class="card">
                 <div class="card-body">
                     <h5 class="card-title">@product.Name</h5>
                     <p class="card-text">Бренд: @product.Brand</p>
                     <p class="card-text">Цена: @product.Price руб.</p>
-                    <p class="card-text">Тип кожи: @product.SkinType</p>
-
-                    <p class="card-text" style="font-size: 14px; color: #6b4c3b;">
-                        <strong>Почему подходит:</strong>
-                        @{
-                        var reasons = new List<string>
-                            ();
-
-                            if (!string.IsNullOrEmpty(product.SkinType) && product.SkinType == ViewBag.UserSkinType)
-                            reasons.Add("тип кожи совпал");
-
-                            if (ViewBag.UserBudget != null && product.Price <= ViewBag.UserBudget)
-                            reasons.Add("цена в бюджете");
-
-                            if (!string.IsNullOrEmpty(product.Problem) && product.Problem == ViewBag.UserProblem)
-                            reasons.Add("решает вашу проблему");
-
-                            if (product.AllergenFree && !string.IsNullOrEmpty(ViewBag.UserAllergies) && ViewBag.UserAllergies != "Нет")
-                            reasons.Add("без аллергенов");
-
-                            if (!string.IsNullOrEmpty(product.Season) && product.Season == ViewBag.UserSeason)
-                            reasons.Add("подходит для сезона");
-                            }
-                            @(reasons.Any() ? string.Join(", ", reasons) : "подходит по общим параметрам")
-                    </p>
-
-                    <button type="button" class="btn btn-primary btn-sm" onclick="addToCart(@product.Id, this)">В корзину</button>
-                    <a href="/Quiz/AddToFavorites?productId=@product.Id" class="btn btn-outline-danger btn-sm">В избранное</a>
+                    <p class="card-text">Рейтинг совместимости: <strong>@score баллов</strong></p>
+                    <p class="card-text" style="font-size: 14px;">@reasons</p>
+                    <a href="/Catalog/Details/@product.Id" class="btn btn-primary btn-sm">Подробнее</a>
+                    <button type="button" class="btn btn-outline-secondary btn-sm" onclick="addToCart(@product.Id, this)">В корзину</button>
+                    <a href="/Quiz/AddToFavorites?productId=@product.Id" class="btn btn-outline-danger btn-sm">❤️ В избранное</a>
                 </div>
             </div>
         </div>

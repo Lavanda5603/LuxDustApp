@@ -7,188 +7,171 @@
     <p id="stepIndicator">Шаг 1 из 15</p>
 
     <div style="width: 100%; background-color: #e0e0e0; height: 8px; margin-bottom: 20px;">
-        <div id="progressBar" style="width: 12.5%; background-color: #007bff; height: 8px;"></div>
+        <div id="progressBar" style="width: 6.6%; background-color: #007bff; height: 8px;"></div>
     </div>
 
     <form id="quizForm" method="post" action="/Quiz/Results">
+
         <div class="step" data-step="1">
             <label>1. Какой у вас тип кожи?</label>
-            <select class="form-select" id="skinType" name="SkinType">
-                <option value="">Выберите...</option>
-                <option value="Сухая">Сухая</option>
-                <option value="Жирная">Жирная</option>
-                <option value="Комбинированная">Комбинированная</option>
-                <option value="Нормальная">Нормальная</option>
-                <option value="Чувствительная">Чувствительная</option>
-                <option value="Обезвоженная">Обезвоженная</option>
-                <option value="Склонная к куперозу">Склонная к куперозу</option>
-                <option value="Не знаю / хочу узнать">Не знаю / хочу узнать</option>
-            </select>
+            <div>
+                <label><input type="radio" name="SkinType" value="Сухая" /> Сухая</label><br />
+                <label><input type="radio" name="SkinType" value="Жирная" /> Жирная</label><br />
+                <label><input type="radio" name="SkinType" value="Комбинированная" /> Комбинированная</label><br />
+                <label><input type="radio" name="SkinType" value="Нормальная" /> Нормальная</label><br />
+                <label><input type="radio" name="SkinType" value="Чувствительная" /> Чувствительная</label><br />
+                <label><input type="radio" name="SkinType" value="Обезвоженная" /> Обезвоженная</label><br />
+                <label><input type="radio" name="SkinType" value="Склонная к куперозу" /> Склонная к куперозу</label><br />
+                <label><input type="radio" name="SkinType" value="Не знаю / хочу узнать" /> Не знаю / хочу узнать</label>
+            </div>
         </div>
 
         <div class="step" data-step="2" style="display:none;">
             <label>2. Сколько вам лет?</label>
-            <select class="form-select" id="age" name="Age">
-                <option value="">Выберите...</option>
-                <option value="до 20">до 20</option>
-                <option value="20-30">20-30</option>
-                <option value="30-40">30-40</option>
-                <option value="40-50">40-50</option>
-                <option value="50+">50+</option>
-            </select>
+            <div>
+                <label><input type="radio" name="Age" value="18" /> до 20</label><br />
+                <label><input type="radio" name="Age" value="25" /> 20–30</label><br />
+                <label><input type="radio" name="Age" value="35" /> 30–40</label><br />
+                <label><input type="radio" name="Age" value="45" /> 40–50</label><br />
+                <label><input type="radio" name="Age" value="55" /> 50+</label>
+            </div>
         </div>
 
         <div class="step" data-step="3" style="display:none;">
             <label>3. Ваш бюджет на уход в месяц</label>
-            <select class="form-select" id="budget" name="Budget">
-                <option value="">Выберите...</option>
-                <option value="до 1000">до 1000</option>
-                <option value="1000-3000">1000-3000</option>
-                <option value="3000-10000">3000-10000</option>
-                <option value="10000-25000">10000-25000</option>
-                <option value="Без лимита">Без лимита</option>
-            </select>
+            <div>
+                <label><input type="radio" name="Budget" value="1000" /> до 1000 руб.</label><br />
+                <label><input type="radio" name="Budget" value="3000" /> 1000–3000 руб.</label><br />
+                <label><input type="radio" name="Budget" value="10000" /> 3000–10000 руб.</label><br />
+                <label><input type="radio" name="Budget" value="25000" /> 10000–25000 руб.</label><br />
+                <label><input type="radio" name="Budget" value="999999" /> Без лимита</label>
+            </div>
         </div>
 
         <div class="step" data-step="4" style="display:none;">
-            <label>4. Какие проблемы вас беспокоят?</label>
-            <select class="form-select" id="problems" name="Problems">
-                <option value="">Выберите...</option>
-                <option value="Акне">Акне</option>
-                <option value="Пигментация">Пигментация</option>
-                <option value="Морщины">Морщины</option>
-                <option value="Купероз">Купероз</option>
-                <option value="Тусклый цвет">Тусклый цвет</option>
-                <option value="Гиперчувствительность">Гиперчувствительность</option>
-                <option value="Чёрные точки">Чёрные точки</option>
-                <option value="Сухость/Шелушение">Сухость/Шелушение</option>
-                <option value="Расширенные поры">Расширенные поры</option>
-                <option value="Отечность (отёки)">Отечность (отёки)</option>
-                <option value="Неровный тон кожи">Неровный тон кожи</option>
-                <option value="Другое (...)">Другое (...)</option>
-            </select>
-            <input type="text" id="problemsOther" name="ProblemsOther" placeholder="Введите ваш вариант..." style="display:none; margin-top:5px;" class="form-control">
+            <label>4. Какие проблемы вас беспокоят? (можно несколько)</label>
+            <div>
+                <label><input type="checkbox" name="Problems" value="Акне" /> Акне</label><br />
+                <label><input type="checkbox" name="Problems" value="Пигментация" /> Пигментация</label><br />
+                <label><input type="checkbox" name="Problems" value="Морщины" /> Морщины</label><br />
+                <label><input type="checkbox" name="Problems" value="Купероз" /> Купероз</label><br />
+                <label><input type="checkbox" name="Problems" value="Тусклый цвет" /> Тусклый цвет</label><br />
+                <label><input type="checkbox" name="Problems" value="Гиперчувствительность" /> Гиперчувствительность</label><br />
+                <label><input type="checkbox" name="Problems" value="Чёрные точки" /> Чёрные точки</label><br />
+                <label><input type="checkbox" name="Problems" value="Сухость/Шелушение" /> Сухость/Шелушение</label><br />
+                <label><input type="checkbox" name="Problems" value="Расширенные поры" /> Расширенные поры</label><br />
+                <label><input type="checkbox" name="Problems" value="Отечность" /> Отечность</label><br />
+                <label><input type="checkbox" name="Problems" value="Неровный тон кожи" /> Неровный тон кожи</label>
+            </div>
         </div>
 
         <div class="step" data-step="5" style="display:none;">
-            <label>5. Есть ли у вас аллергия на компоненты в косметике?</label>
-            <select class="form-select" id="allergies" name="Allergies">
-                <option value="">Выберите...</option>
-                <option value="Нет">Нет</option>
-                <option value="Парабены">Парабены</option>
-                <option value="Отдушки (ароматизаторы)">Отдушки (ароматизаторы)</option>
-                <option value="Спирт (алкоголь)">Спирт (алкоголь)</option>
-                <option value="Силиконы">Силиконы</option>
-                <option value="Сульфаты (SLS/SLES)">Сульфаты (SLS/SLES)</option>
-                <option value="Глютен">Глютен</option>
-                <option value="Орехи и их производные">Орехи и их производные</option>
-                <option value="Эфирные масла">Эфирные масла</option>
-                <option value="Другое (...)">Другое (...)</option>
-            </select>
-            <input type="text" id="allergiesOther" name="AllergiesOther" placeholder="Введите ваш вариант..." style="display:none; margin-top:5px;" class="form-control">
+            <label>5. Есть ли у вас аллергия на компоненты? (можно несколько)</label>
+            <div>
+                <label><input type="checkbox" name="Allergies" value="Нет" /> Нет</label><br />
+                <label><input type="checkbox" name="Allergies" value="Парабены" /> Парабены</label><br />
+                <label><input type="checkbox" name="Allergies" value="Отдушки (ароматизаторы)" /> Отдушки</label><br />
+                <label><input type="checkbox" name="Allergies" value="Спирт (алкоголь)" /> Спирт</label><br />
+                <label><input type="checkbox" name="Allergies" value="Силиконы" /> Силиконы</label><br />
+                <label><input type="checkbox" name="Allergies" value="Сульфаты (SLS/SLES)" /> Сульфаты</label><br />
+                <label><input type="checkbox" name="Allergies" value="Глютен" /> Глютен</label><br />
+                <label><input type="checkbox" name="Allergies" value="Орехи и их производные" /> Орехи</label><br />
+                <label><input type="checkbox" name="Allergies" value="Эфирные масла" /> Эфирные масла</label>
+            </div>
         </div>
 
         <div class="step" data-step="6" style="display:none;">
             <label>6. Для какого сезона подбираете уход?</label>
-            <select class="form-select" id="season" name="Season">
-                <option value="">Выберите...</option>
-                <option value="Лето">Лето</option>
-                <option value="Зима">Зима</option>
-                <option value="Демисезон">Демисезон</option>
-                <option value="Круглый год">Круглый год</option>
-            </select>
+            <div>
+                <label><input type="radio" name="Season" value="Лето" /> Лето</label><br />
+                <label><input type="radio" name="Season" value="Зима" /> Зима</label><br />
+                <label><input type="radio" name="Season" value="Демисезон" /> Демисезон</label><br />
+                <label><input type="radio" name="Season" value="Круглый год" /> Круглый год</label>
+            </div>
         </div>
 
         <div class="step" data-step="7" style="display:none;">
-            <label>7. Каким брендам доверяете?</label>
-            <input type="text" id="brands" name="FavoriteBrands" placeholder="Например: Librederm, Avene" class="form-control">
+            <label>7. Каким брендам доверяете? (через запятую)</label>
+            <input type="text" name="FavoriteBrands" class="form-control" placeholder="Например: Librederm, Avene" />
         </div>
 
         <div class="step" data-step="8" style="display:none;">
-            <label>8. Какая цель ухода?</label>
-            <select class="form-select" id="goal" name="Goal">
-                <option value="">Выберите...</option>
-                <option value="Увлажнение">Увлажнение</option>
-                <option value="Питание">Питание</option>
-                <option value="Антивозрастной">Антивозрастной</option>
-                <option value="Очищение">Очищение</option>
-                <option value="Защита">Защита</option>
-                <option value="Восстановление">Восстановление</option>
-                <option value="Матирование">Матирование</option>
-                <option value="Лифтинг (подтяжка)">Лифтинг (подтяжка)</option>
-                <option value="Осветление пигментации">Осветление пигментации</option>
-                <option value="Сужение пор">Сужение пор</option>
-                <option value="Сияние / здоровый вид">Сияние / здоровый вид</option>
-                <option value="Снятие стресса и успокоение">Снятие стресса и успокоение</option>
-            </select>
+            <label>8. Какая цель ухода? (можно несколько)</label>
+            <div>
+                <label><input type="checkbox" name="Goal" value="Увлажнение" /> Увлажнение</label><br />
+                <label><input type="checkbox" name="Goal" value="Питание" /> Питание</label><br />
+                <label><input type="checkbox" name="Goal" value="Антивозрастной" /> Антивозрастной</label><br />
+                <label><input type="checkbox" name="Goal" value="Очищение" /> Очищение</label><br />
+                <label><input type="checkbox" name="Goal" value="Защита" /> Защита</label><br />
+                <label><input type="checkbox" name="Goal" value="Восстановление" /> Восстановление</label><br />
+                <label><input type="checkbox" name="Goal" value="Матирование" /> Матирование</label><br />
+                <label><input type="checkbox" name="Goal" value="Лифтинг (подтяжка)" /> Лифтинг</label><br />
+                <label><input type="checkbox" name="Goal" value="Осветление пигментации" /> Осветление пигментации</label><br />
+                <label><input type="checkbox" name="Goal" value="Сужение пор" /> Сужение пор</label><br />
+                <label><input type="checkbox" name="Goal" value="Сияние / здоровый вид" /> Сияние</label><br />
+                <label><input type="checkbox" name="Goal" value="Снятие стресса и успокоение" /> Снятие стресса</label>
+            </div>
         </div>
 
         <div class="step" data-step="9" style="display:none;">
             <label>9. Какой у вас уровень стресса?</label>
-            <select class="form-select" id="stressLevel" name="StressLevel">
-                <option value="">Выберите...</option>
-                <option value="Низкий">Низкий</option>
-                <option value="Средний">Средний</option>
-                <option value="Высокий">Высокий</option>
-            </select>
+            <div>
+                <label><input type="radio" name="StressLevel" value="Низкий" /> Низкий</label><br />
+                <label><input type="radio" name="StressLevel" value="Средний" /> Средний</label><br />
+                <label><input type="radio" name="StressLevel" value="Высокий" /> Высокий</label>
+            </div>
         </div>
 
         <div class="step" data-step="10" style="display:none;">
             <label>10. Как обычно выглядит ваш рацион?</label>
-            <select class="form-select" id="dietType" name="DietType">
-                <option value="">Выберите...</option>
-                <option value="Сбалансированное питание">Сбалансированное питание</option>
-                <option value="Часто ем сладкое или жирное">Часто ем сладкое или жирное</option>
-                <option value="Стараюсь питаться правильно, но срываюсь">Стараюсь питаться правильно, но срываюсь</option>
-                <option value="У меня особый режим питания">У меня особый режим питания</option>
-                <option value="Вегетарианство">Вегетарианство</option>
-            </select>
+            <div>
+                <label><input type="radio" name="DietType" value="Сбалансированное питание" /> Сбалансированное питание</label><br />
+                <label><input type="radio" name="DietType" value="Часто ем сладкое или жирное" /> Часто сладкое/жирное</label><br />
+                <label><input type="radio" name="DietType" value="Стараюсь питаться правильно, но срываюсь" /> Стараюсь, но срываюсь</label><br />
+                <label><input type="radio" name="DietType" value="У меня особый режим питания" /> Особый режим</label><br />
+                <label><input type="radio" name="DietType" value="Вегетарианство" /> Вегетарианство</label>
+            </div>
         </div>
 
         <div class="step" data-step="11" style="display:none;">
             <label>11. Есть ли у вас чувствительность к солнцу?</label>
-            <select class="form-select" id="sunSensitivity" name="SunSensitivity">
-                <option value="">Выберите...</option>
-                <option value="true">Да</option>
-                <option value="false">Нет</option>
-            </select>
+            <div>
+                <label><input type="radio" name="SunSensitivity" value="true" /> Да</label><br />
+                <label><input type="radio" name="SunSensitivity" value="false" /> Нет</label>
+            </div>
         </div>
 
         <div class="step" data-step="12" style="display:none;">
             <label>12. Склонны ли вы к отёкам по утрам?</label>
-            <select class="form-select" id="tendencyToEdema" name="TendencyToEdema">
-                <option value="">Выберите...</option>
-                <option value="true">Да</option>
-                <option value="false">Нет</option>
-            </select>
+            <div>
+                <label><input type="radio" name="TendencyToEdema" value="true" /> Да</label><br />
+                <label><input type="radio" name="TendencyToEdema" value="false" /> Нет</label>
+            </div>
         </div>
 
         <div class="step" data-step="13" style="display:none;">
             <label>13. Делаете ли вы профессиональный уход (чистки, пилинги)?</label>
-            <select class="form-select" id="hasProfessionalCare" name="HasProfessionalCare">
-                <option value="">Выберите...</option>
-                <option value="true">Да</option>
-                <option value="false">Нет</option>
-            </select>
+            <div>
+                <label><input type="radio" name="HasProfessionalCare" value="true" /> Да</label><br />
+                <label><input type="radio" name="HasProfessionalCare" value="false" /> Нет</label>
+            </div>
         </div>
 
         <div class="step" data-step="14" style="display:none;">
             <label>14. Какую текстуру средств вы предпочитаете?</label>
-            <select class="form-select" id="texturePreference" name="TexturePreference">
-                <option value="">Выберите...</option>
-                <option value="Лёгкая">Лёгкая (гели, флюиды)</option>
-                <option value="Плотная">Плотная (кремы, масла)</option>
-                <option value="Любая">Любая</option>
-            </select>
+            <div>
+                <label><input type="radio" name="TexturePreference" value="Лёгкая" /> Лёгкая (гели, флюиды)</label><br />
+                <label><input type="radio" name="TexturePreference" value="Плотная" /> Плотная (кремы, масла)</label><br />
+                <label><input type="radio" name="TexturePreference" value="Любая" /> Любая</label>
+            </div>
         </div>
 
         <div class="step" data-step="15" style="display:none;">
             <label>15. Готовы ли вы к многоступенчатому уходу?</label>
-            <select class="form-select" id="readyForMultiStep" name="ReadyForMultiStep">
-                <option value="">Выберите...</option>
-                <option value="true">Да</option>
-                <option value="false">Нет</option>
-            </select>
+            <div>
+                <label><input type="radio" name="ReadyForMultiStep" value="true" /> Да</label><br />
+                <label><input type="radio" name="ReadyForMultiStep" value="false" /> Нет</label>
+            </div>
         </div>
 
         <div style="margin-top: 20px;">

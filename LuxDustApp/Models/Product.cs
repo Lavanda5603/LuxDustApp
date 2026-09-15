@@ -24,5 +24,14 @@
 		public string? TexturePreference { get; set; }
 		public bool HasProfessionalCare { get; set; }
 		public bool ReadyForMultiStep { get; set; }
+
+		public bool HasParabens { get; set; } = false;
+		public bool HasFragrance { get; set; } = false;
+		public bool HasAlcohol { get; set; } = false;
+		public bool HasSilicones { get; set; } = false;
+		public bool HasSulfates { get; set; } = false;
+		public bool HasGluten { get; set; } = false;
+		public bool HasNuts { get; set; } = false;
+		public bool HasEssentialOils { get; set; } = false;
 	}
 }

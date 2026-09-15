@@ -32,31 +32,25 @@ namespace LuxDustApp.Controllers
 		[HttpPost]
 		public IActionResult Results(Profile profile)
 		{
-			var productsWithScores = _recommendationService.GetRecommendationsWithScores(profile);
-
 			var userIdClaim = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
 			if (userIdClaim == null) return RedirectToAction("Login", "Account");
 			var userId = int.Parse(userIdClaim);
 
-			foreach (var kvp in productsWithScores)
+			var productsWithReasons = _recommendationService.GetRecommendationsWithReasons(profile);
+
+			foreach (var kvp in productsWithReasons)
 			{
-				var recommendation = new Recommendation
+				_context.Recommendations.Add(new Recommendation
 				{
 					UserId = userId,
 					ProductId = kvp.Key.Id,
-					Score = kvp.Value,
+					Score = kvp.Value.Score,
+					Reasons = kvp.Value.Reasons,
 					RecommendedAt = System.DateTime.UtcNow
-				};
-				_context.Recommendations.Add(recommendation);
+				});
 			}
 			_context.SaveChanges();
 
-			ViewBag.UserSkinType = profile.SkinType;
-			ViewBag.UserBudget = profile.Budget;
-			ViewBag.UserProblem = profile.Problems;
-			ViewBag.UserAllergies = profile.Allergies;
-			ViewBag.UserSeason = profile.Season;
-			ViewBag.UserGoal = profile.Goal;
 
 			var existingProfile = _context.Profiles.FirstOrDefault(p => p.UserId == userId);
 			if (existingProfile == null)
@@ -71,9 +65,7 @@ namespace LuxDustApp.Controllers
 				existingProfile.Age = profile.Age;
 				existingProfile.Budget = profile.Budget;
 				existingProfile.Problems = profile.Problems;
-				existingProfile.ProblemsOther = profile.ProblemsOther;
 				existingProfile.Allergies = profile.Allergies;
-				existingProfile.AllergiesOther = profile.AllergiesOther;
 				existingProfile.Season = profile.Season;
 				existingProfile.FavoriteBrands = profile.FavoriteBrands;
 				existingProfile.Goal = profile.Goal;
@@ -88,7 +80,7 @@ namespace LuxDustApp.Controllers
 			}
 			_context.SaveChanges();
 
-			return View(productsWithScores.Keys.ToList());
+			return View(productsWithReasons);
 		}
 
 		public IActionResult AddToFavorites(int productId)

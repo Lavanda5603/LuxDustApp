@@ -8,81 +8,51 @@
     const stepIndicator = document.getElementById('stepIndicator');
     const quizForm = document.getElementById('quizForm');
 
-    function setupOtherOption(selectId, inputId) {
-        const select = document.getElementById(selectId);
-        const input = document.getElementById(inputId);
-        if (!select || !input) return;
-
-        select.addEventListener('change', function () {
-            if (this.value === 'Другое (...)') {
-                input.style.display = 'block';
-                input.focus();
-            } else {
-                input.style.display = 'none';
-                input.value = '';
-            }
-        });
-    }
-
-    setupOtherOption('problems', 'problemsOther');
-    setupOtherOption('allergies', 'allergiesOther');
-
-    function validateCurrentStep() {
-        const currentStepEl = document.querySelector(`.step[data-step="${currentStep}"]`);
-        if (!currentStepEl) return true;
-
-        const fields = currentStepEl.querySelectorAll('select, input[type="text"]');
-        let isValid = true;
-
-        fields.forEach(field => {
-            if (field.offsetParent === null) return;
-            if (field.hasAttribute('required') || field.tagName === 'SELECT') {
-                if (!field.value || field.value.trim() === '') {
-                    field.style.border = '2px solid red';
-                    isValid = false;
-                } else {
-                    field.style.border = '';
-                }
-            }
-        });
-
-        if (!isValid) {
-            alert('Пожалуйста, заполните все поля на этом шаге!');
-        }
-
-        return isValid;
-    }
-
     function updateStep() {
         document.querySelectorAll('.step').forEach(el => el.style.display = 'none');
-
         const currentStepEl = document.querySelector(`.step[data-step="${currentStep}"]`);
         if (currentStepEl) currentStepEl.style.display = 'block';
 
         if (progressBar) {
             const progressPercent = (currentStep / totalSteps) * 100;
             progressBar.style.width = progressPercent + '%';
-            progressBar.setAttribute('aria-valuenow', progressPercent);
         }
-
         if (stepIndicator) {
             stepIndicator.textContent = `Шаг ${currentStep} из ${totalSteps}`;
         }
-
-        if (currentStep === totalSteps) {
-            nextBtn.textContent = 'Получить подборку';
-        } else {
-            nextBtn.textContent = 'Продолжить';
-        }
+        nextBtn.textContent = (currentStep === totalSteps) ? 'Получить подборку' : 'Продолжить';
     }
 
     nextBtn.addEventListener('click', function () {
-        if (!validateCurrentStep()) return;
-
         if (currentStep < totalSteps) {
             currentStep++;
             updateStep();
         } else {
+            const formData = new FormData(quizForm);
+            const problems = formData.getAll('Problems').join(',');
+            const allergies = formData.getAll('Allergies').join(',');
+            const goals = formData.getAll('Goal').join(',');
+
+            quizForm.querySelectorAll('input[type="hidden"]').forEach(el => el.remove());
+
+            const problemsInput = document.createElement('input');
+            problemsInput.type = 'hidden';
+            problemsInput.name = 'Problems';
+            problemsInput.value = problems;
+            quizForm.appendChild(problemsInput);
+
+            const allergiesInput = document.createElement('input');
+            allergiesInput.type = 'hidden';
+            allergiesInput.name = 'Allergies';
+            allergiesInput.value = allergies;
+            quizForm.appendChild(allergiesInput);
+
+            const goalInput = document.createElement('input');
+            goalInput.type = 'hidden';
+            goalInput.name = 'Goal';
+            goalInput.value = goals;
+            quizForm.appendChild(goalInput);
+
             quizForm.submit();
         }
     });
