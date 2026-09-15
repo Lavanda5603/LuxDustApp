@@ -1,5 +1,6 @@
 ﻿(function () {
     const nextBtn = document.getElementById('nextBtn');
+    const backBtn = document.getElementById('backBtn');
     if (!nextBtn) return;
 
     let currentStep = 1;
@@ -21,6 +22,10 @@
             stepIndicator.textContent = `Шаг ${currentStep} из ${totalSteps}`;
         }
         nextBtn.textContent = (currentStep === totalSteps) ? 'Получить подборку' : 'Продолжить';
+
+        if (backBtn) {
+            backBtn.style.display = (currentStep > 1) ? 'inline-block' : 'none';
+        }
     }
 
     nextBtn.addEventListener('click', function () {
@@ -56,6 +61,15 @@
             quizForm.submit();
         }
     });
+
+    if (backBtn) {
+        backBtn.addEventListener('click', function () {
+            if (currentStep > 1) {
+                currentStep--;
+                updateStep();
+            }
+        });
+    }
 
     updateStep();
 })();

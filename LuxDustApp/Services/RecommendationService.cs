@@ -40,7 +40,15 @@ namespace LuxDustApp.Services
 				if (userWantsFaceCare &&
 					(product.Category == "Уход за телом" ||
 					 product.Category == "Волосы" ||
-					 product.Category == "Макияж"))
+					 product.Category == "Макияж" ||
+					 product.Category == "Для мужчин" ||
+					 product.Category == "Для детей" ||
+					 product.Category == "Здоровье и БАДы" ||
+					 product.Category == "Парфюмерия" ||
+					 product.Category == "Для дома" ||
+					 product.Category == "Аксессуары" ||
+					 product.Category == "Мини-форматы" ||
+					 product.Category == "Маникюр и педикюр"))
 					continue;
 
 				var res = new RecommendationResult();
@@ -62,6 +70,7 @@ namespace LuxDustApp.Services
 				CheckProfessionalCare(profile, product, res, reasons, warnings);
 				CheckTexture(profile, product, res, reasons, warnings);
 				CheckMultiStep(profile, product, res, reasons, warnings);
+				CheckCategory(profile, product, res, reasons, warnings);
 				CheckBonuses(product, res, reasons);
 
 				res.Reasons = reasons.Any() ? " ✓ " + string.Join("; ", reasons) + "." : "Нет явных совпадений.";
@@ -80,7 +89,8 @@ namespace LuxDustApp.Services
 
 			bool solvesProblem = !string.IsNullOrEmpty(profile.Problems) &&
 								 !string.IsNullOrEmpty(product.Problem) &&
-								 profile.Problems.Split(',').Select(p => p.Trim()).Contains(product.Problem);
+								 profile.Problems.Split(',', StringSplitOptions.RemoveEmptyEntries)
+									 .Select(p => p.Trim()).Contains(product.Problem);
 
 			if (profile.SkinType == product.SkinType)
 			{ res.Score += 40; reasons.Add($"тип кожи «{profile.SkinType}»"); }
@@ -115,6 +125,7 @@ namespace LuxDustApp.Services
 			}
 			else if (profile.Age < 40)
 			{
+				if (product.Problem == "Акне") { res.Score += 10; reasons.Add("подходит для взрослой кожи с акне"); }
 				if (product.Problem == "Тусклый цвет") { res.Score += 15; reasons.Add("борьба с тусклостью"); }
 				if (product.Problem == "Морщины") { res.Score += 10; reasons.Add("профилактика морщин"); }
 			}
@@ -163,8 +174,16 @@ namespace LuxDustApp.Services
 			}
 			else
 			{
-				res.Score += 20; reasons.Add("бюджет без ограничений");
-				if (product.Rating >= 4.7) { res.Score += 15; reasons.Add("высокий рейтинг"); }
+				if (product.Rating >= 4.5)
+				{
+					res.Score += 15;
+					reasons.Add("бюджет без ограничений");
+					if (product.Rating >= 4.7) { res.Score += 10; reasons.Add("высокий рейтинг"); }
+				}
+				else
+				{
+					warnings.Add("низкий рейтинг при бюджете без ограничений");
+				}
 			}
 		}
 
@@ -178,9 +197,18 @@ namespace LuxDustApp.Services
 			{
 				if (problem == product.Problem)
 				{
-					res.Score += 30;
-					reasons.Add($"решает «{problem}»");
-					if (userProblems.Count == 1) { res.Score += 20; reasons.Add("решает вашу главную проблему"); }
+					if (userProblems.Count == 1)
+					{
+						res.Score += 30;
+						reasons.Add($"решает «{problem}»");
+						res.Score += 20;
+						reasons.Add("решает вашу главную проблему");
+					}
+					else
+					{
+						res.Score += 20;
+						reasons.Add($"решает «{problem}»");
+					}
 				}
 				else if (ProblemRelations.Relations.ContainsKey(problem) && ProblemRelations.Relations[problem].Contains(product.Problem))
 				{ res.Score += 15; reasons.Add($"связано с «{problem}»"); }
@@ -263,7 +291,7 @@ namespace LuxDustApp.Services
 				if (goal == "Питание" && (pName.Contains("питат") || pDesc.Contains("питат"))) { res.Score += 20; reasons.Add("питание"); }
 				if (goal == "Антивозрастной" && product.SubCategory == "Антивозрастной уход") { res.Score += 25; reasons.Add("антивозрастной уход"); }
 				if (goal == "Очищение" && product.SubCategory == "Очищение (гели, пенки)") { res.Score += 20; reasons.Add("очищение"); }
-				if (goal == "Защита" && pName.Contains("spf")) { res.Score += 20; reasons.Add("SPF-защита"); }
+				if (goal == "Защита" && (pName.Contains("spf") || product.SubCategory == "Защита от солнца (SPF)")) { res.Score += 20; reasons.Add("SPF-защита"); }
 				if (goal == "Восстановление" && product.SubCategory == "Сыворотки и эссенции") { res.Score += 20; reasons.Add("восстановление"); }
 				if (goal == "Матирование" && product.Problem == "Расширенные поры") { res.Score += 20; reasons.Add("матирование"); }
 				if (goal == "Лифтинг (подтяжка)" && product.Problem == "Морщины") { res.Score += 20; reasons.Add("лифтинг"); }
@@ -284,6 +312,11 @@ namespace LuxDustApp.Services
 			else if (profile.StressLevel == "Средний")
 			{
 				if (product.Problem == "Тусклый цвет") { res.Score += 10; reasons.Add("при среднем стрессе"); }
+				if (product.SubCategory == "Увлажнение") { res.Score += 5; reasons.Add("увлажнение при стрессе"); }
+			}
+			else if (profile.StressLevel == "Низкий")
+			{
+				if (product.SubCategory == "Маски для лица") { res.Score += 5; reasons.Add("поддерживающий уход"); }
 			}
 		}
 
@@ -292,8 +325,10 @@ namespace LuxDustApp.Services
 			if (profile.DietType == "Часто ем сладкое или жирное" && product.Problem == "Акне")
 			{ res.Score += 15; reasons.Add("при высыпаниях из-за питания"); }
 			else if (profile.DietType == "Сбалансированное питание" && product.Category == "Здоровье и БАДы")
-			{ res.Score += 12; reasons.Add("при сбалансированном питании"); }
-			else if (profile.DietType == "Вегетарианство" && product.Category == "Натуральная косметика")
+			{ res.Score -= 5; warnings.Add("при сбалансированном питании БАДы не обязательны"); }
+			else if (profile.DietType == "Вегетарианство" &&
+				(product.Category == "Натуральная косметика" ||
+				 (product.Description ?? "").ToLower().Contains("веган")))
 			{ res.Score += 12; reasons.Add("для вегетарианцев"); }
 		}
 
@@ -342,7 +377,34 @@ namespace LuxDustApp.Services
 			else
 			{
 				if (product.SubCategory == "Сыворотки и эссенции")
-				{ warnings.Add("требует многоступенчатого ухода"); }
+				{
+					res.Score -= 50;
+					warnings.Add("требует многоступенчатого ухода, а вы не готовы");
+				}
+			}
+		}
+
+		private void CheckCategory(Profile profile, Product product, RecommendationResult res, List<string> reasons, List<string> warnings)
+		{
+			if (string.IsNullOrEmpty(product.Category)) return;
+
+			bool userWantsFaceCare = !string.IsNullOrEmpty(profile.Goal) &&
+				(profile.Goal.Contains("Увлажнение") || profile.Goal.Contains("Очищение") ||
+				 profile.Goal.Contains("Антивозрастной") || profile.Goal.Contains("Питание"));
+
+			var extraSubCategories = new List<string> { "Маски для лица", "Уход за глазами", "Скрабы и пилинги" };
+
+			if (product.Category == "Уход за лицом" && userWantsFaceCare)
+			{
+				if (!extraSubCategories.Contains(product.SubCategory))
+				{
+					res.Score += 15;
+					reasons.Add("уход за лицом");
+				}
+				else
+				{
+					res.Score -= 10;
+				}
 			}
 		}
 

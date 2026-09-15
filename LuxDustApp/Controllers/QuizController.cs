@@ -56,6 +56,17 @@ namespace LuxDustApp.Controllers
 			if (existingProfile == null)
 			{
 				profile.UserId = userId;
+				profile.FavoriteBrands = profile.FavoriteBrands ?? "";
+				profile.Problems = profile.Problems ?? "";
+				profile.Allergies = profile.Allergies ?? "";
+				profile.Season = profile.Season ?? "";
+				profile.Goal = profile.Goal ?? "";
+				profile.SkinType = profile.SkinType ?? "";
+				profile.StressLevel = profile.StressLevel ?? "";
+				profile.DietType = profile.DietType ?? "";
+				profile.TexturePreference = profile.TexturePreference ?? "";
+				profile.ProblemsOther = profile.ProblemsOther ?? "";
+				profile.AllergiesOther = profile.AllergiesOther ?? "";
 				profile.UpdatedAt = System.DateTime.UtcNow;
 				_context.Profiles.Add(profile);
 			}
