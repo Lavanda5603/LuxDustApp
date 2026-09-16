@@ -18,19 +18,24 @@ namespace LuxDustApp.Services
 			_logger = logger;
 		}
 
-		public Dictionary<Product, RecommendationResult> GetRecommendationsWithReasons(Profile profile)
+		public RecommendationBundle GetRecommendationsWithReasons(Profile profile)
 		{
 			var allProducts = _context.Products.ToList();
 			var result = new Dictionary<Product, RecommendationResult>();
+			var bundle = new RecommendationBundle();
 
 			if (allProducts == null || !allProducts.Any())
-				return result;
+				return bundle;
 
 			var excludedCategories = new List<string> { "Подборки", "Уборка и стирка", "Хобби и творчество", "Фигура мечты" };
 
 			bool userWantsFaceCare = !string.IsNullOrEmpty(profile.Goal) &&
 				(profile.Goal.Contains("Увлажнение") || profile.Goal.Contains("Очищение") ||
-				 profile.Goal.Contains("Антивозрастной") || profile.Goal.Contains("Питание"));
+				 profile.Goal.Contains("Антивозрастной") || profile.Goal.Contains("Питание") ||
+				 profile.Goal.Contains("Сияние") || profile.Goal.Contains("Матирование") ||
+				 profile.Goal.Contains("Сужение пор") || profile.Goal.Contains("Лифтинг") ||
+				 profile.Goal.Contains("Осветление") || profile.Goal.Contains("Восстановление") ||
+				 profile.Goal.Contains("Снятие стресса"));
 
 			foreach (var product in allProducts)
 			{
@@ -70,7 +75,7 @@ namespace LuxDustApp.Services
 				CheckProfessionalCare(profile, product, res, reasons, warnings);
 				CheckTexture(profile, product, res, reasons, warnings);
 				CheckMultiStep(profile, product, res, reasons, warnings);
-				CheckCategory(profile, product, res, reasons, warnings);
+				CheckCategory(profile, product, res, reasons, warnings, userWantsFaceCare);
 				CheckBonuses(product, res, reasons);
 
 				res.Reasons = reasons.Any() ? " ✓ " + string.Join("; ", reasons) + "." : "Нет явных совпадений.";
@@ -80,7 +85,15 @@ namespace LuxDustApp.Services
 				result[product] = res;
 			}
 
-			return result.OrderByDescending(kv => kv.Value.Score).Take(10).ToDictionary(kv => kv.Key, kv => kv.Value);
+			var sorted = result.OrderByDescending(kv => kv.Value.Score).ToList();
+
+			bundle.Top = sorted.Take(10).Select(kv => kv.Key).ToList();
+			bundle.TopReasons = sorted.Take(10).ToDictionary(kv => kv.Key, kv => kv.Value);
+
+			bundle.Middle = sorted.Skip(10).Take(50).Select(kv => kv.Key).ToList();
+			bundle.MiddleReasons = sorted.Skip(10).Take(50).ToDictionary(kv => kv.Key, kv => kv.Value);
+
+			return bundle;
 		}
 
 		private void CheckSkinType(Profile profile, Product product, RecommendationResult res, List<string> reasons, List<string> warnings)
@@ -176,9 +189,9 @@ namespace LuxDustApp.Services
 			{
 				if (product.Rating >= 4.5)
 				{
-					res.Score += 15;
+					res.Score += 20;
 					reasons.Add("бюджет без ограничений");
-					if (product.Rating >= 4.7) { res.Score += 10; reasons.Add("высокий рейтинг"); }
+					if (product.Rating >= 4.7) { res.Score += 5; reasons.Add("высокий рейтинг"); }
 				}
 				else
 				{
@@ -197,17 +210,12 @@ namespace LuxDustApp.Services
 			{
 				if (problem == product.Problem)
 				{
+					res.Score += 30;
+					reasons.Add($"решает «{problem}»");
 					if (userProblems.Count == 1)
 					{
-						res.Score += 30;
-						reasons.Add($"решает «{problem}»");
-						res.Score += 20;
+						res.Score += 10;
 						reasons.Add("решает вашу главную проблему");
-					}
-					else
-					{
-						res.Score += 20;
-						reasons.Add($"решает «{problem}»");
 					}
 				}
 				else if (ProblemRelations.Relations.ContainsKey(problem) && ProblemRelations.Relations[problem].Contains(product.Problem))
@@ -235,20 +243,30 @@ namespace LuxDustApp.Services
 
 			var userAllergies = profile.Allergies.Split(',', StringSplitOptions.RemoveEmptyEntries).Select(a => a.Trim()).ToList();
 
+			var allergenMap = new Dictionary<string, Func<Product, bool>>
+			{
+				{ "Парабены", p => p.HasParabens },
+				{ "Отдушки (ароматизаторы)", p => p.HasFragrance },
+				{ "Спирт (алкоголь)", p => p.HasAlcohol },
+				{ "Силиконы", p => p.HasSilicones },
+				{ "Сульфаты (SLS/SLES)", p => p.HasSulfates },
+				{ "Глютен", p => p.HasGluten },
+				{ "Орехи и их производные", p => p.HasNuts },
+				{ "Эфирные масла", p => p.HasEssentialOils }
+			};
+
 			foreach (var allergy in userAllergies)
 			{
-				bool conflict = false;
-				if (allergy == "Парабены" && product.HasParabens) conflict = true;
-				if (allergy == "Отдушки (ароматизаторы)" && product.HasFragrance) conflict = true;
-				if (allergy == "Спирт (алкоголь)" && product.HasAlcohol) conflict = true;
-				if (allergy == "Силиконы" && product.HasSilicones) conflict = true;
-				if (allergy == "Сульфаты (SLS/SLES)" && product.HasSulfates) conflict = true;
-				if (allergy == "Глютен" && product.HasGluten) conflict = true;
-				if (allergy == "Орехи и их производные" && product.HasNuts) conflict = true;
-				if (allergy == "Эфирные масла" && product.HasEssentialOils) conflict = true;
-
-				if (conflict) { res.Score -= 50; warnings.Add($"содержит «{allergy}» — аллергия!"); }
-				else { res.Score += 10; reasons.Add($"без «{allergy}»"); }
+				if (allergenMap.ContainsKey(allergy) && allergenMap[allergy](product))
+				{
+					res.Score -= 50;
+					warnings.Add($"содержит «{allergy}» — аллергия!");
+				}
+				else
+				{
+					res.Score += 10;
+					reasons.Add($"без «{allergy}»");
+				}
 			}
 		}
 
@@ -285,20 +303,29 @@ namespace LuxDustApp.Services
 			var pName = product.Name.ToLower();
 			var pDesc = (product.Description ?? "").ToLower();
 
+			var goalRules = new Dictionary<string, Func<bool>>
+			{
+				{ "Увлажнение", () => pName.Contains("увлажн") || pDesc.Contains("увлажн") || product.SubCategory == "Увлажнение" },
+				{ "Питание", () => pName.Contains("питат") || pDesc.Contains("питат") },
+				{ "Антивозрастной", () => product.SubCategory == "Антивозрастной уход" },
+				{ "Очищение", () => product.SubCategory == "Очищение (гели, пенки)" },
+				{ "Защита", () => pName.Contains("spf") || product.SubCategory == "Защита от солнца (SPF)" },
+				{ "Восстановление", () => product.SubCategory == "Сыворотки и эссенции" },
+				{ "Матирование", () => product.Problem == "Расширенные поры" },
+				{ "Лифтинг (подтяжка)", () => product.Problem == "Морщины" },
+				{ "Осветление пигментации", () => product.Problem == "Пигментация" },
+				{ "Сужение пор", () => product.Problem == "Расширенные поры" },
+				{ "Сияние / здоровый вид", () => product.Problem == "Тусклый цвет" },
+				{ "Снятие стресса и успокоение", () => product.Problem == "Гиперчувствительность" }
+			};
+
 			foreach (var goal in userGoals)
 			{
-				if (goal == "Увлажнение" && (pName.Contains("увлажн") || pDesc.Contains("увлажн") || product.SubCategory == "Увлажнение")) { res.Score += 20; reasons.Add("увлажнение"); }
-				if (goal == "Питание" && (pName.Contains("питат") || pDesc.Contains("питат"))) { res.Score += 20; reasons.Add("питание"); }
-				if (goal == "Антивозрастной" && product.SubCategory == "Антивозрастной уход") { res.Score += 25; reasons.Add("антивозрастной уход"); }
-				if (goal == "Очищение" && product.SubCategory == "Очищение (гели, пенки)") { res.Score += 20; reasons.Add("очищение"); }
-				if (goal == "Защита" && (pName.Contains("spf") || product.SubCategory == "Защита от солнца (SPF)")) { res.Score += 20; reasons.Add("SPF-защита"); }
-				if (goal == "Восстановление" && product.SubCategory == "Сыворотки и эссенции") { res.Score += 20; reasons.Add("восстановление"); }
-				if (goal == "Матирование" && product.Problem == "Расширенные поры") { res.Score += 20; reasons.Add("матирование"); }
-				if (goal == "Лифтинг (подтяжка)" && product.Problem == "Морщины") { res.Score += 20; reasons.Add("лифтинг"); }
-				if (goal == "Осветление пигментации" && product.Problem == "Пигментация") { res.Score += 20; reasons.Add("осветление"); }
-				if (goal == "Сужение пор" && product.Problem == "Расширенные поры") { res.Score += 20; reasons.Add("сужение пор"); }
-				if (goal == "Сияние / здоровый вид" && product.Problem == "Тусклый цвет") { res.Score += 20; reasons.Add("сияние"); }
-				if (goal == "Снятие стресса и успокоение" && product.Problem == "Гиперчувствительность") { res.Score += 20; reasons.Add("успокоение"); }
+				if (goalRules.ContainsKey(goal) && goalRules[goal]())
+				{
+					res.Score += 20;
+					reasons.Add(goal.ToLower());
+				}
 			}
 		}
 
@@ -314,18 +341,12 @@ namespace LuxDustApp.Services
 				if (product.Problem == "Тусклый цвет") { res.Score += 10; reasons.Add("при среднем стрессе"); }
 				if (product.SubCategory == "Увлажнение") { res.Score += 5; reasons.Add("увлажнение при стрессе"); }
 			}
-			else if (profile.StressLevel == "Низкий")
-			{
-				if (product.SubCategory == "Маски для лица") { res.Score += 5; reasons.Add("поддерживающий уход"); }
-			}
 		}
 
 		private void CheckDiet(Profile profile, Product product, RecommendationResult res, List<string> reasons, List<string> warnings)
 		{
 			if (profile.DietType == "Часто ем сладкое или жирное" && product.Problem == "Акне")
 			{ res.Score += 15; reasons.Add("при высыпаниях из-за питания"); }
-			else if (profile.DietType == "Сбалансированное питание" && product.Category == "Здоровье и БАДы")
-			{ res.Score -= 5; warnings.Add("при сбалансированном питании БАДы не обязательны"); }
 			else if (profile.DietType == "Вегетарианство" &&
 				(product.Category == "Натуральная косметика" ||
 				 (product.Description ?? "").ToLower().Contains("веган")))
@@ -384,13 +405,9 @@ namespace LuxDustApp.Services
 			}
 		}
 
-		private void CheckCategory(Profile profile, Product product, RecommendationResult res, List<string> reasons, List<string> warnings)
+		private void CheckCategory(Profile profile, Product product, RecommendationResult res, List<string> reasons, List<string> warnings, bool userWantsFaceCare)
 		{
 			if (string.IsNullOrEmpty(product.Category)) return;
-
-			bool userWantsFaceCare = !string.IsNullOrEmpty(profile.Goal) &&
-				(profile.Goal.Contains("Увлажнение") || profile.Goal.Contains("Очищение") ||
-				 profile.Goal.Contains("Антивозрастной") || profile.Goal.Contains("Питание"));
 
 			var extraSubCategories = new List<string> { "Маски для лица", "Уход за глазами", "Скрабы и пилинги" };
 

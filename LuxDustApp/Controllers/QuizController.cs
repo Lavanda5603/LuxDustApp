@@ -36,9 +36,9 @@ namespace LuxDustApp.Controllers
 			if (userIdClaim == null) return RedirectToAction("Login", "Account");
 			var userId = int.Parse(userIdClaim);
 
-			var productsWithReasons = _recommendationService.GetRecommendationsWithReasons(profile);
+			var bundle = _recommendationService.GetRecommendationsWithReasons(profile);
 
-			foreach (var kvp in productsWithReasons)
+			foreach (var kvp in bundle.TopReasons)
 			{
 				_context.Recommendations.Add(new Recommendation
 				{
@@ -51,22 +51,10 @@ namespace LuxDustApp.Controllers
 			}
 			_context.SaveChanges();
 
-
 			var existingProfile = _context.Profiles.FirstOrDefault(p => p.UserId == userId);
 			if (existingProfile == null)
 			{
 				profile.UserId = userId;
-				profile.FavoriteBrands = profile.FavoriteBrands ?? "";
-				profile.Problems = profile.Problems ?? "";
-				profile.Allergies = profile.Allergies ?? "";
-				profile.Season = profile.Season ?? "";
-				profile.Goal = profile.Goal ?? "";
-				profile.SkinType = profile.SkinType ?? "";
-				profile.StressLevel = profile.StressLevel ?? "";
-				profile.DietType = profile.DietType ?? "";
-				profile.TexturePreference = profile.TexturePreference ?? "";
-				profile.ProblemsOther = profile.ProblemsOther ?? "";
-				profile.AllergiesOther = profile.AllergiesOther ?? "";
 				profile.UpdatedAt = System.DateTime.UtcNow;
 				_context.Profiles.Add(profile);
 			}
@@ -91,7 +79,7 @@ namespace LuxDustApp.Controllers
 			}
 			_context.SaveChanges();
 
-			return View(productsWithReasons);
+			return View(bundle);
 		}
 
 		public IActionResult AddToFavorites(int productId)
