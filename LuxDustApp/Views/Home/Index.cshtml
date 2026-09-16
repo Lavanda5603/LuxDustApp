@@ -2,10 +2,322 @@
     ViewData["Title"] = "Главная — LuxDust";
 }
 
-<div class="text-center">
-    <h1>Добро пожаловать в LuxDust!</h1>
-    <p>Твой идеальный уход начинается здесь</p>
-    <hr />
-    <p>Ответьте на несколько вопросов, и система подберёт идеальный уход.</p>
-    <a href="/Quiz/Step1" class="btn btn-primary">Начать подбор</a>
-</div>
+@section Styles {
+    <link rel="stylesheet" href="~/css/home.css" asp-append-version="true" />
+}
+
+@section Scripts {
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+    });
+
+    function animateNumbers() {
+        document.querySelectorAll('.stat-number').forEach(el => {
+            const target = parseInt(el.getAttribute('data-target'));
+            let current = 0;
+            const increment = target / 60;
+            const timer = setInterval(() => {
+                current += increment;
+                if (current >= target) {
+                    el.textContent = target + (el.getAttribute('data-suffix') || '');
+                    clearInterval(timer);
+                } else {
+                    el.textContent = Math.floor(current) + (el.getAttribute('data-suffix') || '');
+                }
+            }, 20);
+        });
+    }
+
+    const statsObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                animateNumbers();
+                statsObserver.disconnect();
+            }
+        });
+    }, { threshold: 0.5 });
+
+    document.addEventListener('DOMContentLoaded', function () {
+        const statsBlock = document.querySelector('.stats-block');
+        if (statsBlock) statsObserver.observe(statsBlock);
+    });
+</script>
+}
+
+<section class="hero-section">
+    <div class="hero-bg-glow"></div>
+    <div class="container">
+        <div class="row align-items-center min-vh-100">
+            <div class="col-lg-6 hero-text fade-in">
+                <p class="hero-tagline">✦ Умный подбор косметики</p>
+                <h1 class="hero-title">
+                    Твоя кожа.<br>
+                    <span class="gold-text">Твои правила.</span>
+                </h1>
+                <p class="hero-subtitle">
+                    15 вопросов — и алгоритм подберёт уход, который подойдёт именно тебе.
+                    Без консультантов, без наугад, без лишних трат.
+                </p>
+                <div class="hero-buttons">
+                    <a href="/Quiz/Step1" class="btn-lux-primary">Начать подбор</a>
+                    <a href="/Catalog" class="btn-lux-outline">Смотреть каталог</a>
+                </div>
+            </div>
+            <div class="col-lg-6 hero-visual fade-in">
+                <div class="drop-container">
+                    <div class="drop"></div>
+                    <div class="drop-glow"></div>
+                </div>
+            </div>
+        </div>
+        <div class="marquee">
+            <div class="marquee-content">
+                <span>увлажнение</span><span>•</span>
+                <span>антивозрастной уход</span><span>•</span>
+                <span>чувствительная кожа</span><span>•</span>
+                <span>акне</span><span>•</span>
+                <span>купероз</span><span>•</span>
+                <span>SPF</span><span>•</span>
+                <span>сыворотки</span><span>•</span>
+                <span>тоники</span><span>•</span>
+                <span>маски</span><span>•</span>
+                <span>уход за глазами</span><span>•</span>
+                <span>увлажнение</span><span>•</span>
+                <span>антивозрастной уход</span><span>•</span>
+                <span>чувствительная кожа</span><span>•</span>
+                <span>акне</span><span>•</span>
+                <span>купероз</span><span>•</span>
+                <span>SPF</span><span>•</span>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="how-section">
+    <div class="container">
+        <div class="section-header fade-in">
+            <p class="section-tagline">Как это работает</p>
+            <h2 class="section-title">Три шага до идеального ухода</h2>
+        </div>
+        <div class="row g-4">
+            <div class="col-md-4 fade-in">
+                <div class="glass-card">
+                    <div class="card-number">01</div>
+                    <div class="card-icon">
+                        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#d4af37" stroke-width="1.5">
+                            <path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                        </svg>
+                    </div>
+                    <h3>Заполни анкету</h3>
+                    <p>15 вопросов о коже, бюджете и образе жизни. Займёт 3–5 минут.</p>
+                </div>
+            </div>
+            <div class="col-md-4 fade-in">
+                <div class="glass-card">
+                    <div class="card-number">02</div>
+                    <div class="card-icon">
+                        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#d4af37" stroke-width="1.5">
+                            <path d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+                        </svg>
+                    </div>
+                    <h3>Получи подборку</h3>
+                    <p>Алгоритм сравнит 500+ продуктов по 16 факторам и покажет ТОП-10.</p>
+                </div>
+            </div>
+            <div class="col-md-4 fade-in">
+                <div class="glass-card">
+                    <div class="card-number">03</div>
+                    <div class="card-icon">
+                        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#d4af37" stroke-width="1.5">
+                            <path d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
+                        </svg>
+                    </div>
+                    <h3>Закажи или сохрани</h3>
+                    <p>Добавь в корзину, избранное или сохрани подборку в личном кабинете.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="stats-section stats-block">
+    <div class="container">
+        <div class="row text-center g-4">
+            <div class="col-6 col-md-3 fade-in">
+                <div class="stat-number gold-text" data-target="15" data-suffix="">0</div>
+                <div class="stat-label">параметров в анкете</div>
+            </div>
+            <div class="col-6 col-md-3 fade-in">
+                <div class="stat-number gold-text" data-target="500" data-suffix="+">0</div>
+                <div class="stat-label">продуктов в базе</div>
+            </div>
+            <div class="col-6 col-md-3 fade-in">
+                <div class="stat-number gold-text" data-target="16" data-suffix="">0</div>
+                <div class="stat-label">факторов в алгоритме</div>
+            </div>
+            <div class="col-6 col-md-3 fade-in">
+                <div class="stat-number gold-text" data-target="30" data-suffix="%">0</div>
+                <div class="stat-label">экономия бюджета</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="promo-section">
+    <div class="container">
+        <div class="section-header fade-in">
+            <p class="section-tagline">Выгодно и свежо</p>
+            <h2 class="section-title">Акции и новинки</h2>
+        </div>
+        <div class="row g-4">
+            <div class="col-md-6 fade-in">
+                <div class="promo-card promo-sale">
+                    <div class="promo-badge">АКЦИЯ</div>
+                    <h3>Скидки до 40%</h3>
+                    <p>На хиты ухода за лицом. Успей до конца месяца.</p>
+                    <a href="/Catalog?filter=sale" class="btn-lux-outline btn-sm">Смотреть акции</a>
+                </div>
+            </div>
+            <div class="col-md-6 fade-in">
+                <div class="promo-card promo-new">
+                    <div class="promo-badge">НОВИНКА</div>
+                    <h3>Свежие поступления</h3>
+                    <p>Новые сыворотки, кремы и тоники уже в каталоге.</p>
+                    <a href="/Catalog?filter=new" class="btn-lux-outline btn-sm">Смотреть новинки</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="trends-section">
+    <div class="container">
+        <div class="section-header fade-in">
+            <p class="section-tagline">Что выбирают</p>
+            <h2 class="section-title">Тренды ухода</h2>
+        </div>
+        <div class="row g-4">
+            <div class="col-md-4 fade-in">
+                <div class="trend-card">
+                    <div class="trend-icon"></div>
+                    <h4>Пробиотики</h4>
+                    <p>Восстанавливают микробиом кожи</p>
+                </div>
+            </div>
+            <div class="col-md-4 fade-in">
+                <div class="trend-card">
+                    <div class="trend-icon"></div>
+                    <h4>Центелла азиатская</h4>
+                    <p>Успокаивает и заживляет</p>
+                </div>
+            </div>
+            <div class="col-md-4 fade-in">
+                <div class="trend-card">
+                    <div class="trend-icon"></div>
+                    <h4>Гиалуроновая кислота</h4>
+                    <p>Глубокое увлажнение</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="features-section">
+    <div class="container">
+        <div class="section-header fade-in">
+            <p class="section-tagline">Почему LuxDust</p>
+            <h2 class="section-title">Уникальные особенности</h2>
+        </div>
+        <div class="row g-4">
+            <div class="col-md-3 col-6 fade-in">
+                <div class="feature-item">
+                    <div class="feature-icon"></div>
+                    <h5>Точный подбор</h5>
+                    <p>16 факторов, а не 2–3 фильтра</p>
+                </div>
+            </div>
+            <div class="col-md-3 col-6 fade-in">
+                <div class="feature-item">
+                    <div class="feature-icon"></div>
+                    <h5>Прозрачность</h5>
+                    <p>Видно, почему продукт подходит</p>
+                </div>
+            </div>
+            <div class="col-md-3 col-6 fade-in">
+                <div class="feature-item">
+                    <div class="feature-icon"></div>
+                    <h5>PWA</h5>
+                    <p>Устанавливается на телефон</p>
+                </div>
+            </div>
+            <div class="col-md-3 col-6 fade-in">
+                <div class="feature-item">
+                    <div class="feature-icon"></div>
+                    <h5>История</h5>
+                    <p>Все подборки сохраняются</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="preview-section">
+    <div class="container">
+        <div class="section-header fade-in">
+            <p class="section-tagline">Пример подборки</p>
+            <h2 class="section-title">ТОП-10 за 2 секунды</h2>
+        </div>
+        <div class="row g-4">
+            <div class="col-md-4 fade-in">
+                <div class="product-preview">
+                    <div class="product-score">125 баллов</div>
+                    <h4>Сыворотка с морским коллагеном</h4>
+                    <p class="product-brand">La Roche-Posay</p>
+                    <p class="product-price">3000 ₽</p>
+                    <p class="product-reason">✓ обезвоженная кожа требует увлажнения</p>
+                </div>
+            </div>
+            <div class="col-md-4 fade-in">
+                <div class="product-preview">
+                    <div class="product-score">112 баллов</div>
+                    <h4>Сыворотка с центеллой</h4>
+                    <p class="product-brand">Avene</p>
+                    <p class="product-price">2300 ₽</p>
+                    <p class="product-reason">✓ связано с «Купероз»</p>
+                </div>
+            </div>
+            <div class="col-md-4 fade-in">
+                <div class="product-preview">
+                    <div class="product-score">107 баллов</div>
+                    <h4>Крем с центеллой</h4>
+                    <p class="product-brand">La Roche-Posay</p>
+                    <p class="product-price">2300 ₽</p>
+                    <p class="product-reason">✓ решает вашу главную проблему</p>
+                </div>
+            </div>
+        </div>
+        <div class="text-center mt-4 fade-in">
+            <p class="preview-note">Так выглядит подборка. Алгоритм объясняет, <strong>почему</strong> этот продукт тебе подходит.</p>
+        </div>
+    </div>
+</section>
+
+<section class="cta-section">
+    <div class="container text-center fade-in">
+        <h2 class="cta-title">Перестань угадывать.<br><span class="gold-text">Начни подбирать.</span></h2>
+        <p class="cta-subtitle">3–5 минут — и ты знаешь, что действительно подходит твоей коже.</p>
+        <div class="cta-buttons">
+            <a href="/Quiz/Step1" class="btn-lux-primary">Начать подбор</a>
+            <a href="/Account/Login" class="btn-lux-outline">Уже есть аккаунт? Войти</a>
+        </div>
+    </div>
+</section>
