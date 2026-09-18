@@ -8,7 +8,7 @@
     --gold-light: #e8c86a;
     --rose: #e8a8a0;
     --pearl: #f8f5f2;
-    --text-muted: #b8a8b8;
+    --text-muted: #f0eaf5;
     --border-subtle: rgba(255, 255, 255, 0.08);
     --border-gold: rgba(212, 175, 55, 0.3);
 }
@@ -47,7 +47,7 @@ a {
     }
 
 p {
-    color: var(--text-muted);
+    color: #f0eaf5;
     line-height: 1.6;
 }
 

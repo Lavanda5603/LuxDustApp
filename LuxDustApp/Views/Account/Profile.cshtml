@@ -57,7 +57,10 @@
                     @foreach (var rec in (List<LuxDustApp.Models.Recommendation>)ViewBag.Recommendations)
                     {
                         <li>
-                            <strong>@rec.Product.Name</strong> — рейтинг: @rec.Score
+                            <a href="/Catalog/Details/@rec.ProductId" class="profile-link">
+                                <strong>@rec.Product.Name</strong>
+                            </a>
+                            — рейтинг: @rec.Score
                             <br />
                             <small>Дата: @rec.RecommendedAt.ToString("dd.MM.yyyy HH:mm")</small>
                         </li>
@@ -82,7 +85,10 @@
                     @foreach (var fav in (List<LuxDustApp.Models.Favorite>)ViewBag.Favorites)
                     {
                         <li>
-                            <strong>@fav.Product.Name</strong> — @fav.Product.Price руб.
+                            <a href="/Catalog/Details/@fav.ProductId" class="profile-link">
+                                <strong>@fav.Product.Name</strong>
+                            </a>
+                            — @fav.Product.Price руб.
                         </li>
                     }
                 </ul>
@@ -115,6 +121,20 @@
                                 Доставка: @order.DeliveryDate.ToString("dd.MM.yyyy") @order.DeliveryTime |
                                 Статус: <strong>@order.Status</strong>
                             </small>
+                            @if (order.Items != null && order.Items.Any())
+                            {
+                            <ul class="order-items">
+                                @foreach (var item in order.Items)
+                                {
+                                <li>
+                                    <a href="/Catalog/Details/@item.ProductId" class="profile-link">
+                                        @item.Product?.Name
+                                    </a>
+                                    × @item.Quantity
+                                </li>
+                                }
+                            </ul>
+                            }
                         </li>
                         }
                 </ul>

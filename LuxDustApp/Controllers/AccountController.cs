@@ -35,7 +35,8 @@ namespace LuxDustApp.Controllers
 				.Where(f => f.UserId == userId).Include(f => f.Product).ToList();
 
 			var orders = _context.Orders
-			.Where(o => o.UserId == userId).OrderByDescending(o => o.CreatedAt).ToList();
+				.Where(o => o.UserId == userId).Include(o => o.Items).ThenInclude(oi => oi.Product)
+				.OrderByDescending(o => o.CreatedAt).ToList();
 
 			foreach (var order in orders)
 			{
