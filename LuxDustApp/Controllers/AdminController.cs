@@ -4,6 +4,7 @@ using LuxDustApp.Data;
 using LuxDustApp.Models;
 using System.Linq;
 using System.Security.Claims;
+using System.Collections.Generic;
 
 namespace LuxDustApp.Controllers
 {
@@ -42,20 +43,8 @@ namespace LuxDustApp.Controllers
 		{
 			if (!IsAdmin()) return RedirectToAction("Login", "Account");
 
-			var model = new AdminProductViewModel
-			{
-				Product = new Product(),
-				Brands = _context.Products.Where(p => p.Brand != null && p.Brand != "").Select(p => p.Brand).Distinct().OrderBy(b => b).ToList(),
-				Categories = _context.Products.Where(p => p.Category != null && p.Category != "").Select(p => p.Category).Distinct().OrderBy(c => c).ToList(),
-				SubcategoriesByCategory = GetSubcategoriesByCategory(),
-				SkinTypes = new List<string> { "Сухая", "Жирная", "Комбинированная", "Нормальная", "Чувствительная", "Обезвоженная", "Склонная к куперозу" },
-				Problems = new List<string> { "Акне", "Пигментация", "Морщины", "Купероз", "Тусклый цвет", "Гиперчувствительность", "Чёрные точки", "Сухость", "Расширенные поры", "Отечность" },
-				Seasons = new List<string> { "Лето", "Зима", "Демисезон", "Круглый год" }
-			};
-
-			return View(model);
+			return View(BuildViewModel(new Product()));
 		}
-
 
 		[HttpPost]
 		public IActionResult Create(Product product)
@@ -68,18 +57,7 @@ namespace LuxDustApp.Controllers
 				product.Price <= 0)
 			{
 				ModelState.AddModelError("", "Заполните все обязательные поля: Название, Бренд, Категория, Цена");
-
-				var model = new AdminProductViewModel
-				{
-					Product = product,
-					Brands = _context.Products.Where(p => p.Brand != null && p.Brand != "").Select(p => p.Brand).Distinct().OrderBy(b => b).ToList(),
-					Categories = _context.Products.Where(p => p.Category != null && p.Category != "").Select(p => p.Category).Distinct().OrderBy(c => c).ToList(),
-					SubcategoriesByCategory = GetSubcategoriesByCategory(),
-					SkinTypes = new List<string> { "Сухая", "Жирная", "Комбинированная", "Нормальная", "Чувствительная", "Обезвоженная", "Склонная к куперозу" },
-					Problems = new List<string> { "Акне", "Пигментация", "Морщины", "Купероз", "Тусклый цвет", "Гиперчувствительность", "Чёрные точки", "Сухость", "Расширенные поры", "Отечность" },
-					Seasons = new List<string> { "Лето", "Зима", "Демисезон", "Круглый год" }
-				};
-				return View(model);
+				return View(BuildViewModel(product));
 			}
 
 			if (string.IsNullOrEmpty(product.SkinType)) product.SkinType = "Нормальная";
@@ -98,6 +76,17 @@ namespace LuxDustApp.Controllers
 			return RedirectToAction("Index");
 		}
 
+		[HttpGet]
+		public IActionResult Edit(int id)
+		{
+			if (!IsAdmin()) return RedirectToAction("Login", "Account");
+
+			var product = _context.Products.FirstOrDefault(p => p.Id == id);
+			if (product == null) return NotFound();
+
+			return View(BuildViewModel(product));
+		}
+
 		[HttpPost]
 		public IActionResult Edit(Product product)
 		{
@@ -109,18 +98,7 @@ namespace LuxDustApp.Controllers
 				product.Price <= 0)
 			{
 				ModelState.AddModelError("", "Заполните все обязательные поля: Название, Бренд, Категория, Цена");
-
-				var model = new AdminProductViewModel
-				{
-					Product = product,
-					Brands = _context.Products.Where(p => p.Brand != null && p.Brand != "").Select(p => p.Brand).Distinct().OrderBy(b => b).ToList(),
-					Categories = _context.Products.Where(p => p.Category != null && p.Category != "").Select(p => p.Category).Distinct().OrderBy(c => c).ToList(),
-					SubcategoriesByCategory = GetSubcategoriesByCategory(),
-					SkinTypes = new List<string> { "Сухая", "Жирная", "Комбинированная", "Нормальная", "Чувствительная", "Обезвоженная", "Склонная к куперозу" },
-					Problems = new List<string> { "Акне", "Пигментация", "Морщины", "Купероз", "Тусклый цвет", "Гиперчувствительность", "Чёрные точки", "Сухость", "Расширенные поры", "Отечность" },
-					Seasons = new List<string> { "Лето", "Зима", "Демисезон", "Круглый год" }
-				};
-				return View(model);
+				return View(BuildViewModel(product));
 			}
 
 			var existing = _context.Products.FirstOrDefault(p => p.Id == product.Id);
@@ -155,6 +133,20 @@ namespace LuxDustApp.Controllers
 			}
 
 			return RedirectToAction("Index");
+		}
+
+		private AdminProductViewModel BuildViewModel(Product product)
+		{
+			return new AdminProductViewModel
+			{
+				Product = product,
+				Brands = _context.Products.Where(p => p.Brand != null && p.Brand != "").Select(p => p.Brand).Distinct().OrderBy(b => b).ToList(),
+				Categories = _context.Products.Where(p => p.Category != null && p.Category != "").Select(p => p.Category).Distinct().OrderBy(c => c).ToList(),
+				SubcategoriesByCategory = GetSubcategoriesByCategory(),
+				SkinTypes = new List<string> { "Сухая", "Жирная", "Комбинированная", "Нормальная", "Чувствительная", "Обезвоженная", "Склонная к куперозу" },
+				Problems = new List<string> { "Акне", "Пигментация", "Морщины", "Купероз", "Тусклый цвет", "Гиперчувствительность", "Чёрные точки", "Сухость", "Расширенные поры", "Отечность" },
+				Seasons = new List<string> { "Лето", "Зима", "Демисезон", "Круглый год" }
+			};
 		}
 
 		private Dictionary<string, List<string>> GetSubcategoriesByCategory()

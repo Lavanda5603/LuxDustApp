@@ -11,17 +11,20 @@
                     <h5 class="card-title">@product.Name</h5>
                     <p class="card-text">@product.Brand</p>
                     <p class="card-text"><strong>@product.Price руб.</strong></p>
-                    @if (product.IsNew)
-                    {
-                    <span class="badge bg-success">Новинка</span>
-                    }
-                    @if (product.IsOnSale)
-                    {
-                    <span class="badge bg-danger">Акция</span>
-                    }
-                    <br /><br />
-                    <a href="/Catalog/Details/@product.Id" class="btn btn-primary btn-sm">Подробнее</a>
-                    <button type="button" class="btn btn-outline-secondary btn-sm" onclick="addToCart(@product.Id, this)">В корзину</button>
+                    <div class="badges-row">
+                        @if (product.IsNew)
+                        {
+                        <span class="badge-lux badge-new">Новинка</span>
+                        }
+                        @if (product.IsOnSale)
+                        {
+                        <span class="badge-lux badge-sale">Акция</span>
+                        }
+                    </div>
+                    <div class="catalog-actions">
+                        <a href="/Catalog/Details/@product.Id" class="btn btn-primary btn-sm">Подробнее</a>
+                        <button type="button" class="btn btn-outline-secondary btn-sm" onclick="addToCart(@product.Id, this)">В корзину</button>
+                    </div>
                 </div>
             </div>
         </div>

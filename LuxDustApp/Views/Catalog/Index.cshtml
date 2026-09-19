@@ -15,10 +15,10 @@
                         var subs = ((Dictionary<string, List<string>>)ViewBag.SubcategoriesByCategory)[cat];
                     <li class="list-group-item p-0">
                         <div class="d-flex justify-content-between align-items-center p-2">
-                            <a href="/Catalog?category=@cat" class="text-decoration-none text-dark flex-grow-1">@cat</a>
+                            <a href="/Catalog?category=@cat" class="text-decoration-none flex-grow-1">@cat</a>
                             @if (subs.Any())
                             {
-                                <span class="text-muted" style="cursor:pointer;" onclick="toggleSubs('@cat.Replace(" ", "_")')">▼</span>
+                                <span onclick="toggleSubs('@cat.Replace(" ", "_")')">▼</span>
                             }
                         </div>
                         @if (subs.Any())
@@ -27,7 +27,7 @@
                                 @foreach (var sub in subs)
                                 {
                                     <li>
-                                        <a href="/Catalog?category=@cat&subcategory=@sub" class="text-decoration-none text-secondary small">— @sub</a>
+                                        <a href="/Catalog?category=@cat&subcategory=@sub">— @sub</a>
                                     </li>
                                 }
                             </ul>
@@ -67,7 +67,7 @@
                     </div>
                 </div>
 
-                <p class="text-muted">Найдено товаров: @ViewBag.TotalItems</p>
+                <p class="catalog-count">Найдено товаров: @ViewBag.TotalItems</p>
 
                 <div id="productsContainer">
                     @await Html.PartialAsync("_ProductCards", Model)
@@ -86,26 +86,27 @@
                         {
                         startPage = Math.Max(1, endPage - 4);
                         }
+                        string BuildUrl(int p) => $"/Catalog?category={ViewBag.CurrentCategory}&subcategory={ViewBag.CurrentSubcategory}&search={ViewBag.CurrentSearch}&minPrice={ViewBag.MinPrice}&maxPrice={ViewBag.MaxPrice}&page={p}";
                         }
 
                         @if (currentPage > 1)
                         {
                         <li class="page-item">
-                            <a class="page-link" href="/Catalog?category=@ViewBag.CurrentCategory&subcategory=@ViewBag.CurrentSubcategory&search=@ViewBag.CurrentSearch&minPrice=@ViewBag.MinPrice&maxPrice=@ViewBag.MaxPrice&page=@(currentPage - 1)">← Назад</a>
+                            <a class="page-link" href="@BuildUrl(Math.Max(1, currentPage - 5))">← Назад</a>
                         </li>
                         }
 
                         @for (int i = startPage; i <= endPage; i++)
                         {
                         <li class="page-item @(i == currentPage ? " active" : "" )">
-                            <a class="page-link" href="/Catalog?category=@ViewBag.CurrentCategory&subcategory=@ViewBag.CurrentSubcategory&search=@ViewBag.CurrentSearch&minPrice=@ViewBag.MinPrice&maxPrice=@ViewBag.MaxPrice&page=@i">@i</a>
+                            <a class="page-link" href="@BuildUrl(i)">@i</a>
                         </li>
                         }
 
                         @if (currentPage < totalPages)
                         {
                         <li class="page-item">
-                            <a class="page-link" href="/Catalog?category=@ViewBag.CurrentCategory&subcategory=@ViewBag.CurrentSubcategory&search=@ViewBag.CurrentSearch&minPrice=@ViewBag.MinPrice&maxPrice=@ViewBag.MaxPrice&page=@(currentPage + 1)">Вперёд →</a>
+                            <a class="page-link" href="@BuildUrl(Math.Min(totalPages, currentPage + 5))">Вперёд →</a>
                         </li>
                         }
                     </ul>
@@ -115,6 +116,8 @@
         </div>
     </div>
 
+    @section Scripts {
     <script src="~/js/quiz.js"></script>
     <script src="~/js/catalog.js"></script>
     <script src="~/js/catalog-search.js"></script>
+    }

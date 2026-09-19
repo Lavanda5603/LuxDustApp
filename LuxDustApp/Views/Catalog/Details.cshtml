@@ -1,22 +1,88 @@
 ﻿@{
-    ViewData["Title"] = "Товар";
+    ViewData["Title"] = Model.Name + " — LuxDust";
 }
 @model LuxDustApp.Models.Product
 
 <div class="container">
-    <h2>@Model.Name</h2>
-    <p><strong>Бренд:</strong> @Model.Brand</p>
-    <p><strong>Категория:</strong> @Model.Category / @Model.SubCategory</p>
-    <p><strong>Цена:</strong> @Model.Price руб.</p>
-    <p><strong>Описание:</strong> @Model.Description</p>
-    <p><strong>Тип кожи:</strong> @Model.SkinType</p>
-    <p><strong>Проблема:</strong> @Model.Problem</p>
-    <p><strong>Сезон:</strong> @Model.Season</p>
-    <p><strong>Рейтинг:</strong> @Model.Rating</p>
+    <div class="product-details">
+        <div class="row">
+            <div class="col-lg-8">
+                <p class="product-brand-large">@Model.Brand</p>
+                <h2>@Model.Name</h2>
+                <div class="product-price-large">@Model.Price ₽</div>
 
-    <button type="button" class="btn btn-primary" onclick="addToCart(@Model.Id, this)">В корзину</button>
-    <a href="/Quiz/AddToFavorites?productId=@Model.Id" class="btn btn-outline-danger">В избранное</a>
-    <a href="/Catalog" class="btn btn-secondary">Назад в каталог</a>
+                <p class="product-description">@Model.Description</p>
+
+                <div class="product-info-grid">
+                    @if (!string.IsNullOrEmpty(Model.Category))
+                    {
+                    <div class="product-info-item">
+                        <span class="label">Категория</span>
+                        <span class="value">@Model.Category</span>
+                    </div>
+                    }
+                    @if (!string.IsNullOrEmpty(Model.SubCategory))
+                    {
+                    <div class="product-info-item">
+                        <span class="label">Подкатегория</span>
+                        <span class="value">@Model.SubCategory</span>
+                    </div>
+                    }
+                    @if (!string.IsNullOrEmpty(Model.SkinType))
+                    {
+                    <div class="product-info-item">
+                        <span class="label">Тип кожи</span>
+                        <span class="value">@Model.SkinType</span>
+                    </div>
+                    }
+                    @if (!string.IsNullOrEmpty(Model.Problem))
+                    {
+                    <div class="product-info-item">
+                        <span class="label">Решает проблему</span>
+                        <span class="value">@Model.Problem</span>
+                    </div>
+                    }
+                    @if (!string.IsNullOrEmpty(Model.Season))
+                    {
+                    <div class="product-info-item">
+                        <span class="label">Сезон</span>
+                        <span class="value">@Model.Season</span>
+                    </div>
+                    }
+                    @if (Model.Rating > 0)
+                    {
+                    <div class="product-info-item">
+                        <span class="label">Рейтинг</span>
+                        <span class="value value-gold">★ @Model.Rating</span>
+                    </div>
+                    }
+                </div>
+
+                <div class="product-actions">
+                    <button type="button" class="btn btn-primary" onclick="addToCart(@Model.Id, this)">В корзину</button>
+                    <button type="button" class="btn btn-outline-secondary" onclick="addToFavorites(@Model.Id, this)">В избранное</button>
+                    <a href="/Catalog" class="btn btn-secondary">Назад в каталог</a>
+                </div>
+            </div>
+
+            <div class="col-lg-4">
+                <div class="product-side-block">
+                    <div class="product-info-item product-info-highlight">
+                        <span class="label">Почему этот товар</span>
+                        <span class="value">
+                            Подобран по вашему типу кожи «@Model.SkinType», решает проблему «@Model.Problem» и подходит для сезона «@Model.Season».
+                        </span>
+                    </div>
+                    <div class="product-info-item product-info-visual">
+                        <div class="product-visual-mark">✦</div>
+                        <p>Здесь будет фотография товара</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
+@section Scripts {
 <script src="~/js/quiz.js"></script>
+}

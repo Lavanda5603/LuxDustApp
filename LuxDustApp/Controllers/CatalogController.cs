@@ -22,13 +22,10 @@ namespace LuxDustApp.Controllers
 
 			if (!string.IsNullOrEmpty(category))
 				products = products.Where(p => p.Category == category);
-
 			if (!string.IsNullOrEmpty(subcategory))
 				products = products.Where(p => p.SubCategory == subcategory);
-
 			if (!string.IsNullOrEmpty(search))
 				products = products.Where(p => p.Name.ToLower().Contains(search.ToLower()));
-
 			if (minPrice.HasValue)
 				products = products.Where(p => p.Price >= minPrice.Value);
 			if (maxPrice.HasValue)
@@ -41,19 +38,18 @@ namespace LuxDustApp.Controllers
 			if (page < 1) page = 1;
 			if (page > totalPages && totalPages > 0) page = totalPages;
 
-			var pagedProducts = products
-				.OrderBy(p => p.Id).Skip((page - 1) * pageSize).Take(pageSize).ToList();
+			var pagedProducts = products.OrderBy(p => p.Id).Skip((page - 1) * pageSize).Take(pageSize).ToList();
 
 			var categories = _context.Products
-				.Where(p => p.Category != null && p.Category != "").Select(p => p.Category).Distinct().OrderBy(c => c).ToList();
+				.Where(p => p.Category != null && p.Category != "")
+				.Select(p => p.Category).Distinct().OrderBy(c => c).ToList();
 
 			var subcategoriesByCategory = new Dictionary<string, List<string>>();
 			foreach (var cat in categories)
 			{
-				var subs = _context.Products
+				subcategoriesByCategory[cat] = _context.Products
 					.Where(p => p.Category == cat && p.SubCategory != null && p.SubCategory != "")
 					.Select(p => p.SubCategory).Distinct().OrderBy(s => s).ToList();
-				subcategoriesByCategory[cat] = subs;
 			}
 
 			ViewBag.Categories = categories;
@@ -84,21 +80,16 @@ namespace LuxDustApp.Controllers
 
 			if (!string.IsNullOrEmpty(category))
 				products = products.Where(p => p.Category == category);
-
 			if (!string.IsNullOrEmpty(subcategory))
 				products = products.Where(p => p.SubCategory == subcategory);
-
 			if (!string.IsNullOrEmpty(query))
 				products = products.Where(p => p.Name.ToLower().Contains(query.ToLower()));
-
 			if (minPrice.HasValue)
 				products = products.Where(p => p.Price >= minPrice.Value);
 			if (maxPrice.HasValue)
 				products = products.Where(p => p.Price <= maxPrice.Value);
 
-			var result = products.Take(12).ToList();
-
-			return PartialView("_ProductCards", result);
+			return PartialView("_ProductCards", products.Take(12).ToList());
 		}
 	}
 }

@@ -20,6 +20,17 @@ if (installBtn) {
 
 if ('serviceWorker' in navigator) {
     navigator.serviceWorker.register('/service-worker.js')
-        .then(reg => console.log('Service Worker зарегистрирован'))
-        .catch(err => console.log('Ошибка Service Worker:', err));
+        .catch(() => { });
 }
+
+document.addEventListener('DOMContentLoaded', function () {
+    const path = window.location.pathname.toLowerCase();
+    document.querySelectorAll('.navbar-nav .nav-link').forEach(function (link) {
+        const href = link.getAttribute('href').toLowerCase();
+        if (href === '/' && (path === '/' || path === '/home' || path === '/home/index')) {
+            link.classList.add('active');
+        } else if (href !== '/' && path.startsWith(href)) {
+            link.classList.add('active');
+        }
+    });
+});

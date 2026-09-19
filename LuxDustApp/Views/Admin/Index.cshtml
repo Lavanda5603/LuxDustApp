@@ -35,7 +35,7 @@
 
         <a href="/Admin/Create" class="btn btn-success mb-3">+ Добавить товар</a>
 
-        <table class="table table-striped">
+        <table class="table">
             <thead>
                 <tr>
                     <th>Id</th>
@@ -51,13 +51,15 @@
                 {
                 <tr>
                     <td>@product.Id</td>
-                    <td>@product.Name</td>
+                    <td><a href="/Catalog/Details/@product.Id" class="admin-product-link">@product.Name</a></td>
                     <td>@product.Brand</td>
                     <td>@product.Price руб.</td>
                     <td>@product.Category</td>
                     <td>
-                        <a href="/Admin/Edit/@product.Id" class="btn btn-sm btn-warning">Редактировать</a>
-                        <a href="/Admin/Delete/@product.Id" class="btn btn-sm btn-danger" onclick="return confirm('Удалить товар?');">Удалить</a>
+                        <div class="admin-actions">
+                            <a href="/Admin/Edit/@product.Id" class="btn btn-sm btn-warning">Редактировать</a>
+                            <a href="/Admin/Delete/@product.Id" class="btn btn-sm btn-danger" onclick="return confirm('Удалить товар?');">Удалить</a>
+                        </div>
                     </td>
                 </tr>
                 }

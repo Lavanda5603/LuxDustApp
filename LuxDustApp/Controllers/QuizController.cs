@@ -25,7 +25,6 @@ namespace LuxDustApp.Controllers
 			{
 				return RedirectToAction("Register", "Account");
 			}
-
 			return View();
 		}
 
@@ -85,24 +84,23 @@ namespace LuxDustApp.Controllers
 		public IActionResult AddToFavorites(int productId)
 		{
 			var userIdClaim = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
-			if (userIdClaim == null) return RedirectToAction("Login", "Account");
+			if (userIdClaim == null) return Json(new { success = false, message = "Не авторизован" });
 			var userId = int.Parse(userIdClaim);
 
 			var existing = _context.Favorites.FirstOrDefault(f => f.UserId == userId && f.ProductId == productId);
 
 			if (existing == null)
 			{
-				var favorite = new Favorite
+				_context.Favorites.Add(new Favorite
 				{
 					UserId = userId,
 					ProductId = productId,
 					AddedAt = System.DateTime.UtcNow
-				};
-				_context.Favorites.Add(favorite);
+				});
 				_context.SaveChanges();
 			}
 
-			return RedirectToAction("Profile", "Account");
+			return Json(new { success = true });
 		}
 
 		public IActionResult AddToCart(int productId)
@@ -119,16 +117,14 @@ namespace LuxDustApp.Controllers
 			}
 			else
 			{
-				var cart = new Cart
+				_context.Carts.Add(new Cart
 				{
 					UserId = userId,
 					ProductId = productId,
 					Quantity = 1,
 					AddedAt = System.DateTime.UtcNow
-				};
-				_context.Carts.Add(cart);
+				});
 			}
-
 			_context.SaveChanges();
 
 			return Json(new { success = true });
@@ -141,7 +137,6 @@ namespace LuxDustApp.Controllers
 			var userId = int.Parse(userIdClaim);
 
 			var cartItems = _context.Carts.Where(c => c.UserId == userId).Include(c => c.Product).ToList();
-
 			return View(cartItems);
 		}
 
@@ -153,7 +148,6 @@ namespace LuxDustApp.Controllers
 				_context.Carts.Remove(item);
 				_context.SaveChanges();
 			}
-
 			return RedirectToAction("Cart", "Quiz");
 		}
 	}

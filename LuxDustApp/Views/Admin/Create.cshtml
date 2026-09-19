@@ -16,14 +16,14 @@
     </div>
     }
 
-    <form method="post" action="/Admin/Create">
+    <form method="post" action="/Admin/Create" class="admin-form">
         <div class="mb-3">
-            <label>Название</label>
+            <label class="form-label-lux">Название</label>
             <input type="text" name="Name" class="form-control" required />
         </div>
 
         <div class="mb-3">
-            <label>Бренд</label>
+            <label class="form-label-lux">Бренд</label>
             <input type="text" name="Brand" class="form-control" list="brandsList" required />
             <datalist id="brandsList">
                 @foreach (var brand in Model.Brands)
@@ -34,8 +34,8 @@
         </div>
 
         <div class="mb-3">
-            <label>Категория</label>
-            <input type="text" name="Category" id="categoryInput" class="form-control" list="categoriesList" required />
+            <label class="form-label-lux">Категория</label>
+            <input type="text" name="Category" class="form-control" list="categoriesList" required />
             <datalist id="categoriesList">
                 @foreach (var cat in Model.Categories)
                 {
@@ -45,7 +45,7 @@
         </div>
 
         <div class="mb-3">
-            <label>Подкатегория</label>
+            <label class="form-label-lux">Подкатегория</label>
             <input type="text" name="SubCategory" class="form-control" list="subcategoriesList" />
             <datalist id="subcategoriesList">
                 @foreach (var kvp in Model.SubcategoriesByCategory)
@@ -59,12 +59,12 @@
         </div>
 
         <div class="mb-3">
-            <label>Цена (шаг 100 руб.)</label>
-            <input type="number" name="Price" class="form-control" step="100" min="0" required />
+            <label class="form-label-lux">Цена</label>
+            <<input type="number" name="Price" class="form-control price-no-arrows" min="0" required />
         </div>
 
         <div class="mb-3">
-            <label>Тип кожи</label>
+            <label class="form-label-lux">Тип кожи</label>
             <select name="SkinType" class="form-select">
                 @foreach (var skin in Model.SkinTypes)
                 {
@@ -74,7 +74,7 @@
         </div>
 
         <div class="mb-3">
-            <label>Проблема</label>
+            <label class="form-label-lux">Проблема</label>
             <select name="Problem" class="form-select">
                 @foreach (var problem in Model.Problems)
                 {
@@ -84,7 +84,7 @@
         </div>
 
         <div class="mb-3">
-            <label>Сезон</label>
+            <label class="form-label-lux">Сезон</label>
             <select name="Season" class="form-select">
                 @foreach (var season in Model.Seasons)
                 {
@@ -94,7 +94,7 @@
         </div>
 
         <div class="mb-3">
-            <label>Описание</label>
+            <label class="form-label-lux">Описание</label>
             <textarea name="Description" class="form-control"></textarea>
         </div>
 

@@ -27,7 +27,7 @@
 				var itemTotal = item.Product.Price * item.Quantity;
 				total += itemTotal;
 				<tr>
-					<td>@item.Product.Name</td>
+					<td><a href="/Catalog/Details/@item.ProductId" class="profile-link">@item.Product.Name</a></td>
 					<td>@item.Product.Price руб.</td>
 					<td>@item.Quantity</td>
 					<td>@itemTotal руб.</td>
@@ -54,4 +54,6 @@
 		}
 	</div>
 
+	@section Scripts {
 	<script src="~/js/quiz.js"></script>
+	}

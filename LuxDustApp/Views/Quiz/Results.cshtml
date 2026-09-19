@@ -3,64 +3,72 @@
 }
 @model LuxDustApp.Models.RecommendationBundle
 
-<h2>ТОП-10 лучших товаров для вас</h2>
+<div class="container">
+    <h2>ТОП-10 лучших товаров для вас</h2>
 
-@if (Model.Top != null && Model.Top.Any())
-{
-<div class="row">
-    @foreach (var product in Model.Top)
+    @if (Model.Top != null && Model.Top.Any())
     {
-    var score = Model.TopReasons[product].Score;
-    var reasons = Model.TopReasons[product].Reasons;
+    <div class="row">
+        @foreach (var product in Model.Top)
+        {
+        var score = Model.TopReasons[product].Score;
+        var reasons = Model.TopReasons[product].Reasons;
 
-    <div class="col-md-6 mb-4">
-        <div class="card">
-            <div class="card-body">
-                <h5 class="card-title">@product.Name</h5>
-                <p class="card-text">Бренд: @product.Brand</p>
-                <p class="card-text">Цена: @product.Price руб.</p>
-                <p class="card-text">Рейтинг совместимости: <strong>@score баллов</strong></p>
-                <p class="card-text" style="font-size: 14px;">@reasons</p>
-                <a href="/Catalog/Details/@product.Id" class="btn btn-primary btn-sm">Подробнее</a>
-                <button type="button" class="btn btn-outline-secondary btn-sm" onclick="addToCart(@product.Id, this)">В корзину</button>
-                <a href="/Quiz/AddToFavorites?productId=@product.Id" class="btn btn-outline-danger btn-sm">В избранное</a>
+        <div class="col-md-6 mb-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">@product.Name</h5>
+                    <p class="card-text">Бренд: @product.Brand</p>
+                    <p class="card-text">Цена: @product.Price руб.</p>
+                    <p class="card-text">Рейтинг совместимости: <strong>@score баллов</strong></p>
+                    <p class="recommendation-reasons">@reasons</p>
+                    <div class="catalog-actions">
+                        <a href="/Catalog/Details/@product.Id" class="btn btn-primary btn-sm">Подробнее</a>
+                        <button type="button" class="btn btn-outline-secondary btn-sm" onclick="addToCart(@product.Id, this)">В корзину</button>
+                        <button type="button" class="btn btn-outline-secondary btn-sm" onclick="addToFavorites(@product.Id, this)">В избранное</button>
+                    </div>
+                </div>
             </div>
         </div>
+        }
+    </div>
+    }
+    else
+    {
+    <p>Подходящих продуктов не найдено.</p>
+    }
+
+    @if (Model.Middle != null && Model.Middle.Any())
+    {
+    <h2 class="mt-5">Также может вам подойти</h2>
+
+    <div class="row">
+        @foreach (var product in Model.Middle)
+        {
+        var score = Model.MiddleReasons[product].Score;
+        var reasons = Model.MiddleReasons[product].Reasons;
+
+        <div class="col-md-6 mb-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">@product.Name</h5>
+                    <p class="card-text">Бренд: @product.Brand</p>
+                    <p class="card-text">Цена: @product.Price руб.</p>
+                    <p class="card-text">Рейтинг совместимости: <strong>@score баллов</strong></p>
+                    <p class="recommendation-reasons">@reasons</p>
+                    <div class="catalog-actions">
+                        <a href="/Catalog/Details/@product.Id" class="btn btn-primary btn-sm">Подробнее</a>
+                        <button type="button" class="btn btn-outline-secondary btn-sm" onclick="addToCart(@product.Id, this)">В корзину</button>
+                        <button type="button" class="btn btn-outline-secondary btn-sm" onclick="addToFavorites(@product.Id, this)">В избранное</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        }
     </div>
     }
 </div>
-}
-else
-{
-<p>Подходящих продуктов не найдено.</p>
-}
 
-@if (Model.Middle != null && Model.Middle.Any())
-{
-<h2 class="mt-5">Также может вам подойти</h2>
-
-<div class="row">
-    @foreach (var product in Model.Middle)
-    {
-    var score = Model.MiddleReasons[product].Score;
-    var reasons = Model.MiddleReasons[product].Reasons;
-
-    <div class="col-md-6 mb-4">
-        <div class="card">
-            <div class="card-body">
-                <h5 class="card-title">@product.Name</h5>
-                <p class="card-text">Бренд: @product.Brand</p>
-                <p class="card-text">Цена: @product.Price руб.</p>
-                <p class="card-text">Рейтинг совместимости: <strong>@score баллов</strong></p>
-                <p class="card-text" style="font-size: 14px;">@reasons</p>
-                <a href="/Catalog/Details/@product.Id" class="btn btn-primary btn-sm">Подробнее</a>
-                <button type="button" class="btn btn-outline-secondary btn-sm" onclick="addToCart(@product.Id, this)">В корзину</button>
-                <a href="/Quiz/AddToFavorites?productId=@product.Id" class="btn btn-outline-danger btn-sm">❤️ В избранное</a>
-            </div>
-        </div>
-    </div>
-    }
-</div>
-}
-
+@section Scripts {
 <script src="~/js/quiz.js"></script>
+}
