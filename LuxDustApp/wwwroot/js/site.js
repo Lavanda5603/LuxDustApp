@@ -19,8 +19,11 @@ if (installBtn) {
 }
 
 if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('/service-worker.js')
-        .catch(() => { });
+    navigator.serviceWorker.getRegistrations().then(function (registrations) {
+        for (let registration of registrations) {
+            registration.unregister();
+        }
+    });
 }
 
 document.addEventListener('DOMContentLoaded', function () {

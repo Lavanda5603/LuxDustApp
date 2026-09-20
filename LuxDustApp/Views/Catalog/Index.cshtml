@@ -60,10 +60,10 @@
                         <input type="text" id="searchInput" class="form-control" placeholder="Поиск по названию..." value="@ViewBag.CurrentSearch" autocomplete="off" />
                     </div>
                     <div class="col-md-3">
-                        <input type="number" id="minPrice" class="form-control" placeholder="Цена от" value="@ViewBag.MinPrice" />
+                        <input type="number" id="minPrice" class="form-control" placeholder="Цена от" value="@ViewBag.MinPrice" step="100" min="0" />
                     </div>
                     <div class="col-md-3">
-                        <input type="number" id="maxPrice" class="form-control" placeholder="Цена до" value="@ViewBag.MaxPrice" />
+                        <input type="number" id="maxPrice" class="form-control" placeholder="Цена до" value="@ViewBag.MaxPrice" step="100" min="0" />
                     </div>
                 </div>
 

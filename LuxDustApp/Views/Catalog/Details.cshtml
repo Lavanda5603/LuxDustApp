@@ -73,16 +73,39 @@
                             Подобран по вашему типу кожи «@Model.SkinType», решает проблему «@Model.Problem» и подходит для сезона «@Model.Season».
                         </span>
                     </div>
+
                     <div class="product-info-item product-info-visual">
+                        @if (!string.IsNullOrEmpty(Model.ImageUrl))
+                        {
+                        <img src="@Model.ImageUrl" alt="@Model.Name" class="product-image" onclick="openImage(this.src)" />
+                        }
+                        else
+                        {
                         <div class="product-visual-mark">✦</div>
-                        <p>Здесь будет фотография товара</p>
+                        <p>Фотография скоро появится</p>
+                        }
                     </div>
+
+                    @if (!string.IsNullOrEmpty(Model.ImageUrl))
+                    {
+                    <div class="product-decor">
+                        <span>✦</span>
+                        <span>✦</span>
+                        <span>✦</span>
+                    </div>
+                    }
                 </div>
             </div>
         </div>
     </div>
 </div>
 
+<div id="imageModal" class="image-modal" onclick="closeImage()">
+    <span class="image-modal-close" onclick="closeImage()">×</span>
+    <img id="imageModalContent" class="image-modal-content" />
+</div>
+
 @section Scripts {
 <script src="~/js/quiz.js"></script>
+<script src="~/js/product-details.js"></script>
 }

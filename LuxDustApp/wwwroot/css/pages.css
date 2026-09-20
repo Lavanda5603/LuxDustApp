@@ -819,8 +819,32 @@ datalist option {
 
 .product-info-visual {
 	text-align: center;
-	padding: 3rem 1.5rem;
+	padding: 1rem;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	min-height: 250px;
+	max-height: 300px;
+	overflow: hidden;
 }
+
+.product-image {
+	width: 100%;
+	max-width: 250px;
+	height: auto;
+	max-height: 250px;
+	object-fit: contain;
+	border-radius: 12px;
+	box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+	border: 1px solid rgba(212, 175, 55, 0.3);
+	transition: transform 0.3s ease;
+	background: rgba(255, 255, 255, 0.02);
+	padding: 0.5rem;
+}
+
+	.product-image:hover {
+		transform: scale(1.05);
+	}
 
 .product-visual-mark {
 	font-size: 5rem;
@@ -969,4 +993,104 @@ body span.text-muted,
 body small.text-muted,
 body div.text-muted {
 	color: #e8c86a !important;
+}
+
+.product-decor {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	gap: 0.8rem;
+	margin-top: 1rem;
+	padding-top: 0.5rem;
+	width: 100%;
+}
+
+	.product-decor span {
+		color: #d4af37;
+		font-size: 0.9rem;
+		opacity: 0.6;
+		transition: all 0.3s ease;
+	}
+
+		.product-decor span:nth-child(2) {
+			font-size: 1.2rem;
+			opacity: 0.9;
+		}
+
+		.product-decor span:hover {
+			opacity: 1;
+			transform: scale(1.2);
+		}
+
+.image-modal {
+	display: none;
+	position: fixed;
+	z-index: 9999;
+	left: 0;
+	top: 0;
+	width: 100%;
+	height: 100%;
+	background-color: rgba(15, 6, 20, 0.95);
+	backdrop-filter: blur(10px);
+	justify-content: center;
+	align-items: center;
+	padding: 2rem;
+	cursor: zoom-out;
+	animation: fadeInModal 0.3s ease;
+}
+
+@keyframes fadeInModal {
+	from {
+		opacity: 0;
+	}
+
+	to {
+		opacity: 1;
+	}
+}
+
+.image-modal-content {
+	max-width: 90%;
+	max-height: 90%;
+	width: auto;
+	height: auto;
+	object-fit: contain;
+	border-radius: 16px;
+	box-shadow: 0 0 80px rgba(212, 175, 55, 0.4);
+	border: 1px solid rgba(212, 175, 55, 0.4);
+	animation: zoomInModal 0.3s ease;
+}
+
+@keyframes zoomInModal {
+	from {
+		transform: scale(0.8);
+		opacity: 0;
+	}
+
+	to {
+		transform: scale(1);
+		opacity: 1;
+	}
+}
+
+.image-modal-close {
+	position: absolute;
+	top: 20px;
+	right: 40px;
+	color: #d4af37;
+	font-size: 3rem;
+	font-weight: 300;
+	cursor: pointer;
+	transition: all 0.3s ease;
+	line-height: 1;
+	z-index: 10000;
+}
+
+	.image-modal-close:hover {
+		color: #e8c86a;
+		transform: scale(1.2);
+	}
+
+.product-image {
+	cursor: zoom-in;
 }

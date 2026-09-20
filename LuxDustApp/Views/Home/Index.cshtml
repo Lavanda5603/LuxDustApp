@@ -3,7 +3,7 @@
 }
 
 @section Styles {
-    <link rel="stylesheet" href="~/css/home.css" asp-append-version="true" />
+<link rel="stylesheet" href="~/css/home.css" asp-append-version="true" />
 }
 
 @section Scripts {
@@ -58,7 +58,7 @@
     <div class="container">
         <div class="row align-items-center min-vh-100">
             <div class="col-lg-6 hero-text fade-in">
-                <p class="hero-tagline">✦ Умный подбор косметики</p>
+                <p class="hero-tagline">Умный подбор косметики</p>
                 <h1 class="hero-title">
                     Твоя кожа.<br>
                     <span class="gold-text">Твои правила.</span>
@@ -68,8 +68,16 @@
                     Без консультантов, без наугад, без лишних трат.
                 </p>
                 <div class="hero-buttons">
+                    @if (User.Identity.IsAuthenticated)
+                    {
+                    <a href="/Quiz/Step1" class="btn-lux-primary">Пройти анкету</a>
+                    <a href="/Account/Profile" class="btn-lux-outline">Личный кабинет</a>
+                    }
+                    else
+                    {
                     <a href="/Quiz/Step1" class="btn-lux-primary">Начать подбор</a>
                     <a href="/Catalog" class="btn-lux-outline">Смотреть каталог</a>
+                    }
                 </div>
             </div>
             <div class="col-lg-6 hero-visual fade-in">
@@ -112,11 +120,6 @@
             <div class="col-md-4 fade-in">
                 <div class="glass-card">
                     <div class="card-number">01</div>
-                    <div class="card-icon">
-                        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#d4af37" stroke-width="1.5">
-                            <path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                        </svg>
-                    </div>
                     <h3>Заполни анкету</h3>
                     <p>15 вопросов о коже, бюджете и образе жизни. Займёт 3–5 минут.</p>
                 </div>
@@ -124,11 +127,6 @@
             <div class="col-md-4 fade-in">
                 <div class="glass-card">
                     <div class="card-number">02</div>
-                    <div class="card-icon">
-                        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#d4af37" stroke-width="1.5">
-                            <path d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
-                        </svg>
-                    </div>
                     <h3>Получи подборку</h3>
                     <p>Алгоритм сравнит 500+ продуктов по 16 факторам и покажет ТОП-10.</p>
                 </div>
@@ -136,11 +134,6 @@
             <div class="col-md-4 fade-in">
                 <div class="glass-card">
                     <div class="card-number">03</div>
-                    <div class="card-icon">
-                        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#d4af37" stroke-width="1.5">
-                            <path d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
-                        </svg>
-                    </div>
                     <h3>Закажи или сохрани</h3>
                     <p>Добавь в корзину, избранное или сохрани подборку в личном кабинете.</p>
                 </div>
@@ -208,21 +201,18 @@
         <div class="row g-4">
             <div class="col-md-4 fade-in">
                 <div class="trend-card">
-                    <div class="trend-icon"></div>
                     <h4>Пробиотики</h4>
                     <p>Восстанавливают микробиом кожи</p>
                 </div>
             </div>
             <div class="col-md-4 fade-in">
                 <div class="trend-card">
-                    <div class="trend-icon"></div>
                     <h4>Центелла азиатская</h4>
                     <p>Успокаивает и заживляет</p>
                 </div>
             </div>
             <div class="col-md-4 fade-in">
                 <div class="trend-card">
-                    <div class="trend-icon"></div>
                     <h4>Гиалуроновая кислота</h4>
                     <p>Глубокое увлажнение</p>
                 </div>
@@ -240,28 +230,24 @@
         <div class="row g-4">
             <div class="col-md-3 col-6 fade-in">
                 <div class="feature-item">
-                    <div class="feature-icon"></div>
                     <h5>Точный подбор</h5>
                     <p>16 факторов, а не 2–3 фильтра</p>
                 </div>
             </div>
             <div class="col-md-3 col-6 fade-in">
                 <div class="feature-item">
-                    <div class="feature-icon"></div>
                     <h5>Прозрачность</h5>
                     <p>Видно, почему продукт подходит</p>
                 </div>
             </div>
             <div class="col-md-3 col-6 fade-in">
                 <div class="feature-item">
-                    <div class="feature-icon"></div>
                     <h5>PWA</h5>
                     <p>Устанавливается на телефон</p>
                 </div>
             </div>
             <div class="col-md-3 col-6 fade-in">
                 <div class="feature-item">
-                    <div class="feature-icon"></div>
                     <h5>История</h5>
                     <p>Все подборки сохраняются</p>
                 </div>
@@ -316,8 +302,16 @@
         <h2 class="cta-title">Перестань угадывать.<br><span class="gold-text">Начни подбирать.</span></h2>
         <p class="cta-subtitle">3–5 минут — и ты знаешь, что действительно подходит твоей коже.</p>
         <div class="cta-buttons">
+            @if (User.Identity.IsAuthenticated)
+            {
+            <a href="/Quiz/Step1" class="btn-lux-primary">Пройти анкету заново</a>
+            <a href="/Account/Profile" class="btn-lux-outline">Личный кабинет</a>
+            }
+            else
+            {
             <a href="/Quiz/Step1" class="btn-lux-primary">Начать подбор</a>
             <a href="/Account/Login" class="btn-lux-outline">Уже есть аккаунт? Войти</a>
+            }
         </div>
     </div>
 </section>
