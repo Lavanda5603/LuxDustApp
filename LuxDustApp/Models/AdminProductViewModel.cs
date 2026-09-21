@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Microsoft.AspNetCore.Http;
 
 namespace LuxDustApp.Models
 {
@@ -11,5 +12,7 @@ namespace LuxDustApp.Models
 		public List<string> SkinTypes { get; set; }
 		public List<string> Problems { get; set; }
 		public List<string> Seasons { get; set; }
+		public IFormFile ImageFile { get; set; }
+		public bool RemoveImage { get; set; }
 	}
 }

@@ -16,19 +16,20 @@
     </div>
     }
 
-    <form method="post" action="/Admin/Edit" class="admin-form">
-        <input type="hidden" name="Id" value="@Model.Product.Id" />
-        <input type="hidden" name="CreatedAt" value="@Model.Product.CreatedAt" />
-        <input type="hidden" name="Rating" value="@Model.Product.Rating" />
+    <form method="post" action="/Admin/Edit" enctype="multipart/form-data" class="admin-form">
+        <input type="hidden" asp-for="Product.Id" />
+        <input type="hidden" asp-for="Product.CreatedAt" />
+        <input type="hidden" asp-for="Product.Rating" />
+        <input type="hidden" asp-for="Product.ImageUrl" />
 
         <div class="mb-3">
             <label class="form-label-lux">Название</label>
-            <input type="text" name="Name" class="form-control" value="@Model.Product.Name" required />
+            <input type="text" asp-for="Product.Name" class="form-control" required />
         </div>
 
         <div class="mb-3">
             <label class="form-label-lux">Бренд</label>
-            <input type="text" name="Brand" class="form-control" list="brandsList" value="@Model.Product.Brand" required />
+            <input type="text" asp-for="Product.Brand" class="form-control" list="brandsList" required />
             <datalist id="brandsList">
                 @foreach (var brand in Model.Brands)
                 {
@@ -39,7 +40,7 @@
 
         <div class="mb-3">
             <label class="form-label-lux">Категория</label>
-            <input type="text" name="Category" class="form-control" list="categoriesList" value="@Model.Product.Category" required />
+            <input type="text" asp-for="Product.Category" class="form-control" list="categoriesList" required />
             <datalist id="categoriesList">
                 @foreach (var cat in Model.Categories)
                 {
@@ -50,7 +51,7 @@
 
         <div class="mb-3">
             <label class="form-label-lux">Подкатегория</label>
-            <input type="text" name="SubCategory" class="form-control" list="subcategoriesList" value="@Model.Product.SubCategory" />
+            <input type="text" asp-for="Product.SubCategory" class="form-control" list="subcategoriesList" />
             <datalist id="subcategoriesList">
                 @foreach (var kvp in Model.SubcategoriesByCategory)
                 {
@@ -64,12 +65,12 @@
 
         <div class="mb-3">
             <label class="form-label-lux">Цена</label>
-            <input type="number" name="Price" class="form-control price-no-arrows" min="0" value="@Model.Product.Price" required />
+            <input type="number" asp-for="Product.Price" class="form-control price-no-arrows" min="0" required />
         </div>
 
         <div class="mb-3">
             <label class="form-label-lux">Тип кожи</label>
-            <select name="SkinType" class="form-select">
+            <select asp-for="Product.SkinType" class="form-select">
                 @foreach (var skin in Model.SkinTypes)
                 {
                 <option value="@skin" selected="@(skin == Model.Product.SkinType)">@skin</option>
@@ -79,7 +80,7 @@
 
         <div class="mb-3">
             <label class="form-label-lux">Проблема</label>
-            <select name="Problem" class="form-select">
+            <select asp-for="Product.Problem" class="form-select">
                 @foreach (var problem in Model.Problems)
                 {
                 <option value="@problem" selected="@(problem == Model.Product.Problem)">@problem</option>
@@ -89,7 +90,7 @@
 
         <div class="mb-3">
             <label class="form-label-lux">Сезон</label>
-            <select name="Season" class="form-select">
+            <select asp-for="Product.Season" class="form-select">
                 @foreach (var season in Model.Seasons)
                 {
                 <option value="@season" selected="@(season == Model.Product.Season)">@season</option>
@@ -99,16 +100,42 @@
 
         <div class="mb-3">
             <label class="form-label-lux">Описание</label>
-            <textarea name="Description" class="form-control">@Model.Product.Description</textarea>
+            <textarea asp-for="Product.Description" class="form-control"></textarea>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label-lux">Текущее фото</label>
+            <div class="admin-image-preview">
+                @if (!string.IsNullOrEmpty(Model.Product.ImageUrl) && Model.Product.ImageUrl != "/images/default.jpg")
+                {
+                <img src="@Model.Product.ImageUrl" alt="@Model.Product.Name" />
+                <div>
+                    <span class="current-image-label">Текущее фото</span>
+                    <div class="remove-image-check form-check">
+                        <input type="checkbox" asp-for="RemoveImage" class="form-check-input" id="removeImageCheck" />
+                        <label class="form-check-label" for="removeImageCheck">Удалить текущее фото</label>
+                    </div>
+                </div>
+                }
+                else
+                {
+                <span class="no-image-text">Фото не загружено</span>
+                }
+            </div>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label-lux">Загрузить новое фото</label>
+            <input type="file" asp-for="ImageFile" class="form-control" accept="image/*" />
         </div>
 
         <div class="mb-3 form-check">
-            <input type="checkbox" name="IsNew" value="true" class="form-check-input" id="isNewCheck" @(Model.Product.IsNew ? "checked" : "" ) />
+            <input type="checkbox" asp-for="Product.IsNew" class="form-check-input" id="isNewCheck" />
             <label class="form-check-label" for="isNewCheck">Новинка</label>
         </div>
 
         <div class="mb-3 form-check">
-            <input type="checkbox" name="IsOnSale" value="true" class="form-check-input" id="isOnSaleCheck" @(Model.Product.IsOnSale ? "checked" : "" ) />
+            <input type="checkbox" asp-for="Product.IsOnSale" class="form-check-input" id="isOnSaleCheck" />
             <label class="form-check-label" for="isOnSaleCheck">Акция</label>
         </div>
 

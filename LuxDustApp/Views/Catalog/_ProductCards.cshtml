@@ -8,18 +8,32 @@
         <div class="col-md-4 mb-4">
             <div class="card">
                 <div class="card-body">
-                    <h5 class="card-title">@product.Name</h5>
-                    <p class="card-text">@product.Brand</p>
-                    <p class="card-text"><strong>@product.Price руб.</strong></p>
-                    <div class="badges-row">
-                        @if (product.IsNew)
-                        {
-                        <span class="badge-lux badge-new">Новинка</span>
-                        }
-                        @if (product.IsOnSale)
-                        {
-                        <span class="badge-lux badge-sale">Акция</span>
-                        }
+                    <div class="catalog-card">
+                        <div class="catalog-card-info">
+                            <h5 class="card-title">@product.Name</h5>
+                            <p class="card-text">@product.Brand</p>
+                            <p class="card-text"><strong>@product.Price руб.</strong></p>
+                            <div class="badges-row">
+                                @if (product.IsNew)
+                                {
+                                <span class="badge-lux badge-new">Новинка</span>
+                                }
+                                @if (product.IsOnSale)
+                                {
+                                <span class="badge-lux badge-sale">Акция</span>
+                                }
+                            </div>
+                        </div>
+                        <a href="/Catalog/Details/@product.Id" class="catalog-card-image">
+                            @if (!string.IsNullOrEmpty(product.ImageUrl) && product.ImageUrl != "/images/default.jpg")
+                            {
+                            <img src="@product.ImageUrl" alt="@product.Name" />
+                            }
+                            else
+                            {
+                            <span class="no-image">✦</span>
+                            }
+                        </a>
                     </div>
                     <div class="catalog-actions">
                         <a href="/Catalog/Details/@product.Id" class="btn btn-primary btn-sm">Подробнее</a>

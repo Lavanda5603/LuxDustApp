@@ -16,15 +16,15 @@
     </div>
     }
 
-    <form method="post" action="/Admin/Create" class="admin-form">
+    <form method="post" action="/Admin/Create" enctype="multipart/form-data" class="admin-form">
         <div class="mb-3">
             <label class="form-label-lux">Название</label>
-            <input type="text" name="Name" class="form-control" required />
+            <input type="text" asp-for="Product.Name" class="form-control" required />
         </div>
 
         <div class="mb-3">
             <label class="form-label-lux">Бренд</label>
-            <input type="text" name="Brand" class="form-control" list="brandsList" required />
+            <input type="text" asp-for="Product.Brand" class="form-control" list="brandsList" required />
             <datalist id="brandsList">
                 @foreach (var brand in Model.Brands)
                 {
@@ -35,7 +35,7 @@
 
         <div class="mb-3">
             <label class="form-label-lux">Категория</label>
-            <input type="text" name="Category" class="form-control" list="categoriesList" required />
+            <input type="text" asp-for="Product.Category" class="form-control" list="categoriesList" required />
             <datalist id="categoriesList">
                 @foreach (var cat in Model.Categories)
                 {
@@ -46,7 +46,7 @@
 
         <div class="mb-3">
             <label class="form-label-lux">Подкатегория</label>
-            <input type="text" name="SubCategory" class="form-control" list="subcategoriesList" />
+            <input type="text" asp-for="Product.SubCategory" class="form-control" list="subcategoriesList" />
             <datalist id="subcategoriesList">
                 @foreach (var kvp in Model.SubcategoriesByCategory)
                 {
@@ -60,12 +60,12 @@
 
         <div class="mb-3">
             <label class="form-label-lux">Цена</label>
-            <<input type="number" name="Price" class="form-control price-no-arrows" min="0" required />
+            <input type="number" asp-for="Product.Price" class="form-control price-no-arrows" min="0" required />
         </div>
 
         <div class="mb-3">
             <label class="form-label-lux">Тип кожи</label>
-            <select name="SkinType" class="form-select">
+            <select asp-for="Product.SkinType" class="form-select">
                 @foreach (var skin in Model.SkinTypes)
                 {
                 <option value="@skin">@skin</option>
@@ -75,7 +75,7 @@
 
         <div class="mb-3">
             <label class="form-label-lux">Проблема</label>
-            <select name="Problem" class="form-select">
+            <select asp-for="Product.Problem" class="form-select">
                 @foreach (var problem in Model.Problems)
                 {
                 <option value="@problem">@problem</option>
@@ -85,7 +85,7 @@
 
         <div class="mb-3">
             <label class="form-label-lux">Сезон</label>
-            <select name="Season" class="form-select">
+            <select asp-for="Product.Season" class="form-select">
                 @foreach (var season in Model.Seasons)
                 {
                 <option value="@season">@season</option>
@@ -95,16 +95,21 @@
 
         <div class="mb-3">
             <label class="form-label-lux">Описание</label>
-            <textarea name="Description" class="form-control"></textarea>
+            <textarea asp-for="Product.Description" class="form-control"></textarea>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label-lux">Фото товара</label>
+            <input type="file" asp-for="ImageFile" class="form-control" accept="image/*" />
         </div>
 
         <div class="mb-3 form-check">
-            <input type="checkbox" name="IsNew" value="true" class="form-check-input" id="isNewCheck" />
+            <input type="checkbox" asp-for="Product.IsNew" class="form-check-input" id="isNewCheck" />
             <label class="form-check-label" for="isNewCheck">Новинка</label>
         </div>
 
         <div class="mb-3 form-check">
-            <input type="checkbox" name="IsOnSale" value="true" class="form-check-input" id="isOnSaleCheck" />
+            <input type="checkbox" asp-for="Product.IsOnSale" class="form-check-input" id="isOnSaleCheck" />
             <label class="form-check-label" for="isOnSaleCheck">Акция</label>
         </div>
 
