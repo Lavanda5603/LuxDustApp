@@ -45,7 +45,6 @@ namespace LuxDustApp.Controllers
 		public IActionResult Create()
 		{
 			if (!IsAdmin()) return RedirectToAction("Login", "Account");
-
 			return View(BuildViewModel(new Product()));
 		}
 
@@ -54,34 +53,28 @@ namespace LuxDustApp.Controllers
 		{
 			if (!IsAdmin()) return RedirectToAction("Login", "Account");
 
-			if (string.IsNullOrWhiteSpace(model.Product.Name) ||
-				string.IsNullOrWhiteSpace(model.Product.Brand) ||
-				string.IsNullOrWhiteSpace(model.Product.Category) ||
-				model.Product.Price <= 0)
+			var product = model?.Product ?? new Product();
+
+			if (string.IsNullOrEmpty(product.Name)) product.Name = "Без названия";
+			if (string.IsNullOrEmpty(product.Brand)) product.Brand = "Без бренда";
+			if (string.IsNullOrEmpty(product.Category)) product.Category = "Без категории";
+			if (string.IsNullOrEmpty(product.SubCategory)) product.SubCategory = "";
+			if (string.IsNullOrEmpty(product.SkinType)) product.SkinType = "Нормальная";
+			if (string.IsNullOrEmpty(product.Problem)) product.Problem = "Тусклый цвет";
+			if (string.IsNullOrEmpty(product.Season)) product.Season = "Круглый год";
+			if (string.IsNullOrEmpty(product.Description)) product.Description = "";
+			if (string.IsNullOrEmpty(product.TexturePreference)) product.TexturePreference = "Лёгкая";
+			if (string.IsNullOrEmpty(product.ImageUrl)) product.ImageUrl = "/images/default.jpg";
+
+			product.CreatedAt = DateTime.UtcNow;
+			product.Rating = 4.5;
+
+			if (model?.ImageFile != null && model.ImageFile.Length > 0)
 			{
-				ModelState.AddModelError("", "Заполните все обязательные поля: Название, Бренд, Категория, Цена");
-				return View(BuildViewModel(model.Product));
+				product.ImageUrl = SaveImage(model.ImageFile);
 			}
 
-			if (string.IsNullOrEmpty(model.Product.SkinType)) model.Product.SkinType = "Нормальная";
-			if (string.IsNullOrEmpty(model.Product.Problem)) model.Product.Problem = "Тусклый цвет";
-			if (string.IsNullOrEmpty(model.Product.Season)) model.Product.Season = "Круглый год";
-			if (string.IsNullOrEmpty(model.Product.Description)) model.Product.Description = "";
-			if (string.IsNullOrEmpty(model.Product.SubCategory)) model.Product.SubCategory = "";
-			if (string.IsNullOrEmpty(model.Product.TexturePreference)) model.Product.TexturePreference = "Лёгкая";
-			model.Product.CreatedAt = DateTime.UtcNow;
-			model.Product.Rating = 4.5;
-
-			if (model.ImageFile != null && model.ImageFile.Length > 0)
-			{
-				var imageUrl = SaveImage(model.ImageFile);
-				model.Product.ImageUrl = imageUrl;
-			}
-
-			if (string.IsNullOrEmpty(model.Product.ImageUrl))
-				model.Product.ImageUrl = "/images/default.jpg";
-
-			_context.Products.Add(model.Product);
+			_context.Products.Add(product);
 			_context.SaveChanges();
 
 			return RedirectToAction("Index");
@@ -103,29 +96,22 @@ namespace LuxDustApp.Controllers
 		{
 			if (!IsAdmin()) return RedirectToAction("Login", "Account");
 
-			if (string.IsNullOrWhiteSpace(model.Product.Name) ||
-				string.IsNullOrWhiteSpace(model.Product.Brand) ||
-				string.IsNullOrWhiteSpace(model.Product.Category) ||
-				model.Product.Price <= 0)
-			{
-				ModelState.AddModelError("", "Заполните все обязательные поля: Название, Бренд, Категория, Цена");
-				return View(BuildViewModel(model.Product));
-			}
+			var productData = model?.Product ?? new Product();
 
-			var existing = _context.Products.FirstOrDefault(p => p.Id == model.Product.Id);
+			var existing = _context.Products.FirstOrDefault(p => p.Id == productData.Id);
 			if (existing == null) return NotFound();
 
-			existing.Name = model.Product.Name;
-			existing.Brand = model.Product.Brand;
-			existing.Category = model.Product.Category;
-			existing.SubCategory = model.Product.SubCategory;
-			existing.Price = model.Product.Price;
-			existing.SkinType = model.Product.SkinType;
-			existing.Problem = model.Product.Problem;
-			existing.Season = model.Product.Season;
-			existing.Description = model.Product.Description ?? "";
-			existing.IsNew = model.Product.IsNew;
-			existing.IsOnSale = model.Product.IsOnSale;
+			if (!string.IsNullOrEmpty(productData.Name)) existing.Name = productData.Name;
+			if (!string.IsNullOrEmpty(productData.Brand)) existing.Brand = productData.Brand;
+			if (!string.IsNullOrEmpty(productData.Category)) existing.Category = productData.Category;
+			if (!string.IsNullOrEmpty(productData.SubCategory)) existing.SubCategory = productData.SubCategory;
+			if (productData.Price > 0) existing.Price = productData.Price;
+			if (!string.IsNullOrEmpty(productData.SkinType)) existing.SkinType = productData.SkinType;
+			if (!string.IsNullOrEmpty(productData.Problem)) existing.Problem = productData.Problem;
+			if (!string.IsNullOrEmpty(productData.Season)) existing.Season = productData.Season;
+			if (!string.IsNullOrEmpty(productData.Description)) existing.Description = productData.Description;
+			existing.IsNew = productData.IsNew;
+			existing.IsOnSale = productData.IsOnSale;
 
 			if (model.RemoveImage)
 			{
@@ -134,8 +120,7 @@ namespace LuxDustApp.Controllers
 
 			if (model.ImageFile != null && model.ImageFile.Length > 0)
 			{
-				var imageUrl = SaveImage(model.ImageFile);
-				existing.ImageUrl = imageUrl;
+				existing.ImageUrl = SaveImage(model.ImageFile);
 			}
 
 			_context.SaveChanges();

@@ -52,6 +52,22 @@
                     <span>Все товары</span>
                     }
                 </h2>
+                
+                <div class="row g-2 mb-3">
+                    <div class="col-12">
+                        <div class="catalog-filters">
+                            <a href="/Catalog?filter=sale" class="filter-btn @(ViewBag.Filter == " sale" ? "active" : "" )">
+                                Акции
+                            </a>
+                            <a href="/Catalog?filter=new" class="filter-btn @(ViewBag.Filter == " new" ? "active" : "" )">
+                                Новинки
+                            </a>
+                            <a href="/Catalog" class="filter-btn @(string.IsNullOrEmpty(ViewBag.Filter as string) ? " active" : "" )">
+                                Все товары
+                            </a>
+                        </div>
+                    </div>
+                </div>
 
                 <div class="row g-2 mb-4">
                     <input type="hidden" id="currentCategory" value="@ViewBag.CurrentCategory" />
@@ -86,7 +102,7 @@
                         {
                         startPage = Math.Max(1, endPage - 4);
                         }
-                        string BuildUrl(int p) => $"/Catalog?category={ViewBag.CurrentCategory}&subcategory={ViewBag.CurrentSubcategory}&search={ViewBag.CurrentSearch}&minPrice={ViewBag.MinPrice}&maxPrice={ViewBag.MaxPrice}&page={p}";
+                        string BuildUrl(int p) => $"/Catalog?category={ViewBag.CurrentCategory}&subcategory={ViewBag.CurrentSubcategory}&search={ViewBag.CurrentSearch}&minPrice={ViewBag.MinPrice}&maxPrice={ViewBag.MaxPrice}&filter={ViewBag.Filter}&page={p}";
                         }
 
                         @if (currentPage > 1)

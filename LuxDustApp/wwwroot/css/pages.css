@@ -1224,3 +1224,37 @@ input[type="file"].form-control {
 		height: 70px;
 	}
 }
+
+.catalog-filters {
+	display: flex;
+	gap: 0.6rem;
+	flex-wrap: wrap;
+	margin-bottom: 1rem;
+}
+
+.filter-btn {
+	padding: 0.5rem 1.3rem;
+	background: rgba(255, 255, 255, 0.04);
+	border: 1px solid rgba(255, 255, 255, 0.08);
+	border-radius: 50px;
+	color: var(--gold);
+	font-size: 0.9rem;
+	font-weight: 500;
+	transition: all 0.3s ease;
+	text-transform: uppercase;
+	letter-spacing: 0.5px;
+}
+
+	.filter-btn:hover {
+		border-color: var(--gold);
+		color: var(--white);
+		background: rgba(212, 175, 55, 0.1);
+	}
+
+	.filter-btn.active {
+		background: linear-gradient(135deg, #d4af37 0%, #e8c86a 100%);
+		color: #1a0b1f;
+		border-color: var(--gold);
+		font-weight: 700;
+		box-shadow: 0 5px 20px rgba(212, 175, 55, 0.3);
+	}

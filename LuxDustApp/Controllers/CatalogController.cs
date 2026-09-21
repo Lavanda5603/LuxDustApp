@@ -16,7 +16,7 @@ namespace LuxDustApp.Controllers
 			_context = context;
 		}
 
-		public IActionResult Index(string category = null, string subcategory = null, string search = null, int? minPrice = null, int? maxPrice = null, int page = 1)
+		public IActionResult Index(string category = null, string subcategory = null, string search = null, int? minPrice = null, int? maxPrice = null, string filter = null, int page = 1)
 		{
 			var products = _context.Products.AsQueryable();
 
@@ -31,9 +31,14 @@ namespace LuxDustApp.Controllers
 			if (maxPrice.HasValue)
 				products = products.Where(p => p.Price <= maxPrice.Value);
 
+			if (filter == "sale")
+				products = products.Where(p => p.IsOnSale);
+			if (filter == "new")
+				products = products.Where(p => p.IsNew);
+
 			int pageSize = 12;
 			int totalItems = products.Count();
-			int totalPages = (int)Math.Ceiling((double)totalItems / pageSize);
+			int totalPages = (int)System.Math.Ceiling((double)totalItems / pageSize);
 
 			if (page < 1) page = 1;
 			if (page > totalPages && totalPages > 0) page = totalPages;
@@ -44,7 +49,7 @@ namespace LuxDustApp.Controllers
 				.Where(p => p.Category != null && p.Category != "")
 				.Select(p => p.Category).Distinct().OrderBy(c => c).ToList();
 
-			var subcategoriesByCategory = new Dictionary<string, List<string>>();
+			var subcategoriesByCategory = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.List<string>>();
 			foreach (var cat in categories)
 			{
 				subcategoriesByCategory[cat] = _context.Products
@@ -59,6 +64,7 @@ namespace LuxDustApp.Controllers
 			ViewBag.CurrentSearch = search;
 			ViewBag.MinPrice = minPrice;
 			ViewBag.MaxPrice = maxPrice;
+			ViewBag.Filter = filter;
 			ViewBag.CurrentPage = page;
 			ViewBag.TotalPages = totalPages;
 			ViewBag.TotalItems = totalItems;

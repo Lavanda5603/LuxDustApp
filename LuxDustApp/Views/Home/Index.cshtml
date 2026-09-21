@@ -7,50 +7,7 @@
 }
 
 @section Scripts {
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('visible');
-                }
-            });
-        }, { threshold: 0.1 });
-
-        document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
-    });
-
-    function animateNumbers() {
-        document.querySelectorAll('.stat-number').forEach(el => {
-            const target = parseInt(el.getAttribute('data-target'));
-            let current = 0;
-            const increment = target / 60;
-            const timer = setInterval(() => {
-                current += increment;
-                if (current >= target) {
-                    el.textContent = target + (el.getAttribute('data-suffix') || '');
-                    clearInterval(timer);
-                } else {
-                    el.textContent = Math.floor(current) + (el.getAttribute('data-suffix') || '');
-                }
-            }, 20);
-        });
-    }
-
-    const statsObserver = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                animateNumbers();
-                statsObserver.disconnect();
-            }
-        });
-    }, { threshold: 0.5 });
-
-    document.addEventListener('DOMContentLoaded', function () {
-        const statsBlock = document.querySelector('.stats-block');
-        if (statsBlock) statsObserver.observe(statsBlock);
-    });
-</script>
+    <script src="~/js/home.js"></script>
 }
 
 <section class="hero-section">
@@ -82,8 +39,19 @@
             </div>
             <div class="col-lg-6 hero-visual fade-in">
                 <div class="drop-container">
-                    <div class="drop"></div>
-                    <div class="drop-glow"></div>
+                    <div class="drop-bg"></div>
+                    @{
+                    var heroImagePath = "/images/hero/hero-product.png";
+                    var heroImageExists = System.IO.File.Exists(System.IO.Path.Combine(System.IO.Directory.GetCurrentDirectory(), "wwwroot", "images", "hero", "hero-product.png"));
+                    }
+                    @if (heroImageExists)
+                    {
+                    <img src="@heroImagePath" alt="Косметика" class="drop-image" />
+                    }
+                    else
+                    {
+                    <div class="drop-fallback"></div>
+                    }
                 </div>
             </div>
         </div>
@@ -116,27 +84,21 @@
             <p class="section-tagline">Как это работает</p>
             <h2 class="section-title">Три шага до идеального ухода</h2>
         </div>
-        <div class="row g-4">
-            <div class="col-md-4 fade-in">
-                <div class="glass-card">
-                    <div class="card-number">01</div>
-                    <h3>Заполни анкету</h3>
-                    <p>15 вопросов о коже, бюджете и образе жизни. Займёт 3–5 минут.</p>
-                </div>
+        <div class="how-timeline">
+            <div class="how-step fade-in">
+                <div class="how-step-icon">01</div>
+                <h3>Заполни анкету</h3>
+                <p>15 вопросов о коже, бюджете и образе жизни. Займёт 3–5 минут.</p>
             </div>
-            <div class="col-md-4 fade-in">
-                <div class="glass-card">
-                    <div class="card-number">02</div>
-                    <h3>Получи подборку</h3>
-                    <p>Алгоритм сравнит 500+ продуктов по 16 факторам и покажет ТОП-10.</p>
-                </div>
+            <div class="how-step fade-in">
+                <div class="how-step-icon">02</div>
+                <h3>Получи подборку</h3>
+                <p>Алгоритм сравнит 500+ продуктов по 16 факторам и покажет ТОП-10.</p>
             </div>
-            <div class="col-md-4 fade-in">
-                <div class="glass-card">
-                    <div class="card-number">03</div>
-                    <h3>Закажи или сохрани</h3>
-                    <p>Добавь в корзину, избранное или сохрани подборку в личном кабинете.</p>
-                </div>
+            <div class="how-step fade-in">
+                <div class="how-step-icon">03</div>
+                <h3>Закажи или сохрани</h3>
+                <p>Добавь в корзину, избранное или сохрани подборку в личном кабинете.</p>
             </div>
         </div>
     </div>
@@ -171,24 +133,84 @@
             <p class="section-tagline">Выгодно и свежо</p>
             <h2 class="section-title">Акции и новинки</h2>
         </div>
-        <div class="row g-4">
-            <div class="col-md-6 fade-in">
-                <div class="promo-card promo-sale">
-                    <div class="promo-badge">АКЦИЯ</div>
-                    <h3>Скидки до 40%</h3>
-                    <p>На хиты ухода за лицом. Успей до конца месяца.</p>
-                    <a href="/Catalog?filter=sale" class="btn-lux-outline btn-sm">Смотреть акции</a>
+
+        @{
+        var saleProducts = ViewBag.SaleProducts as List<LuxDustApp.Models.Product>
+            ;
+            var newProducts = ViewBag.NewProducts as List<LuxDustApp.Models.Product>
+                ;
+                }
+
+                <div class="promo-scroll-wrapper fade-in">
+                    <div class="row g-4 mb-4">
+                        <div class="col-md-6">
+                            <div class="promo-card promo-sale">
+                                <div>
+                                    <div class="promo-badge">Акция</div>
+                                    <h3>Скидки до 40%</h3>
+                                    <p>На хиты ухода за лицом. Успей до конца месяца.</p>
+                                </div>
+                                <a href="/Catalog?filter=sale" class="btn-lux-outline btn-sm">Смотреть все акции</a>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="promo-card promo-new">
+                                <div>
+                                    <div class="promo-badge">Новинка</div>
+                                    <h3>Свежие поступления</h3>
+                                    <p>Новые сыворотки, кремы и тоники уже в каталоге.</p>
+                                </div>
+                                <a href="/Catalog?filter=new" class="btn-lux-outline btn-sm">Смотреть все новинки</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    @if (saleProducts != null && saleProducts.Any())
+                    {
+                    <h4 class="mb-3" style="color: var(--gold); font-family: 'Playfair Display', serif; font-size: 1.2rem;">Акции месяца</h4>
+                    <div class="promo-scroll">
+                        @foreach (var product in saleProducts)
+                        {
+                        <a href="/Catalog/Details/@product.Id" class="promo-scroll-item">
+                            @if (!string.IsNullOrEmpty(product.ImageUrl) && product.ImageUrl != "/images/default.jpg")
+                            {
+                            <img src="@product.ImageUrl" alt="@product.Name" />
+                            }
+                            else
+                            {
+                            <div class="promo-item-no-img">✦</div>
+                            }
+                            <h5>@product.Name</h5>
+                            <div class="promo-item-brand">@product.Brand</div>
+                            <div class="promo-item-price">@product.Price ₽</div>
+                        </a>
+                        }
+                    </div>
+                    }
+
+                    @if (newProducts != null && newProducts.Any())
+                    {
+                    <h4 class="mb-3 mt-4" style="color: var(--gold); font-family: 'Playfair Display', serif; font-size: 1.2rem;">Новинки</h4>
+                    <div class="promo-scroll">
+                        @foreach (var product in newProducts)
+                        {
+                        <a href="/Catalog/Details/@product.Id" class="promo-scroll-item">
+                            @if (!string.IsNullOrEmpty(product.ImageUrl) && product.ImageUrl != "/images/default.jpg")
+                            {
+                            <img src="@product.ImageUrl" alt="@product.Name" />
+                            }
+                            else
+                            {
+                            <div class="promo-item-no-img">✦</div>
+                            }
+                            <h5>@product.Name</h5>
+                            <div class="promo-item-brand">@product.Brand</div>
+                            <div class="promo-item-price">@product.Price ₽</div>
+                        </a>
+                        }
+                    </div>
+                    }
                 </div>
-            </div>
-            <div class="col-md-6 fade-in">
-                <div class="promo-card promo-new">
-                    <div class="promo-badge">НОВИНКА</div>
-                    <h3>Свежие поступления</h3>
-                    <p>Новые сыворотки, кремы и тоники уже в каталоге.</p>
-                    <a href="/Catalog?filter=new" class="btn-lux-outline btn-sm">Смотреть новинки</a>
-                </div>
-            </div>
-        </div>
     </div>
 </section>
 
@@ -200,22 +222,70 @@
         </div>
         <div class="row g-4">
             <div class="col-md-4 fade-in">
-                <div class="trend-card">
-                    <h4>Пробиотики</h4>
-                    <p>Восстанавливают микробиом кожи</p>
-                </div>
+                <a href="/Catalog?search=пробиотик" class="trend-card">
+                    <div class="trend-image-wrapper">
+                        @{
+                        var trend1 = "/images/trends/probiotics.jpg";
+                        var trend1Exists = System.IO.File.Exists(System.IO.Path.Combine(System.IO.Directory.GetCurrentDirectory(), "wwwroot", "images", "trends", "probiotics.jpg"));
+                        }
+                        @if (trend1Exists)
+                        {
+                        <img src="@trend1" alt="Пробиотики" class="trend-image" />
+                        }
+                        else
+                        {
+                        <div class="trend-image" style="display: flex; align-items: center; justify-content: center; font-size: 4rem; color: var(--gold); opacity: 0.4;">✦</div>
+                        }
+                    </div>
+                    <div class="trend-content">
+                        <h4>Пробиотики</h4>
+                        <p>Восстанавливают микробиом кожи</p>
+                    </div>
+                </a>
             </div>
             <div class="col-md-4 fade-in">
-                <div class="trend-card">
-                    <h4>Центелла азиатская</h4>
-                    <p>Успокаивает и заживляет</p>
-                </div>
+                <a href="/Catalog?search=центелл" class="trend-card">
+                    <div class="trend-image-wrapper">
+                        @{
+                        var trend2 = "/images/trends/centella.jpg";
+                        var trend2Exists = System.IO.File.Exists(System.IO.Path.Combine(System.IO.Directory.GetCurrentDirectory(), "wwwroot", "images", "trends", "centella.jpg"));
+                        }
+                        @if (trend2Exists)
+                        {
+                        <img src="@trend2" alt="Центелла" class="trend-image" />
+                        }
+                        else
+                        {
+                        <div class="trend-image" style="display: flex; align-items: center; justify-content: center; font-size: 4rem; color: var(--gold); opacity: 0.4;">✦</div>
+                        }
+                    </div>
+                    <div class="trend-content">
+                        <h4>Центелла азиатская</h4>
+                        <p>Успокаивает и заживляет</p>
+                    </div>
+                </a>
             </div>
             <div class="col-md-4 fade-in">
-                <div class="trend-card">
-                    <h4>Гиалуроновая кислота</h4>
-                    <p>Глубокое увлажнение</p>
-                </div>
+                <a href="/Catalog?search=гиалурон" class="trend-card">
+                    <div class="trend-image-wrapper">
+                        @{
+                        var trend3 = "/images/trends/hyaluronic.jpg";
+                        var trend3Exists = System.IO.File.Exists(System.IO.Path.Combine(System.IO.Directory.GetCurrentDirectory(), "wwwroot", "images", "trends", "hyaluronic.jpg"));
+                        }
+                        @if (trend3Exists)
+                        {
+                        <img src="@trend3" alt="Гиалуроновая кислота" class="trend-image" />
+                        }
+                        else
+                        {
+                        <div class="trend-image" style="display: flex; align-items: center; justify-content: center; font-size: 4rem; color: var(--gold); opacity: 0.4;">✦</div>
+                        }
+                    </div>
+                    <div class="trend-content">
+                        <h4>Гиалуроновая кислота</h4>
+                        <p>Глубокое увлажнение</p>
+                    </div>
+                </a>
             </div>
         </div>
     </div>
@@ -227,30 +297,26 @@
             <p class="section-tagline">Почему LuxDust</p>
             <h2 class="section-title">Уникальные особенности</h2>
         </div>
-        <div class="row g-4">
-            <div class="col-md-3 col-6 fade-in">
-                <div class="feature-item">
-                    <h5>Точный подбор</h5>
-                    <p>16 факторов, а не 2–3 фильтра</p>
-                </div>
+        <div class="features-grid">
+            <div class="feature-item fade-in">
+                <div class="feature-icon-lux">✦</div>
+                <h5>Точный подбор</h5>
+                <p>16 факторов, а не 2–3 фильтра</p>
             </div>
-            <div class="col-md-3 col-6 fade-in">
-                <div class="feature-item">
-                    <h5>Прозрачность</h5>
-                    <p>Видно, почему продукт подходит</p>
-                </div>
+            <div class="feature-item fade-in">
+                <div class="feature-icon-lux">✦</div>
+                <h5>Прозрачность</h5>
+                <p>Видно, почему продукт подходит</p>
             </div>
-            <div class="col-md-3 col-6 fade-in">
-                <div class="feature-item">
-                    <h5>PWA</h5>
-                    <p>Устанавливается на телефон</p>
-                </div>
+            <div class="feature-item fade-in">
+                <div class="feature-icon-lux">✦</div>
+                <h5>PWA</h5>
+                <p>Устанавливается на телефон</p>
             </div>
-            <div class="col-md-3 col-6 fade-in">
-                <div class="feature-item">
-                    <h5>История</h5>
-                    <p>Все подборки сохраняются</p>
-                </div>
+            <div class="feature-item fade-in">
+                <div class="feature-icon-lux">✦</div>
+                <h5>История</h5>
+                <p>Все подборки сохраняются</p>
             </div>
         </div>
     </div>
@@ -264,7 +330,7 @@
         </div>
         <div class="row g-4">
             <div class="col-md-4 fade-in">
-                <div class="product-preview">
+                <div class="product-preview score-high">
                     <div class="product-score">125 баллов</div>
                     <h4>Сыворотка с морским коллагеном</h4>
                     <p class="product-brand">La Roche-Posay</p>
@@ -273,7 +339,7 @@
                 </div>
             </div>
             <div class="col-md-4 fade-in">
-                <div class="product-preview">
+                <div class="product-preview score-high">
                     <div class="product-score">112 баллов</div>
                     <h4>Сыворотка с центеллой</h4>
                     <p class="product-brand">Avene</p>
@@ -282,7 +348,7 @@
                 </div>
             </div>
             <div class="col-md-4 fade-in">
-                <div class="product-preview">
+                <div class="product-preview score-high">
                     <div class="product-score">107 баллов</div>
                     <h4>Крем с центеллой</h4>
                     <p class="product-brand">La Roche-Posay</p>
