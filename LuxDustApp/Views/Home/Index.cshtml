@@ -7,7 +7,7 @@
 }
 
 @section Scripts {
-    <script src="~/js/home.js"></script>
+<script src="~/js/home.js"></script>
 }
 
 <section class="hero-section">
@@ -168,22 +168,28 @@
 
                     @if (saleProducts != null && saleProducts.Any())
                     {
-                    <h4 class="mb-3" style="color: var(--gold); font-family: 'Playfair Display', serif; font-size: 1.2rem;">✦ Акции</h4>
+                    <h4 class="mb-3" style="color: var(--gold); font-family: 'Playfair Display', serif; font-size: 2.0rem;">Акции</h4>
                     <div class="promo-scroll">
                         @foreach (var product in saleProducts)
                         {
                         <a href="/Catalog/Details/@product.Id" class="promo-scroll-item">
-                            @if (!string.IsNullOrEmpty(product.ImageUrl) && product.ImageUrl != "/images/default.jpg")
-                            {
-                            <img src="@product.ImageUrl" alt="@product.Name" />
-                            }
-                            else
-                            {
-                            <div class="promo-item-no-img">✦</div>
-                            }
-                            <h5>@product.Name</h5>
-                            <div class="promo-item-brand">@product.Brand</div>
-                            <div class="promo-item-price">@product.Price ₽</div>
+                            <div class="catalog-card">
+                                <div class="catalog-card-info">
+                                    <h5>@product.Name</h5>
+                                    <div class="promo-item-brand">@product.Brand</div>
+                                    <div class="promo-item-price">@product.Price ₽</div>
+                                </div>
+                                <div class="catalog-card-image">
+                                    @if (!string.IsNullOrEmpty(product.ImageUrl) && product.ImageUrl != "/images/default.jpg")
+                                    {
+                                    <img src="@product.ImageUrl" alt="@product.Name" />
+                                    }
+                                    else
+                                    {
+                                    <div class="no-image">✦</div>
+                                    }
+                                </div>
+                            </div>
                         </a>
                         }
                     </div>
@@ -191,22 +197,28 @@
 
                     @if (newProducts != null && newProducts.Any())
                     {
-                    <h4 class="mb-3 mt-4" style="color: var(--gold); font-family: 'Playfair Display', serif; font-size: 1.2rem;">✦ Новинки</h4>
+                    <h4 class="mb-3 mt-4" style="color: var(--gold); font-family: 'Playfair Display', serif; font-size: 2.0rem;">Новинки</h4>
                     <div class="promo-scroll">
                         @foreach (var product in newProducts)
                         {
                         <a href="/Catalog/Details/@product.Id" class="promo-scroll-item">
-                            @if (!string.IsNullOrEmpty(product.ImageUrl) && product.ImageUrl != "/images/default.jpg")
-                            {
-                            <img src="@product.ImageUrl" alt="@product.Name" />
-                            }
-                            else
-                            {
-                            <div class="promo-item-no-img">✦</div>
-                            }
-                            <h5>@product.Name</h5>
-                            <div class="promo-item-brand">@product.Brand</div>
-                            <div class="promo-item-price">@product.Price ₽</div>
+                            <div class="catalog-card">
+                                <div class="catalog-card-info">
+                                    <h5>@product.Name</h5>
+                                    <div class="promo-item-brand">@product.Brand</div>
+                                    <div class="promo-item-price">@product.Price ₽</div>
+                                </div>
+                                <div class="catalog-card-image">
+                                    @if (!string.IsNullOrEmpty(product.ImageUrl) && product.ImageUrl != "/images/default.jpg")
+                                    {
+                                    <img src="@product.ImageUrl" alt="@product.Name" />
+                                    }
+                                    else
+                                    {
+                                    <div class="no-image">✦</div>
+                                    }
+                                </div>
+                            </div>
                         </a>
                         }
                     </div>
@@ -221,73 +233,32 @@
             <p class="section-tagline">Что выбирают</p>
             <h2 class="section-title">Тренды ухода</h2>
         </div>
+
+        @{
+        var trends = new[]
+        {
+        new { Img = "/images/trends/probiotics.png", Alt = "Пробиотики", Title = "Пробиотики", Desc = "Восстанавливают микробиом кожи", Query = "пробиотик" },
+        new { Img = "/images/trends/centella.png", Alt = "Центелла", Title = "Центелла азиатская", Desc = "Успокаивает и заживляет", Query = "центелл" },
+        new { Img = "/images/trends/hyaluronic.png", Alt = "Гиалуроновая кислота", Title = "Гиалуроновая кислота", Desc = "Глубокое увлажнение", Query = "гиалурон" }
+        };
+        }
+
         <div class="row g-4">
+            @foreach (var t in trends)
+            {
             <div class="col-md-4 fade-in">
-                <a href="/Catalog?search=пробиотик" class="trend-card">
+                <a href="/Catalog?search=@t.Query" class="trend-card">
                     <div class="trend-image-wrapper">
-                        @{
-                        var trend1 = "/images/trends/probiotics.jpg";
-                        var trend1Exists = System.IO.File.Exists(System.IO.Path.Combine(System.IO.Directory.GetCurrentDirectory(), "wwwroot", "images", "trends", "probiotics.jpg"));
-                        }
-                        @if (trend1Exists)
-                        {
-                        <img src="@trend1" alt="Пробиотики" class="trend-image" />
-                        }
-                        else
-                        {
-                        <div class="trend-image" style="display: flex; align-items: center; justify-content: center; font-size: 4rem; color: var(--gold); opacity: 0.4;">✦</div>
-                        }
+                        <img src="@t.Img" alt="@t.Alt" class="trend-image"
+                             onerror="this.style.display='none'; this.parentElement.innerHTML='<div class=&quot;trend-image&quot; style=&quot;display:flex;align-items:center;justify-content:center;font-size:4rem;color:var(--gold);opacity:0.4;&quot;>✦</div>';" />
                     </div>
                     <div class="trend-content">
-                        <h4>Пробиотики</h4>
-                        <p>Восстанавливают микробиом кожи</p>
+                        <h4>@t.Title</h4>
+                        <p>@t.Desc</p>
                     </div>
                 </a>
             </div>
-            <div class="col-md-4 fade-in">
-                <a href="/Catalog?search=центелл" class="trend-card">
-                    <div class="trend-image-wrapper">
-                        @{
-                        var trend2 = "/images/trends/centella.jpg";
-                        var trend2Exists = System.IO.File.Exists(System.IO.Path.Combine(System.IO.Directory.GetCurrentDirectory(), "wwwroot", "images", "trends", "centella.jpg"));
-                        }
-                        @if (trend2Exists)
-                        {
-                        <img src="@trend2" alt="Центелла" class="trend-image" />
-                        }
-                        else
-                        {
-                        <div class="trend-image" style="display: flex; align-items: center; justify-content: center; font-size: 4rem; color: var(--gold); opacity: 0.4;">✦</div>
-                        }
-                    </div>
-                    <div class="trend-content">
-                        <h4>Центелла азиатская</h4>
-                        <p>Успокаивает и заживляет</p>
-                    </div>
-                </a>
-            </div>
-            <div class="col-md-4 fade-in">
-                <a href="/Catalog?search=гиалурон" class="trend-card">
-                    <div class="trend-image-wrapper">
-                        @{
-                        var trend3 = "/images/trends/hyaluronic.jpg";
-                        var trend3Exists = System.IO.File.Exists(System.IO.Path.Combine(System.IO.Directory.GetCurrentDirectory(), "wwwroot", "images", "trends", "hyaluronic.jpg"));
-                        }
-                        @if (trend3Exists)
-                        {
-                        <img src="@trend3" alt="Гиалуроновая кислота" class="trend-image" />
-                        }
-                        else
-                        {
-                        <div class="trend-image" style="display: flex; align-items: center; justify-content: center; font-size: 4rem; color: var(--gold); opacity: 0.4;">✦</div>
-                        }
-                    </div>
-                    <div class="trend-content">
-                        <h4>Гиалуроновая кислота</h4>
-                        <p>Глубокое увлажнение</p>
-                    </div>
-                </a>
-            </div>
+            }
         </div>
     </div>
 </section>
