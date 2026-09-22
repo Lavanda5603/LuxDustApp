@@ -1,0 +1,33 @@
+﻿@model List<LuxDustApp.Models.Product>
+
+    @if (Model == null || !Model.Any())
+    {
+    <tr>
+        <td colspan="6" style="text-align:center; padding: 3rem 1rem; color: #e8c86a;">
+            <div style="font-size: 3rem; color: #d4af37; opacity: 0.4; margin-bottom: 1rem;">✦</div>
+            Ничего не найдено
+        </td>
+    </tr>
+    }
+    else
+    {
+    @foreach (var product in Model)
+    {
+    <tr>
+        <td>@product.Id</td>
+        <td>
+            <a href="/Catalog/Details/@product.Id" class="admin-product-link">@product.Name</a>
+        </td>
+        <td>@product.Brand</td>
+        <td>@product.Price руб.</td>
+        <td>@product.Category</td>
+        <td>
+            <div class="admin-actions">
+                <a href="/Admin/Edit/@product.Id" class="btn btn-sm btn-warning">Редактировать</a>
+                <a href="/Admin/Delete/@product.Id" class="btn btn-sm btn-danger"
+                   onclick="return confirm('Удалить товар?');">Удалить</a>
+            </div>
+        </td>
+    </tr>
+    }
+    }

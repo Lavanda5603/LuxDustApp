@@ -142,32 +142,33 @@
                 }
 
                 <div class="promo-scroll-wrapper fade-in">
-                    <div class="row g-4 mb-4">
-                        <div class="col-md-6">
-                            <div class="promo-card promo-sale">
-                                <div>
-                                    <div class="promo-badge">Акция</div>
-                                    <h3>Скидки до 40%</h3>
-                                    <p>На хиты ухода за лицом. Успей до конца месяца.</p>
-                                </div>
-                                <a href="/Catalog?filter=sale" class="btn-lux-outline btn-sm">Смотреть все акции</a>
+                    <div class="promo-cards-wrapper" style="margin-bottom: 4rem;">
+                        <div class="promo-card promo-sale">
+                            <div>
+                                <div class="promo-badge">Акция</div>
+                                <h3>Скидки до 40%</h3>
+                                <p>На хиты ухода за лицом. Успей до конца месяца.</p>
                             </div>
+                            <a href="/Catalog?filter=sale" class="btn-lux-outline btn-sm">Смотреть все акции</a>
                         </div>
-                        <div class="col-md-6">
-                            <div class="promo-card promo-new">
-                                <div>
-                                    <div class="promo-badge">Новинка</div>
-                                    <h3>Свежие поступления</h3>
-                                    <p>Новые сыворотки, кремы и тоники уже в каталоге.</p>
-                                </div>
-                                <a href="/Catalog?filter=new" class="btn-lux-outline btn-sm">Смотреть все новинки</a>
+
+                        <div class="promo-divider">
+                            <span>✦</span>
+                        </div>
+
+                        <div class="promo-card promo-new">
+                            <div>
+                                <div class="promo-badge">Новинка</div>
+                                <h3>Свежие поступления</h3>
+                                <p>Новые сыворотки, кремы и тоники уже в каталоге.</p>
                             </div>
+                            <a href="/Catalog?filter=new" class="btn-lux-outline btn-sm">Смотреть все новинки</a>
                         </div>
                     </div>
 
                     @if (saleProducts != null && saleProducts.Any())
                     {
-                    <h4 class="mb-3" style="color: var(--gold); font-family: 'Playfair Display', serif; font-size: 1.2rem;">Акции месяца</h4>
+                    <h4 class="mb-3" style="color: var(--gold); font-family: 'Playfair Display', serif; font-size: 1.2rem;">✦ Акции</h4>
                     <div class="promo-scroll">
                         @foreach (var product in saleProducts)
                         {
@@ -190,7 +191,7 @@
 
                     @if (newProducts != null && newProducts.Any())
                     {
-                    <h4 class="mb-3 mt-4" style="color: var(--gold); font-family: 'Playfair Display', serif; font-size: 1.2rem;">Новинки</h4>
+                    <h4 class="mb-3 mt-4" style="color: var(--gold); font-family: 'Playfair Display', serif; font-size: 1.2rem;">✦ Новинки</h4>
                     <div class="promo-scroll">
                         @foreach (var product in newProducts)
                         {

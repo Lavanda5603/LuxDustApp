@@ -1258,3 +1258,70 @@ input[type="file"].form-control {
 		font-weight: 700;
 		box-shadow: 0 5px 20px rgba(212, 175, 55, 0.3);
 	}
+
+.admin-search-panel {
+	background: rgba(255, 255, 255, 0.04);
+	border: 1px solid rgba(255, 255, 255, 0.08);
+	border-radius: 20px;
+	padding: 1.5rem;
+	backdrop-filter: blur(10px);
+	position: relative;
+	overflow: hidden;
+	margin-bottom: 1rem;
+}
+
+	.admin-search-panel::before {
+		content: '';
+		position: absolute;
+		top: 0;
+		left: 0;
+		right: 0;
+		height: 2px;
+		background: linear-gradient(90deg, transparent, #d4af37, transparent);
+		opacity: 0.6;
+	}
+
+	.admin-search-panel .form-select {
+		background: rgba(255, 255, 255, 0.04);
+		border: 1px solid rgba(255, 255, 255, 0.08);
+		color: #ffffff;
+		border-radius: 12px;
+		padding: 0.85rem 1.3rem;
+		font-size: 1rem;
+		transition: all 0.3s ease;
+	}
+
+		.admin-search-panel .form-select:focus {
+			background: rgba(255, 255, 255, 0.07);
+			border-color: #d4af37;
+			color: #ffffff;
+			box-shadow: 0 0 0 0.2rem rgba(212, 175, 55, 0.15);
+		}
+
+	.admin-search-panel #adminSearchInput {
+		background: rgba(255, 255, 255, 0.04);
+		border: 1px solid rgba(255, 255, 255, 0.08);
+		color: #ffffff;
+		border-radius: 12px;
+		padding: 0.85rem 1.3rem;
+		font-size: 1rem;
+	}
+
+		.admin-search-panel #adminSearchInput:focus {
+			background: rgba(255, 255, 255, 0.07);
+			border-color: #d4af37;
+			color: #ffffff;
+			box-shadow: 0 0 0 0.2rem rgba(212, 175, 55, 0.15);
+		}
+
+		.admin-search-panel #adminSearchInput::placeholder {
+			color: #d4af37;
+			opacity: 0.5;
+		}
+
+	.admin-search-panel .catalog-count strong {
+		color: #d4af37;
+		font-size: 1.15rem;
+		font-weight: 700;
+		font-family: 'Playfair Display', serif;
+	}

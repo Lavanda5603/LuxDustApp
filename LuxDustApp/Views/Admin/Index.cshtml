@@ -11,7 +11,7 @@
                 <div class="card text-center">
                     <div class="card-body">
                         <h5>Всего товаров</h5>
-                        <p class="display-6">@ViewBag.TotalProducts</p>
+                        <p class="display-6" id="totalProductsCount">@ViewBag.TotalProducts</p>
                     </div>
                 </div>
             </div>
@@ -33,9 +33,53 @@
             </div>
         </div>
 
-        <a href="/Admin/Create" class="btn btn-success mb-3">Добавить товар</a>
+        <a href="/Admin/Create" class="btn btn-success mb-4">Добавить товар</a>
 
-        <table class="table">
+        <div class="admin-search-panel">
+            <div class="row g-3">
+                <div class="col-md-5">
+                    <label class="form-label-lux">Поиск по названию</label>
+                    <input type="text" id="adminSearchInput" class="form-control"
+                           placeholder="Поиск по названию" autocomplete="off" />
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label-lux">Бренд</label>
+                    <select id="adminBrandFilter" class="form-select">
+                        <option value="">Все бренды</option>
+                        @foreach (var brand in (List
+                        <string>
+                            )ViewBag.AllBrands)
+                            {
+                            <option value="@brand">@brand</option>
+                            }
+                    </select>
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label-lux">Категория</label>
+                    <select id="adminCategoryFilter" class="form-select">
+                        <option value="">Все категории</option>
+                        @foreach (var cat in (List
+                        <string>
+                            )ViewBag.AllCategories)
+                            {
+                            <option value="@cat">@cat</option>
+                            }
+                    </select>
+                </div>
+            </div>
+
+            <div class="catalog-filters mt-3">
+                <a href="#" class="filter-btn active" data-filter="">Все товары</a>
+                <a href="#" class="filter-btn" data-filter="new">Новинки</a>
+                <a href="#" class="filter-btn" data-filter="sale">Акции</a>
+            </div>
+
+            <p class="catalog-count mt-3 mb-0">
+                Найдено: <strong id="adminFoundCount">@ViewBag.TotalProducts</strong>
+            </p>
+        </div>
+
+        <table class="table mt-3">
             <thead>
                 <tr>
                     <th>Id</th>
@@ -46,23 +90,12 @@
                     <th>Действия</th>
                 </tr>
             </thead>
-            <tbody>
-                @foreach (var product in Model)
-                {
-                <tr>
-                    <td>@product.Id</td>
-                    <td><a href="/Catalog/Details/@product.Id" class="admin-product-link">@product.Name</a></td>
-                    <td>@product.Brand</td>
-                    <td>@product.Price руб.</td>
-                    <td>@product.Category</td>
-                    <td>
-                        <div class="admin-actions">
-                            <a href="/Admin/Edit/@product.Id" class="btn btn-sm btn-warning">Редактировать</a>
-                            <a href="/Admin/Delete/@product.Id" class="btn btn-sm btn-danger" onclick="return confirm('Удалить товар?');">Удалить</a>
-                        </div>
-                    </td>
-                </tr>
-                }
+            <tbody id="adminProductsBody">
+                @await Html.PartialAsync("_AdminProductRows", Model)
             </tbody>
         </table>
     </div>
+
+    @section Scripts {
+        <script src="~/js/admin-search.js"></script>
+    }

@@ -39,7 +39,39 @@ namespace LuxDustApp.Controllers
 			ViewBag.TotalUsers = _context.Users.Count();
 			ViewBag.TotalOrders = 0;
 
+			ViewBag.AllBrands = _context.Products
+				.Where(p => p.Brand != null && p.Brand != "").Select(p => p.Brand!).Distinct().OrderBy(b => b).ToList();
+
+			ViewBag.AllCategories = _context.Products
+				.Where(p => p.Category != null && p.Category != "").Select(p => p.Category!).Distinct().OrderBy(c => c).ToList();
+
 			return View(products);
+		}
+
+		[HttpGet]
+		public IActionResult Search(string query = null, string brand = null, string category = null, string filter = null)
+		{
+			if (!IsAdmin()) return Unauthorized();
+
+			var products = _context.Products.AsQueryable();
+
+			if (!string.IsNullOrEmpty(query))
+				products = products.Where(p => p.Name.ToLower().Contains(query.ToLower()));
+
+			if (!string.IsNullOrEmpty(brand))
+				products = products.Where(p => p.Brand == brand);
+
+			if (!string.IsNullOrEmpty(category))
+				products = products.Where(p => p.Category == category);
+
+			if (filter == "new")
+				products = products.Where(p => p.IsNew);
+
+			if (filter == "sale")
+				products = products.Where(p => p.IsOnSale);
+
+			var list = products.OrderBy(p => p.Id).ToList();
+			return PartialView("_AdminProductRows", list);
 		}
 
 		public IActionResult Create()
@@ -53,7 +85,7 @@ namespace LuxDustApp.Controllers
 		{
 			if (!IsAdmin()) return RedirectToAction("Login", "Account");
 
-			var product = model?.Product ?? new Product();
+			var product = model.Product ?? new Product();
 
 			if (string.IsNullOrEmpty(product.Name)) product.Name = "Без названия";
 			if (string.IsNullOrEmpty(product.Brand)) product.Brand = "Без бренда";
@@ -69,7 +101,7 @@ namespace LuxDustApp.Controllers
 			product.CreatedAt = DateTime.UtcNow;
 			product.Rating = 4.5;
 
-			if (model?.ImageFile != null && model.ImageFile.Length > 0)
+			if (model.ImageFile != null && model.ImageFile.Length > 0)
 			{
 				product.ImageUrl = SaveImage(model.ImageFile);
 			}
@@ -96,7 +128,7 @@ namespace LuxDustApp.Controllers
 		{
 			if (!IsAdmin()) return RedirectToAction("Login", "Account");
 
-			var productData = model?.Product ?? new Product();
+			var productData = model.Product ?? new Product();
 
 			var existing = _context.Products.FirstOrDefault(p => p.Id == productData.Id);
 			if (existing == null) return NotFound();
