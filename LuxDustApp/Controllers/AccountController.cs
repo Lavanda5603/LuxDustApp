@@ -8,6 +8,9 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using BCrypt.Net;
+using System.IO;
+using Microsoft.AspNetCore.Http;
+using System;
 
 namespace LuxDustApp.Controllers
 {
@@ -71,7 +74,10 @@ namespace LuxDustApp.Controllers
 			ViewBag.Recommendations = recommendations;
 			ViewBag.Favorites = favorites;
 			ViewBag.Orders = orders;
+			var user = _context.Users.FirstOrDefault(u => u.Id == userId);
+
 			ViewBag.UserName = User.Identity.Name;
+			ViewBag.User = user;
 
 			return View();
 		}
@@ -154,6 +160,80 @@ namespace LuxDustApp.Controllers
 		{
 			var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 			return userIdClaim != null ? int.Parse(userIdClaim) : null;
+		}
+
+		[HttpGet]
+		public IActionResult EditProfile()
+		{
+			var userId = GetUserId();
+			if (userId == null) return RedirectToAction("Login");
+
+			var user = _context.Users.FirstOrDefault(u => u.Id == userId.Value);
+			if (user == null) return NotFound();
+
+			var model = new EditProfileViewModel
+			{
+				FullName = user.FullName,
+				BirthDate = user.BirthDate,
+				City = user.City,
+				CurrentAvatarUrl = user.AvatarUrl
+			};
+
+			return View(model);
+		}
+
+		[HttpPost]
+		public IActionResult EditProfile(EditProfileViewModel model)
+		{
+			var userId = GetUserId();
+			if (userId == null) return RedirectToAction("Login");
+
+			if (model.BirthDate.HasValue && model.BirthDate.Value.Date > DateTime.UtcNow.Date)
+			{
+				ModelState.AddModelError("BirthDate", "Дата рождения не может быть в будущем");
+				return View(model);
+			}
+
+			var user = _context.Users.FirstOrDefault(u => u.Id == userId.Value);
+			if (user == null) return NotFound();
+
+			user.FullName = model.FullName;
+			user.BirthDate = model.BirthDate.HasValue
+				? DateTime.SpecifyKind(model.BirthDate.Value, DateTimeKind.Utc)
+				: null;
+			user.City = model.City;
+
+			if (model.RemoveAvatar)
+			{
+				user.AvatarUrl = null;
+			}
+
+			if (model.AvatarFile != null && model.AvatarFile.Length > 0)
+			{
+				user.AvatarUrl = SaveAvatar(model.AvatarFile);
+			}
+
+			_context.SaveChanges();
+
+			return RedirectToAction("Profile");
+		}
+
+		private string SaveAvatar(IFormFile file)
+		{
+			var uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images", "avatars");
+
+			if (!Directory.Exists(uploadsFolder))
+				Directory.CreateDirectory(uploadsFolder);
+
+			var uniqueName = Guid.NewGuid().ToString() + Path.GetExtension(file.FileName);
+			var filePath = Path.Combine(uploadsFolder, uniqueName);
+
+			using (var stream = new FileStream(filePath, FileMode.Create))
+			{
+				file.CopyTo(stream);
+			}
+
+			return "/images/avatars/" + uniqueName;
 		}
 	}
 }

@@ -17,38 +17,113 @@
         <form method="post" action="/Checkout/PlaceOrder">
             <div class="row">
                 <div class="col-md-7">
-                    <!-- ...форма доставки без изменений... -->
+                    <h4>Способ доставки</h4>
+                    <div class="mb-3">
+                        <label><input type="radio" name="deliveryMethod" value="Курьер" checked onclick="toggleAddress(true)" /> Курьер (300 руб.)</label><br />
+                        <label><input type="radio" name="deliveryMethod" value="Самовывоз" onclick="toggleAddress(false)" /> Самовывоз (бесплатно)</label>
+                    </div>
+
+                    <div id="addressBlock" class="mb-3">
+                        <label>Адрес доставки</label>
+                        <input type="text" name="address" class="form-control" placeholder="Город, улица, дом, квартира" />
+                    </div>
+
+                    <h4>Дата и время</h4>
+                    <div class="mb-3">
+                        <label>Дата доставки</label>
+                        <input type="date" name="deliveryDate" class="form-control" min="@DateTime.Now.ToString(" yyyy-MM-dd")" max="@DateTime.Now.AddDays(5).ToString(" yyyy-MM-dd")" required />
+                        <small class="text-muted">Можно выбрать с сегодняшнего дня до @DateTime.Now.AddDays(5).ToString("dd.MM.yyyy")</small>
+                    </div>
+
+                    <div class="mb-3">
+                        <label>Время доставки</label>
+                        <select name="deliveryTime" class="form-select" required>
+                            <option value="">Выберите время...</option>
+                            <option value="10:00-12:00">10:00–12:00</option>
+                            <option value="12:00-14:00">12:00–14:00</option>
+                            <option value="14:00-16:00">14:00–16:00</option>
+                            <option value="16:00-18:00">16:00–18:00</option>
+                            <option value="18:00-20:00">18:00–20:00</option>
+                        </select>
+                    </div>
+
+                    <h4>Контактные данные</h4>
+                    <div class="mb-3">
+                        <label>Телефон</label>
+                        <input type="text" name="phone" class="form-control" placeholder="+7 (___) ___-__-__" required />
+                    </div>
+
+                    <div class="mb-3">
+                        <label>Комментарий (необязательно)</label>
+                        <textarea name="comment" class="form-control" placeholder="Пожелания к заказу"></textarea>
+                    </div>
                 </div>
 
                 <div class="col-md-5">
-                    <h4>Ваш заказ</h4>
-                    <ul class="list-group mb-3">
-                        @foreach (var item in Model)
-                        {
-                        var itemTotal = item.Product.Price * item.Quantity;
-                        <li class="list-group-item d-flex justify-content-between">
-                            <span>@item.Product.Name × @item.Quantity</span>
-                            <strong>@itemTotal руб.</strong>
-                        </li>
-                        }
-                    </ul>
+                    <div class="order-summary">
+                        <h4>Ваш заказ</h4>
 
-                    <p><strong>Товары:</strong> @total руб.</p>
-                    <p><strong>Доставка:</strong> <span id="deliveryPrice">300</span> руб.</p>
-                    <p><strong>Итого:</strong> <span id="totalPrice">@(total + 300)</span> руб.</p>
+                        <ul class="order-items-list">
+                            @foreach (var item in Model)
+                            {
+                            var itemTotal = item.Product.Price * item.Quantity;
+                            <li>
+                                <div class="order-item-row">
+                                    <a href="/Catalog/Details/@item.ProductId" class="profile-link">@item.Product.Name</a>
+                                    <div class="qty-controls">
+                                        <button type="button" class="qty-btn" onclick="updateQuantity(@item.Id, -1, this)">−</button>
+                                        <span class="qty-value" data-cart-id="@item.Id">@item.Quantity</span>
+                                        <button type="button" class="qty-btn" onclick="updateQuantity(@item.Id, 1, this)">+</button>
+                                    </div>
+                                    <strong class="item-total" data-cart-id="@item.Id" data-price="@item.Product.Price">@itemTotal руб.</strong>
+                                </div>
+                            </li>
+                            }
+                        </ul>
 
-                    <button type="submit" class="btn btn-success w-100">Оформить заказ</button>
+                        <div class="order-totals">
+                            <p><strong>Товары:</strong> <span id="varTotal">@total</span> руб.</p>
+                            <p id="promoRow" style="display:none;">
+                                <strong>Скидка:</strong> <span id="promoDiscount">0</span> руб.
+                            </p>
+                            <p id="giftCardRow" style="display:none;">
+                                <strong>Подарочные карты:</strong> <span id="giftCardDiscount">0</span> руб.
+                            </p>
+                            <p><strong>Доставка:</strong> <span id="deliveryPrice">300</span> руб.</p>
+                            <p class="order-grand-total"><strong>Итого:</strong> <span id="totalPrice">@(total + 300)</span> руб.</p>
+                        </div>
+
+                        <div class="promo-block">
+                            <label class="form-label-lux">Промокод</label>
+                            <div class="promo-input-row">
+                                <input type="text" id="promoCodeInput" class="form-control" placeholder="Например, SALE10" />
+                                <button type="button" class="btn btn-primary btn-sm" onclick="applyPromo()">Применить</button>
+                            </div>
+                            <div id="promoMessage" class="promo-message"></div>
+                        </div>
+
+                        <div class="promo-block">
+                            <label class="form-label-lux">Подарочная карта</label>
+                            <div class="promo-input-row">
+                                <input type="text" id="giftCardInput" class="form-control" placeholder="LUX-XXXX-XXXX-XXXX" />
+                                <button type="button" class="btn btn-primary btn-sm" onclick="applyGiftCard()">Применить</button>
+                            </div>
+                            <div id="giftCardMessage" class="promo-message"></div>
+                            <div id="appliedGiftCards" class="applied-giftcards"></div>
+                        </div>
+
+                        <input type="hidden" name="appliedPromoCode" id="appliedPromoCode" value="" />
+                        <input type="hidden" name="appliedDiscount" id="appliedDiscount" value="0" />
+                        <input type="hidden" name="appliedGiftCards" id="appliedGiftCardsInput" value="" />
+
+                        <button type="submit" class="btn btn-success w-100 mt-3">Оформить заказ</button>
+                    </div>
                 </div>
             </div>
         </form>
     </div>
 
-    <script>
-        var total = @total;
-        function toggleAddress(show) {
-            document.getElementById('addressBlock').style.display = show ? 'block' : 'none';
-            var delivery = show ? 300 : 0;
-            document.getElementById('deliveryPrice').textContent = delivery;
-            document.getElementById('totalPrice').textContent = total + delivery;
-        }
-    </script>
+    @section Scripts {
+    <script src="~/js/quiz.js"></script>
+    <script src="~/js/promo.js"></script>
+    }

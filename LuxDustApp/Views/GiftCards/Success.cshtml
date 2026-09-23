@@ -1,0 +1,33 @@
+﻿@{
+    ViewData["Title"] = "Подарочная карта";
+}
+@model LuxDustApp.Models.GiftCard
+
+<div class="container">
+    <h2>Спасибо за покупку</h2>
+
+    <div class="giftcard-success">
+        <div class="giftcard-success-icon">✦</div>
+
+        <p class="giftcard-success-label">Ваш код подарочной карты</p>
+
+        <div class="giftcard-code" id="giftCardCode">@Model.Code</div>
+
+        <button type="button" class="btn btn-secondary btn-sm" onclick="copyGiftCode()">Скопировать код</button>
+
+        <div class="giftcard-success-info">
+            <p><strong>Номинал:</strong> @Model.Amount ₽</p>
+            <p><strong>Остаток:</strong> @Model.RemainingAmount ₽</p>
+            <p><strong>Действует до:</strong> @Model.ExpiresAt?.ToString("dd.MM.yyyy")</p>
+        </div>
+
+        <div class="giftcard-success-actions">
+            <a href="/Catalog" class="btn btn-primary">В каталог</a>
+            <a href="/GiftCards/MyCards" class="btn btn-secondary">Мои карты</a>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+<script src="~/js/giftcard.js"></script>
+}

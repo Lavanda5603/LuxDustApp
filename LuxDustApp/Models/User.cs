@@ -19,5 +19,10 @@ namespace LuxDustApp.Models
 		public bool IsAdmin { get; set; } = false;
 
 		public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+
+		public string? AvatarUrl { get; set; }
+		public string? FullName { get; set; }
+		public DateTime? BirthDate { get; set; }
+		public string? City { get; set; }
 	}
 }

@@ -1,0 +1,55 @@
+﻿@{
+    ViewData["Title"] = "Редактировать профиль";
+}
+@model LuxDustApp.Models.EditProfileViewModel
+
+<div class="container">
+    <h2>Редактировать профиль</h2>
+
+    <form method="post" action="/Account/EditProfile" enctype="multipart/form-data" class="admin-form">
+        <div class="mb-3">
+            <label class="form-label-lux">ФИО</label>
+            <input type="text" asp-for="FullName" class="form-control" placeholder="Иванова Мария Сергеевна" />
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label-lux">Дата рождения</label>
+            <input type="date" asp-for="BirthDate" class="form-control" max="@DateTime.UtcNow.ToString(" yyyy-MM-dd")" />
+            <span asp-validation-for="BirthDate" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label-lux">Город</label>
+            <input type="text" asp-for="City" class="form-control" placeholder="Москва" />
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label-lux">Текущий аватар</label>
+            <div class="avatar-edit-preview">
+                @if (!string.IsNullOrEmpty(Model.CurrentAvatarUrl))
+                {
+                <img src="@Model.CurrentAvatarUrl" alt="Аватар" />
+                <div class="avatar-edit-info">
+                    <span class="current-image-label">Текущий аватар</span>
+                    <div class="remove-image-check form-check">
+                        <input type="checkbox" asp-for="RemoveAvatar" class="form-check-input" id="removeAvatarCheck" />
+                        <label class="form-check-label" for="removeAvatarCheck">Удалить текущий аватар</label>
+                    </div>
+                </div>
+                }
+                else
+                {
+                <span class="no-image-text">Аватар не загружен</span>
+                }
+            </div>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label-lux">Загрузить новый аватар</label>
+            <input type="file" asp-for="AvatarFile" class="form-control" accept="image/*" />
+        </div>
+
+        <button type="submit" class="btn btn-success">Сохранить</button>
+        <a href="/Account/Profile" class="btn btn-secondary">Назад</a>
+    </form>
+</div>

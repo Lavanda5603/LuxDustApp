@@ -1,9 +1,40 @@
 ﻿@{
     ViewData["Title"] = "Личный кабинет";
+    var user = ViewBag.User as LuxDustApp.Models.User;
 }
 
 <div class="container">
     <h2>Личный кабинет</h2>
+
+    <div class="profile-header">
+        <div class="profile-avatar">
+            @if (user != null && !string.IsNullOrEmpty(user.AvatarUrl))
+            {
+            <img src="@user.AvatarUrl" alt="Аватар" />
+            }
+            else
+            {
+            <div class="avatar-placeholder">
+                @(user?.Name?.Substring(0, 1).ToUpper() ?? "?")
+            </div>
+            }
+        </div>
+        <div class="profile-info">
+            <h3>@(user?.FullName ?? user?.Name ?? "Пользователь")</h3>
+            <p class="profile-email">@user?.Email</p>
+            <p class="profile-meta">
+                @if (!string.IsNullOrEmpty(user?.City))
+                {
+                <span>@user.City</span>
+                }
+                @if (user?.BirthDate != null)
+                {
+                <span> · @user.BirthDate.Value.ToString("dd.MM.yyyy")</span>
+                }
+            </p>
+            <a href="/Account/EditProfile" class="btn btn-primary btn-sm">Редактировать данные</a>
+        </div>
+    </div>
 
     <div class="card mb-4">
         <div class="card-header">
@@ -12,36 +43,36 @@
         <div class="card-body">
             @if (ViewBag.Profile != null)
             {
-                var profile = (LuxDustApp.Models.Profile)ViewBag.Profile;
-                <div class="row">
-                    <div class="col-md-6">
-                        <p><strong>Тип кожи:</strong> @profile.SkinType</p>
-                        <p><strong>Возраст:</strong> @profile.Age</p>
-                        <p><strong>Бюджет:</strong> @profile.Budget руб.</p>
-                        <p><strong>Проблемы:</strong> @profile.Problems</p>
-                        <p><strong>Другое (проблемы):</strong> @(profile.ProblemsOther ?? "—")</p>
-                        <p><strong>Другое (аллергии):</strong> @(profile.AllergiesOther ?? "—")</p>
-                        <p><strong>Уровень стресса:</strong> @(profile.StressLevel ?? "—")</p>
-                        <p><strong>Тип питания:</strong> @(profile.DietType ?? "—")</p>
-                        <p><strong>Предпочтение по текстуре:</strong> @(profile.TexturePreference ?? "—")</p>
-                    </div>
-                    <div class="col-md-6">
-                        <p><strong>Любимые бренды:</strong> @profile.FavoriteBrands</p>
-                        <p><strong>Цель ухода:</strong> @profile.Goal</p>
-                        <p><strong>Уровень стресса:</strong> @profile.StressLevel</p>
-                        <p><strong>Тип питания:</strong> @profile.DietType</p>
-                        <p><strong>Чувствительность к солнцу:</strong> @(profile.SunSensitivity ? "Да" : "Нет")</p>
-                        <p><strong>Склонность к отёкам:</strong> @(profile.TendencyToEdema ? "Да" : "Нет")</p>
-                        <p><strong>Профессиональный уход:</strong> @(profile.HasProfessionalCare ? "Да" : "Нет")</p>
-                        <p><strong>Предпочтение по текстуре:</strong> @profile.TexturePreference</p>
-                        <p><strong>Готовность к многоступенчатому уходу:</strong> @(profile.ReadyForMultiStep ? "Да" : "Нет")</p>
-                    </div>
+            var profile = (LuxDustApp.Models.Profile)ViewBag.Profile;
+            <div class="row">
+                <div class="col-md-6">
+                    <p><strong>Тип кожи:</strong> @profile.SkinType</p>
+                    <p><strong>Возраст:</strong> @profile.Age</p>
+                    <p><strong>Бюджет:</strong> @profile.Budget руб.</p>
+                    <p><strong>Проблемы:</strong> @profile.Problems</p>
+                    <p><strong>Другое (проблемы):</strong> @(profile.ProblemsOther ?? "—")</p>
+                    <p><strong>Другое (аллергии):</strong> @(profile.AllergiesOther ?? "—")</p>
+                    <p><strong>Уровень стресса:</strong> @(profile.StressLevel ?? "—")</p>
+                    <p><strong>Тип питания:</strong> @(profile.DietType ?? "—")</p>
+                    <p><strong>Предпочтение по текстуре:</strong> @(profile.TexturePreference ?? "—")</p>
                 </div>
-                <a href="/Quiz/Step1" class="btn btn-primary mt-3">@(ViewBag.Profile != null ? "Изменить анкету" : "Заполнить анкету")</a>
+                <div class="col-md-6">
+                    <p><strong>Любимые бренды:</strong> @profile.FavoriteBrands</p>
+                    <p><strong>Цель ухода:</strong> @profile.Goal</p>
+                    <p><strong>Уровень стресса:</strong> @profile.StressLevel</p>
+                    <p><strong>Тип питания:</strong> @profile.DietType</p>
+                    <p><strong>Чувствительность к солнцу:</strong> @(profile.SunSensitivity ? "Да" : "Нет")</p>
+                    <p><strong>Склонность к отёкам:</strong> @(profile.TendencyToEdema ? "Да" : "Нет")</p>
+                    <p><strong>Профессиональный уход:</strong> @(profile.HasProfessionalCare ? "Да" : "Нет")</p>
+                    <p><strong>Предпочтение по текстуре:</strong> @profile.TexturePreference</p>
+                    <p><strong>Готовность к многоступенчатому уходу:</strong> @(profile.ReadyForMultiStep ? "Да" : "Нет")</p>
+                </div>
+            </div>
+            <a href="/Quiz/Step1" class="btn btn-primary mt-3">@(ViewBag.Profile != null ? "Изменить анкету" : "Заполнить анкету")</a>
             }
             else
             {
-                <p>Вы ещё не заполнили анкету. <a href="/Quiz/Step1">Заполнить сейчас</a></p>
+            <p>Вы ещё не заполнили анкету. <a href="/Quiz/Step1">Заполнить сейчас</a></p>
             }
         </div>
     </div>
@@ -51,11 +82,14 @@
             <h4>История подборок</h4>
         </div>
         <div class="card-body">
-            @if (ViewBag.Recommendations != null && ((List<LuxDustApp.Models.Recommendation>)ViewBag.Recommendations).Any())
-            {
+            @if (ViewBag.Recommendations != null && ((List<LuxDustApp.Models.Recommendation>
+                )ViewBag.Recommendations).Any())
+                {
                 <ul>
-                    @foreach (var rec in (List<LuxDustApp.Models.Recommendation>)ViewBag.Recommendations)
-                    {
+                    @foreach (var rec in (List
+                    <LuxDustApp.Models.Recommendation>
+                        )ViewBag.Recommendations)
+                        {
                         <li>
                             <a href="/Catalog/Details/@rec.ProductId" class="profile-link">
                                 <strong>@rec.Product.Name</strong>
@@ -64,13 +98,23 @@
                             <br />
                             <small>Дата: @rec.RecommendedAt.ToString("dd.MM.yyyy HH:mm")</small>
                         </li>
-                    }
+                        }
                 </ul>
-            }
-            else
-            {
+                }
+                else
+                {
                 <p>У вас пока нет сохранённых подборок.</p>
-            }
+                }
+        </div>
+    </div>
+
+    <div class="card mb-4">
+        <div class="card-header">
+            <h4>Мои подарочные карты</h4>
+        </div>
+        <div class="card-body">
+            <p><a href="/GiftCards/MyCards" class="profile-link">Посмотреть все мои подарочные карты</a></p>
+            <p><a href="/GiftCards" class="profile-link">Купить новую карту</a></p>
         </div>
     </div>
 
@@ -79,24 +123,27 @@
             <h4>Избранное</h4>
         </div>
         <div class="card-body">
-            @if (ViewBag.Favorites != null && ((List<LuxDustApp.Models.Favorite>)ViewBag.Favorites).Any())
-            {
+            @if (ViewBag.Favorites != null && ((List<LuxDustApp.Models.Favorite>
+                )ViewBag.Favorites).Any())
+                {
                 <ul>
-                    @foreach (var fav in (List<LuxDustApp.Models.Favorite>)ViewBag.Favorites)
-                    {
+                    @foreach (var fav in (List
+                    <LuxDustApp.Models.Favorite>
+                        )ViewBag.Favorites)
+                        {
                         <li>
                             <a href="/Catalog/Details/@fav.ProductId" class="profile-link">
                                 <strong>@fav.Product.Name</strong>
                             </a>
                             — @fav.Product.Price руб.
                         </li>
-                    }
+                        }
                 </ul>
-            }
-            else
-            {
+                }
+                else
+                {
                 <p>У вас пока нет избранных товаров.</p>
-            }
+                }
         </div>
     </div>
 

@@ -1,0 +1,32 @@
+﻿@{
+    ViewData["Title"] = "Мои карты";
+}
+@model List<LuxDustApp.Models.GiftCard>
+
+    <div class="container">
+        <h2>Мои подарочные карты</h2>
+
+        @if (Model != null && Model.Any())
+        {
+        <div class="giftcards-list">
+            @foreach (var card in Model)
+            {
+            <div class="giftcard-item">
+                <div class="giftcard-item-code">@card.Code</div>
+                <div class="giftcard-item-info">
+                    <p><strong>Номинал:</strong> @card.Amount ₽</p>
+                    <p><strong>Остаток:</strong> @card.RemainingAmount ₽</p>
+                    <p><strong>Действует до:</strong> @card.ExpiresAt?.ToString("dd.MM.yyyy")</p>
+                </div>
+                <div class="giftcard-item-status @(card.IsActive && card.RemainingAmount > 0 ? " active" : "used" )">
+                    @(card.IsActive && card.RemainingAmount > 0 ? "Активна" : "Использована")
+                </div>
+            </div>
+            }
+        </div>
+        }
+        else
+        {
+        <p>У вас пока нет подарочных карт. <a href="/GiftCards" class="profile-link">Купить карту</a></p>
+        }
+    </div>

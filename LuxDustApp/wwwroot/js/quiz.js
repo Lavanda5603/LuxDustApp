@@ -89,3 +89,64 @@ function confirmRemove(cartId) {
         window.location.href = '/Quiz/RemoveFromCart?cartId=' + cartId;
     }
 }
+
+function updateQuantity(cartId, delta, btn) {
+    fetch('/Quiz/UpdateQuantity?cartId=' + cartId + '&delta=' + delta, {
+        method: 'POST'
+    })
+        .then(response => response.json())
+        .then(data => {
+            if (!data.success) {
+                alert('Не удалось обновить количество');
+                return;
+            }
+
+            document.querySelectorAll('.qty-value[data-cart-id="' + cartId + '"]').forEach(el => {
+                el.textContent = data.quantity;
+            });
+
+            document.querySelectorAll('.item-total[data-cart-id="' + cartId + '"]').forEach(el => {
+                const price = parseInt(el.dataset.price);
+                el.textContent = (price * data.quantity) + ' руб.';
+            });
+
+            let grandTotal = 0;
+            document.querySelectorAll('.item-total').forEach(el => {
+                const price = parseInt(el.dataset.price);
+                const qtyEl = document.querySelector('.qty-value[data-cart-id="' + el.dataset.cartId + '"]');
+                const qty = parseInt(qtyEl.textContent);
+                grandTotal += price * qty;
+            });
+
+            const grandTotalEl = document.getElementById('cartGrandTotal');
+            if (grandTotalEl) grandTotalEl.textContent = grandTotal + ' руб.';
+
+            const totalPriceEl = document.getElementById('totalPrice');
+            const deliveryPriceEl = document.getElementById('deliveryPrice');
+            if (totalPriceEl) {
+                const delivery = deliveryPriceEl ? parseInt(deliveryPriceEl.textContent) : 0;
+                totalPriceEl.textContent = grandTotal + delivery;
+            }
+
+            const varTotal = document.getElementById('varTotal');
+            if (varTotal) varTotal.textContent = grandTotal;
+        })
+        .catch(() => alert('Ошибка при обновлении'));
+}
+
+function toggleAddress(show) {
+    var addressBlock = document.getElementById('addressBlock');
+    if (addressBlock) {
+        addressBlock.style.display = show ? 'block' : 'none';
+    }
+
+    var deliveryPriceEl = document.getElementById('deliveryPrice');
+    var varTotalEl = document.getElementById('varTotal');
+    var totalPriceEl = document.getElementById('totalPrice');
+
+    var delivery = show ? 300 : 0;
+    if (deliveryPriceEl) deliveryPriceEl.textContent = delivery;
+
+    var total = varTotalEl ? parseInt(varTotalEl.textContent) : 0;
+    if (totalPriceEl) totalPriceEl.textContent = total + delivery;
+}

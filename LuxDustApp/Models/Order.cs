@@ -16,10 +16,13 @@ namespace LuxDustApp.Models
 		public int TotalPrice { get; set; }
 		public int DeliveryPrice { get; set; }
 		public int Discount { get; set; }
+		public string? PromoCode { get; set; }
+		public int PromoDiscount { get; set; }
 		public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 		public string? Status { get; set; }
 
 		public List<OrderItem> Items { get; set; } = new List<OrderItem>();
+		public List<OrderGiftCard> GiftCards { get; set; } = new List<OrderGiftCard>();
 		public User? User { get; set; }
 	}
 }

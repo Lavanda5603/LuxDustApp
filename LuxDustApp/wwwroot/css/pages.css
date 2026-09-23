@@ -1146,3 +1146,663 @@ body div.text-muted {
 	align-items: center;
 	gap: 1rem;
 	margin-top: 0.5rem;
+}
+
+.profile-header {
+	display: flex;
+	align-items: center;
+	gap: 2rem;
+	padding: 2rem;
+	background: rgba(255, 255, 255, 0.04);
+	border: 1px solid rgba(255, 255, 255, 0.08);
+	border-radius: 24px;
+	margin-bottom: 2rem;
+	backdrop-filter: blur(15px);
+	position: relative;
+	overflow: hidden;
+}
+
+	.profile-header::before {
+		content: '';
+		position: absolute;
+		top: 0;
+		left: 0;
+		right: 0;
+		height: 2px;
+		background: linear-gradient(90deg, transparent, #d4af37, transparent);
+		opacity: 0.5;
+	}
+
+.profile-avatar {
+	flex-shrink: 0;
+}
+
+	.profile-avatar img {
+		width: 140px;
+		height: 140px;
+		border-radius: 50%;
+		object-fit: cover;
+		border: 3px solid #d4af37;
+		box-shadow: 0 0 30px rgba(212, 175, 55, 0.4);
+		background: rgba(255, 255, 255, 0.03);
+	}
+
+.avatar-placeholder {
+	width: 140px;
+	height: 140px;
+	border-radius: 50%;
+	background: linear-gradient(135deg, rgba(212, 175, 55, 0.3) 0%, rgba(232, 168, 160, 0.3) 100%);
+	border: 3px solid #d4af37;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	font-family: 'Playfair Display', serif;
+	font-size: 3.5rem;
+	font-weight: 700;
+	color: #1a0b1f;
+	box-shadow: 0 0 30px rgba(212, 175, 55, 0.4);
+}
+
+.profile-info h3 {
+	font-family: 'Playfair Display', serif;
+	font-size: 1.8rem;
+	color: #ffffff;
+	margin: 0 0 0.5rem 0;
+	letter-spacing: 0.5px;
+}
+
+.profile-email {
+	color: #e8c86a;
+	font-size: 1rem;
+	margin: 0 0 0.4rem 0;
+}
+
+.profile-meta {
+	color: #d4af37;
+	font-size: 0.95rem;
+	margin: 0 0 1rem 0;
+	letter-spacing: 0.3px;
+}
+
+.profile-info .btn {
+	margin-top: 0.5rem;
+}
+
+@media (max-width: 768px) {
+	.profile-header {
+		flex-direction: column;
+		text-align: center;
+		gap: 1.5rem;
+	}
+
+	.profile-avatar img,
+	.avatar-placeholder {
+		width: 110px;
+		height: 110px;
+	}
+
+	.profile-info h3 {
+		font-size: 1.5rem;
+	}
+}
+
+.avatar-edit-preview {
+	display: flex;
+	align-items: center;
+	gap: 1.2rem;
+	padding: 1rem;
+	background: rgba(255, 255, 255, 0.03);
+	border: 1px solid rgba(255, 255, 255, 0.08);
+	border-radius: 16px;
+}
+
+	.avatar-edit-preview img {
+		width: 90px;
+		height: 90px;
+		border-radius: 50%;
+		object-fit: cover;
+		border: 2px solid #d4af37;
+		box-shadow: 0 0 20px rgba(212, 175, 55, 0.35);
+		background: rgba(255, 255, 255, 0.03);
+		flex-shrink: 0;
+	}
+
+	.avatar-edit-preview .avatar-edit-info {
+		display: flex;
+		flex-direction: column;
+	}
+
+	.avatar-edit-preview .current-image-label {
+		color: #d4af37;
+		font-size: 0.9rem;
+		font-weight: 600;
+		display: block;
+		margin-bottom: 0.4rem;
+	}
+
+	.avatar-edit-preview .no-image-text {
+		color: #e8c86a;
+		font-size: 0.9rem;
+		font-style: italic;
+	}
+
+input[type="file"].form-control::file-selector-button {
+	background: linear-gradient(135deg, #d4af37 0%, #e8c86a 100%);
+	color: #1a0b1f;
+	border: none;
+	padding: 0.5rem 1rem;
+	border-radius: 50px;
+	font-weight: 600;
+	cursor: pointer;
+	margin-right: 1rem;
+	font-size: 0.85rem;
+	text-transform: uppercase;
+	letter-spacing: 0.5px;
+	transition: all 0.3s ease;
+}
+
+.qty-controls {
+	display: inline-flex;
+	align-items: center;
+	gap: 0.5rem;
+	background: rgba(255, 255, 255, 0.04);
+	border: 1px solid rgba(255, 255, 255, 0.08);
+	border-radius: 50px;
+	padding: 0.3rem 0.5rem;
+}
+
+.qty-btn {
+	width: 32px;
+	height: 32px;
+	border-radius: 50%;
+	border: none;
+	background: linear-gradient(135deg, #d4af37 0%, #e8c86a 100%);
+	color: #1a0b1f;
+	font-weight: 700;
+	font-size: 1.1rem;
+	cursor: pointer;
+	transition: all 0.3s ease;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	padding: 0;
+	line-height: 1;
+}
+
+	.qty-btn:hover {
+		transform: scale(1.1);
+		box-shadow: 0 4px 15px rgba(212, 175, 55, 0.5);
+	}
+
+.qty-value {
+	min-width: 30px;
+	text-align: center;
+	color: #ffffff;
+	font-weight: 600;
+	font-size: 1rem;
+}
+
+.order-summary {
+	background: rgba(255, 255, 255, 0.04);
+	border: 1px solid rgba(255, 255, 255, 0.08);
+	border-radius: 20px;
+	padding: 1.8rem;
+	backdrop-filter: blur(10px);
+	position: relative;
+	overflow: hidden;
+	position: sticky;
+	top: 100px;
+}
+
+	.order-summary::before {
+		content: '';
+		position: absolute;
+		top: 0;
+		left: 0;
+		right: 0;
+		height: 2px;
+		background: linear-gradient(90deg, transparent, #d4af37, transparent);
+		opacity: 0.6;
+	}
+
+	.order-summary h4 {
+		color: #d4af37;
+		font-family: 'Playfair Display', serif;
+		font-size: 1.4rem;
+		margin-bottom: 1.2rem;
+		text-align: center;
+		letter-spacing: 1px;
+	}
+
+.order-items-list {
+	list-style: none;
+	padding: 0;
+	margin: 0 0 1.5rem 0;
+}
+
+	.order-items-list li {
+		padding: 0.9rem 0;
+		border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+	}
+
+		.order-items-list li:last-child {
+			border-bottom: none;
+		}
+
+.order-item-row {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 0.8rem;
+	flex-wrap: wrap;
+}
+
+	.order-item-row .profile-link {
+		flex: 1;
+		min-width: 0;
+		font-size: 0.95rem;
+		overflow: hidden;
+		text-overflow: ellipsis;
+	}
+
+	.order-item-row .item-total {
+		color: #d4af37;
+		font-size: 1rem;
+		font-weight: 700;
+		white-space: nowrap;
+	}
+
+.order-totals {
+	border-top: 1px solid rgba(212, 175, 55, 0.3);
+	padding-top: 1rem;
+	margin-bottom: 1.5rem;
+}
+
+	.order-totals p {
+		color: #e8c86a;
+		margin: 0.5rem 0;
+		font-size: 1rem;
+		display: flex;
+		justify-content: space-between;
+	}
+
+		.order-totals p strong {
+			color: #ffffff;
+			font-weight: 600;
+		}
+
+.order-grand-total {
+	font-size: 1.25rem !important;
+	padding-top: 0.7rem;
+	border-top: 1px solid rgba(212, 175, 55, 0.2);
+	margin-top: 0.7rem !important;
+}
+
+	.order-grand-total span {
+		color: #d4af37;
+		font-family: 'Playfair Display', serif;
+		font-size: 1.5rem;
+		font-weight: 700;
+	}
+
+@media (max-width: 768px) {
+	.order-summary {
+		position: static;
+		margin-top: 2rem;
+	}
+
+	.order-item-row {
+		flex-direction: column;
+		align-items: flex-start;
+	}
+}
+
+.promo-block {
+	margin-top: 1.2rem;
+	padding-top: 1.2rem;
+	border-top: 1px solid rgba(212, 175, 55, 0.3);
+}
+
+.promo-input-row {
+	display: flex;
+	gap: 0.6rem;
+	align-items: stretch;
+}
+
+	.promo-input-row .form-control {
+		flex: 1;
+	}
+
+	.promo-input-row .btn {
+		white-space: nowrap;
+	}
+
+.promo-message {
+	margin-top: 0.6rem;
+	font-size: 0.9rem;
+	min-height: 1.2rem;
+}
+
+	.promo-message.success {
+		color: #d4af37;
+	}
+
+	.promo-message.error {
+		color: #e8a8a0;
+	}
+
+.giftcards-intro {
+	text-align: center;
+	margin-bottom: 3rem;
+}
+
+	.giftcards-intro p {
+		color: #e8c86a;
+		font-size: 1.1rem;
+		max-width: 600px;
+		margin: 0 auto;
+		line-height: 1.7;
+	}
+
+.giftcards-grid {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+	gap: 1.5rem;
+	margin-bottom: 4rem;
+	max-width: 900px;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+.giftcard-option {
+	background: rgba(255, 255, 255, 0.04);
+	border: 1px solid rgba(255, 255, 255, 0.08);
+	border-radius: 24px;
+	padding: 2.5rem 1.5rem;
+	text-align: center;
+	transition: all 0.4s ease;
+	position: relative;
+	overflow: hidden;
+	backdrop-filter: blur(10px);
+}
+
+	.giftcard-option::before {
+		content: '';
+		position: absolute;
+		top: 0;
+		left: 0;
+		right: 0;
+		height: 2px;
+		background: linear-gradient(90deg, transparent, #d4af37, transparent);
+		opacity: 0.5;
+	}
+
+	.giftcard-option:hover {
+		border-color: #d4af37;
+		transform: translateY(-8px);
+		box-shadow: 0 20px 50px rgba(212, 175, 55, 0.2);
+		background: rgba(255, 255, 255, 0.07);
+	}
+
+	.giftcard-option.featured {
+		background: linear-gradient(135deg, rgba(212, 175, 55, 0.12) 0%, rgba(232, 168, 160, 0.08) 100%);
+		border-color: rgba(212, 175, 55, 0.5);
+	}
+
+.giftcard-icon {
+	font-size: 2.5rem;
+	color: #d4af37;
+	margin-bottom: 1rem;
+	display: block;
+	animation: pulse-icon 3s ease-in-out infinite;
+}
+
+.giftcard-amount {
+	font-family: 'Playfair Display', serif;
+	font-size: 2.5rem;
+	font-weight: 700;
+	background: linear-gradient(135deg, #d4af37 0%, #e8c86a 100%);
+	-webkit-background-clip: text;
+	-webkit-text-fill-color: transparent;
+	background-clip: text;
+	margin-bottom: 1.5rem;
+	letter-spacing: 1px;
+}
+
+.giftcards-steps {
+	text-align: center;
+}
+
+	.giftcards-steps h4 {
+		font-family: 'Playfair Display', serif;
+		color: #d4af37;
+		font-size: 1.4rem;
+		margin-bottom: 2rem;
+		letter-spacing: 1px;
+	}
+
+.giftcards-steps-row {
+	display: flex;
+	justify-content: center;
+	gap: 2rem;
+	flex-wrap: wrap;
+}
+
+.giftcard-step {
+	text-align: center;
+	max-width: 200px;
+}
+
+.giftcard-step-num {
+	font-family: 'Playfair Display', serif;
+	font-size: 2.5rem;
+	font-weight: 700;
+	color: #d4af37;
+	line-height: 1;
+	margin-bottom: 0.8rem;
+	letter-spacing: 2px;
+}
+
+.giftcard-step p {
+	color: #e8c86a;
+	font-size: 0.95rem;
+	margin: 0;
+}
+
+.giftcard-success {
+	background: rgba(255, 255, 255, 0.04);
+	border: 1px solid rgba(255, 255, 255, 0.08);
+	border-radius: 24px;
+	padding: 3rem 2rem;
+	text-align: center;
+	backdrop-filter: blur(15px);
+	position: relative;
+	overflow: hidden;
+	max-width: 600px;
+	margin: 0 auto;
+}
+
+	.giftcard-success::before {
+		content: '';
+		position: absolute;
+		top: 0;
+		left: 0;
+		right: 0;
+		height: 2px;
+		background: linear-gradient(90deg, transparent, #d4af37, transparent);
+		opacity: 0.7;
+	}
+
+.giftcard-success-icon {
+	font-size: 3rem;
+	color: #d4af37;
+	margin-bottom: 1rem;
+	animation: pulse-icon 3s ease-in-out infinite;
+}
+
+.giftcard-success-label {
+	color: #e8c86a;
+	font-size: 0.95rem;
+	margin-bottom: 0.5rem;
+	letter-spacing: 1px;
+	text-transform: uppercase;
+}
+
+.giftcard-code {
+	font-family: 'Playfair Display', serif;
+	font-size: 1.8rem;
+	font-weight: 700;
+	color: #d4af37;
+	background: rgba(212, 175, 55, 0.08);
+	border: 2px dashed rgba(212, 175, 55, 0.5);
+	border-radius: 14px;
+	padding: 1.2rem;
+	margin: 1rem 0;
+	letter-spacing: 2px;
+	word-break: break-all;
+}
+
+.giftcard-success-info {
+	margin: 2rem 0;
+	padding-top: 1.5rem;
+	border-top: 1px solid rgba(212, 175, 55, 0.2);
+}
+
+	.giftcard-success-info p {
+		color: #e8c86a;
+		margin: 0.5rem 0;
+		font-size: 1rem;
+	}
+
+	.giftcard-success-info strong {
+		color: #ffffff;
+	}
+
+.giftcard-success-actions {
+	display: flex;
+	gap: 1rem;
+	justify-content: center;
+	flex-wrap: wrap;
+	margin-top: 1.5rem;
+}
+
+.giftcards-list {
+	display: flex;
+	flex-direction: column;
+	gap: 1rem;
+}
+
+.giftcard-item {
+	display: flex;
+	align-items: center;
+	gap: 2rem;
+	background: rgba(255, 255, 255, 0.04);
+	border: 1px solid rgba(255, 255, 255, 0.08);
+	border-radius: 16px;
+	padding: 1.5rem;
+	backdrop-filter: blur(10px);
+}
+
+.giftcard-item-code {
+	font-family: 'Playfair Display', serif;
+	font-size: 1.1rem;
+	color: #d4af37;
+	letter-spacing: 1.5px;
+	flex-shrink: 0;
+}
+
+.giftcard-item-info {
+	flex: 1;
+}
+
+	.giftcard-item-info p {
+		color: #e8c86a;
+		margin: 0.3rem 0;
+		font-size: 0.95rem;
+	}
+
+	.giftcard-item-info strong {
+		color: #ffffff;
+	}
+
+.giftcard-item-status {
+	padding: 0.4rem 1rem;
+	border-radius: 50px;
+	font-size: 0.8rem;
+	font-weight: 700;
+	text-transform: uppercase;
+	letter-spacing: 1px;
+	flex-shrink: 0;
+}
+
+	.giftcard-item-status.active {
+		background: linear-gradient(135deg, #d4af37 0%, #e8c86a 100%);
+		color: #1a0b1f;
+	}
+
+	.giftcard-item-status.used {
+		background: rgba(232, 168, 160, 0.3);
+		color: #e8a8a0;
+	}
+
+@media (max-width: 768px) {
+	.giftcard-item {
+		flex-direction: column;
+		align-items: flex-start;
+		gap: 1rem;
+	}
+
+	.giftcard-code {
+		font-size: 1.4rem;
+	}
+
+	.giftcard-amount {
+		font-size: 2rem;
+	}
+}
+
+.applied-giftcards {
+	display: flex;
+	flex-direction: column;
+	gap: 0.5rem;
+	margin-top: 0.8rem;
+}
+
+.applied-giftcard-item {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 0.8rem;
+	background: rgba(212, 175, 55, 0.08);
+	border: 1px solid rgba(212, 175, 55, 0.3);
+	border-radius: 10px;
+	padding: 0.5rem 0.8rem;
+	font-size: 0.9rem;
+}
+
+.applied-giftcard-code {
+	color: #d4af37;
+	font-family: 'Playfair Display', serif;
+	letter-spacing: 1px;
+}
+
+.applied-giftcard-amount {
+	color: #e8c86a;
+	font-weight: 700;
+}
+
+.applied-giftcard-remove {
+	background: transparent;
+	border: none;
+	color: #e8a8a0;
+	font-size: 1.2rem;
+	cursor: pointer;
+	line-height: 1;
+	padding: 0 0.3rem;
+	transition: all 0.3s ease;
+}
+
+	.applied-giftcard-remove:hover {
+		color: #ffffff;
+		transform: scale(1.2);
+	}

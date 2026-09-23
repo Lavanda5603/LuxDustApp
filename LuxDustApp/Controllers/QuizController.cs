@@ -150,5 +150,24 @@ namespace LuxDustApp.Controllers
 			}
 			return RedirectToAction("Cart", "Quiz");
 		}
+
+		[HttpPost]
+		public IActionResult UpdateQuantity(int cartId, int delta)
+		{
+			var userIdClaim = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+			if (userIdClaim == null) return Json(new { success = false });
+			var userId = int.Parse(userIdClaim);
+
+			var item = _context.Carts.FirstOrDefault(c => c.Id == cartId && c.UserId == userId);
+			if (item == null) return Json(new { success = false });
+
+			item.Quantity += delta;
+			if (item.Quantity < 1) item.Quantity = 1;
+			if (item.Quantity > 99) item.Quantity = 99;
+
+			_context.SaveChanges();
+
+			return Json(new { success = true, quantity = item.Quantity });
+		}
 	}
 }
