@@ -1144,9 +1144,42 @@ body div.text-muted {
 .admin-image-preview {
 	display: flex;
 	align-items: center;
-	gap: 1rem;
+	gap: 1.2rem;
 	margin-top: 0.5rem;
+	padding: 1rem;
+	background: rgba(255, 255, 255, 0.03);
+	border: 1px solid rgba(255, 255, 255, 0.08);
+	border-radius: 16px;
 }
+
+	.admin-image-preview img {
+		width: 120px;
+		height: 120px;
+		max-width: 120px;
+		max-height: 120px;
+		object-fit: contain;
+		border-radius: 12px;
+		border: 1px solid rgba(212, 175, 55, 0.4);
+		background: rgba(255, 255, 255, 0.02);
+		padding: 0.4rem;
+		flex-shrink: 0;
+		box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+	}
+
+	.admin-image-preview .current-image-label {
+		color: #d4af37;
+		font-size: 0.9rem;
+		font-weight: 600;
+		display: block;
+		margin-bottom: 0.5rem;
+		letter-spacing: 0.5px;
+	}
+
+	.admin-image-preview .no-image-text {
+		color: #e8c86a;
+		font-size: 0.9rem;
+		font-style: italic;
+	}
 
 .profile-header {
 	display: flex;
