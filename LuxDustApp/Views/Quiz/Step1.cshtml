@@ -6,12 +6,14 @@
     <h2>Давайте познакомимся!</h2>
     <p id="stepIndicator">Шаг 1 из 15</p>
 
+    <!-- Прогресс-бар -->
     <div style="width: 100%; background-color: #e0e0e0; height: 8px; margin-bottom: 20px;">
         <div id="progressBar" style="width: 6.6%; background-color: #007bff; height: 8px;"></div>
     </div>
 
     <form id="quizForm" method="post" action="/Quiz/Results">
 
+        <!-- Шаг 1: Тип кожи -->
         <div class="step" data-step="1">
             <label>1. Какой у вас тип кожи?</label>
             <div>
@@ -26,6 +28,7 @@
             </div>
         </div>
 
+        <!-- Шаг 2: Возраст -->
         <div class="step" data-step="2" style="display:none;">
             <label>2. Сколько вам лет?</label>
             <div>
@@ -37,6 +40,7 @@
             </div>
         </div>
 
+        <!-- Шаг 3: Бюджет -->
         <div class="step" data-step="3" style="display:none;">
             <label>3. Ваш бюджет на уход в месяц</label>
             <div>
@@ -48,6 +52,7 @@
             </div>
         </div>
 
+        <!-- Шаг 4: Проблемы (множественный выбор) -->
         <div class="step" data-step="4" style="display:none;">
             <label>4. Какие проблемы вас беспокоят? (можно несколько)</label>
             <div>
@@ -65,6 +70,7 @@
             </div>
         </div>
 
+        <!-- Шаг 5: Аллергии (множественный выбор) -->
         <div class="step" data-step="5" style="display:none;">
             <label>5. Есть ли у вас аллергия на компоненты? (можно несколько)</label>
             <div>
@@ -80,6 +86,7 @@
             </div>
         </div>
 
+        <!-- Шаг 6: Сезон -->
         <div class="step" data-step="6" style="display:none;">
             <label>6. Для какого сезона подбираете уход?</label>
             <div>
@@ -90,11 +97,13 @@
             </div>
         </div>
 
-        <div class="step" data-step="7" style="display:none;">
-            <label>7. Каким брендам доверяете? (через запятую)</label>
+        <!-- Шаг 7: Любимые бренды (необязательный) -->
+        <div class="step" data-step="7" data-optional="true" style="display:none;">
+            <label>7. Каким брендам доверяете? (необязательно, через запятую)</label>
             <input type="text" name="FavoriteBrands" class="form-control" placeholder="Например: Librederm, Avene" />
         </div>
 
+        <!-- Шаг 8: Цель ухода (множественный выбор) -->
         <div class="step" data-step="8" style="display:none;">
             <label>8. Какая цель ухода? (можно несколько)</label>
             <div>
@@ -113,6 +122,7 @@
             </div>
         </div>
 
+        <!-- Шаг 9: Уровень стресса -->
         <div class="step" data-step="9" style="display:none;">
             <label>9. Какой у вас уровень стресса?</label>
             <div>
@@ -122,6 +132,7 @@
             </div>
         </div>
 
+        <!-- Шаг 10: Тип питания -->
         <div class="step" data-step="10" style="display:none;">
             <label>10. Как обычно выглядит ваш рацион?</label>
             <div>
@@ -133,6 +144,7 @@
             </div>
         </div>
 
+        <!-- Шаг 11: Чувствительность к солнцу -->
         <div class="step" data-step="11" style="display:none;">
             <label>11. Есть ли у вас чувствительность к солнцу?</label>
             <div>
@@ -141,6 +153,7 @@
             </div>
         </div>
 
+        <!-- Шаг 12: Склонность к отёкам -->
         <div class="step" data-step="12" style="display:none;">
             <label>12. Склонны ли вы к отёкам по утрам?</label>
             <div>
@@ -149,6 +162,7 @@
             </div>
         </div>
 
+        <!-- Шаг 13: Профессиональный уход -->
         <div class="step" data-step="13" style="display:none;">
             <label>13. Делаете ли вы профессиональный уход (чистки, пилинги)?</label>
             <div>
@@ -157,6 +171,7 @@
             </div>
         </div>
 
+        <!-- Шаг 14: Текстура -->
         <div class="step" data-step="14" style="display:none;">
             <label>14. Какую текстуру средств вы предпочитаете?</label>
             <div>
@@ -166,6 +181,7 @@
             </div>
         </div>
 
+        <!-- Шаг 15: Готовность к многоступенчатому уходу -->
         <div class="step" data-step="15" style="display:none;">
             <label>15. Готовы ли вы к многоступенчатому уходу?</label>
             <div>
@@ -174,6 +190,7 @@
             </div>
         </div>
 
+        <!-- Кнопки навигации -->
         <div style="margin-top: 20px; display: flex; gap: 10px;">
             <button type="button" id="backBtn" class="btn btn-secondary" style="display:none;">Назад</button>
             <button type="button" id="nextBtn" class="btn btn-primary">Продолжить</button>

@@ -6,6 +6,7 @@
 <div class="container">
     <h2>ТОП-10 лучших товаров для вас</h2>
 
+    <!-- ТОП-10 -->
     @if (Model.Top != null && Model.Top.Any())
     {
     <div class="row">
@@ -17,6 +18,8 @@
         <div class="col-md-6 mb-4">
             <div class="card">
                 <div class="card-body">
+
+                    <!-- Карточка: инфо + картинка -->
                     <div class="catalog-card">
                         <div class="catalog-card-info">
                             <h5 class="card-title">@product.Name</h5>
@@ -35,7 +38,11 @@
                             }
                         </a>
                     </div>
+
+                    <!-- Причины подбора -->
                     <p class="recommendation-reasons">@reasons</p>
+
+                    <!-- Кнопки -->
                     <div class="catalog-actions">
                         <a href="/Catalog/Details/@product.Id" class="btn btn-primary btn-sm">Подробнее</a>
                         <button type="button" class="btn btn-outline-secondary btn-sm" onclick="addToCart(@product.Id, this)">В корзину</button>
@@ -52,6 +59,7 @@
     <p>Подходящих продуктов не найдено.</p>
     }
 
+    <!-- Также может вам подойти -->
     @if (Model.Middle != null && Model.Middle.Any())
     {
     <h2 class="mt-5">Также может вам подойти</h2>
@@ -65,6 +73,8 @@
         <div class="col-md-6 mb-4">
             <div class="card">
                 <div class="card-body">
+
+                    <!-- Карточка: инфо + картинка -->
                     <div class="catalog-card">
                         <div class="catalog-card-info">
                             <h5 class="card-title">@product.Name</h5>
@@ -83,7 +93,11 @@
                             }
                         </a>
                     </div>
+
+                    <!-- Причины подбора -->
                     <p class="recommendation-reasons">@reasons</p>
+
+                    <!-- Кнопки -->
                     <div class="catalog-actions">
                         <a href="/Catalog/Details/@product.Id" class="btn btn-primary btn-sm">Подробнее</a>
                         <button type="button" class="btn btn-outline-secondary btn-sm" onclick="addToCart(@product.Id, this)">В корзину</button>

@@ -1,6 +1,9 @@
-﻿@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500;600&display=swap');
+﻿/* site.css - Общий дизайн: переменные, навбар, футер, кнопки, формы */
+
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500;600&display=swap');
 
 :root {
+    /* Основные цвета */
     --bg-dark: #1a0b1f;
     --bg-medium: #2d1b36;
     --bg-deep: #0f0614;
@@ -15,12 +18,14 @@
     --white: #ffffff;
     --text-gold: #e8c86a;
     --text-soft: #d8cce0;
+    /* Границы и тени */
     --border-subtle: rgba(255, 255, 255, 0.08);
     --border-gold: rgba(212, 175, 55, 0.3);
     --shadow-soft: 0 20px 50px rgba(0, 0, 0, 0.3);
     --shadow-gold: 0 15px 40px rgba(212, 175, 55, 0.4);
 }
 
+/* Сброс отступов и границ */
 * {
     box-sizing: border-box;
 }
@@ -30,9 +35,9 @@ html, body {
     padding: 0;
 }
 
+/* Основной фон и типографика */
 body {
-    background: linear-gradient(135deg, var(--bg-dark) 0%, var(--bg-medium) 100%);
-    background-attachment: fixed;
+    background: linear-gradient(135deg, var(--bg-dark) 0%, var(--bg-medium) 100%) fixed;
     min-height: 100vh;
     color: var(--pearl);
     font-family: 'Inter', sans-serif;
@@ -43,6 +48,7 @@ body {
     flex-direction: column !important;
 }
 
+    /* Декоративное свечение справа сверху */
     body::before {
         content: '';
         position: fixed;
@@ -56,6 +62,7 @@ body {
         z-index: 0;
     }
 
+    /* Декоративное свечение слева снизу */
     body::after {
         content: '';
         position: fixed;
@@ -99,6 +106,7 @@ p {
     font-size: 1rem;
 }
 
+/* Золотой градиентный текст */
 .gold-text {
     background: linear-gradient(135deg, var(--gold) 0%, var(--gold-light) 100%);
     -webkit-background-clip: text;
@@ -110,6 +118,7 @@ p {
     color: var(--text-gold) !important;
 }
 
+/* Анимация появления блоков при скролле */
 .fade-in {
     opacity: 0;
     transform: translateY(30px);
@@ -121,6 +130,7 @@ p {
         transform: translateY(0);
     }
 
+/* Навигация */
 .navbar {
     background: rgba(15, 6, 20, 0.9) !important;
     backdrop-filter: blur(20px);
@@ -166,6 +176,7 @@ p {
         color: var(--gold) !important;
     }
 
+    /* Звёздочка перед логотипом */
     .navbar-brand::before {
         content: '✦';
         color: var(--gold);
@@ -213,6 +224,7 @@ p {
         align-items: center;
     }
 
+        /* Золотая полоска под ссылкой при наведении */
         .navbar-nav .nav-link::after {
             content: '';
             position: absolute;
@@ -234,6 +246,7 @@ p {
                 width: 70%;
             }
 
+        /* Активная ссылка */
         .navbar-nav .nav-link.active {
             color: var(--white) !important;
             font-weight: 700;
@@ -257,6 +270,7 @@ p {
     background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='%23d4af37' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
 }
 
+/* Кнопка установки PWA */
 #installPwaBtn {
     background: linear-gradient(135deg, var(--gold) 0%, var(--gold-light) 100%) !important;
     color: var(--bg-dark) !important;
@@ -279,6 +293,7 @@ p {
         box-shadow: 0 10px 25px rgba(212, 175, 55, 0.4);
     }
 
+/* Кнопки LuxDust */
 .btn-lux-primary {
     background: linear-gradient(135deg, var(--gold) 0%, var(--gold-light) 100%);
     color: var(--bg-dark) !important;
@@ -331,6 +346,7 @@ p {
         font-size: 0.85rem;
     }
 
+/* Формы */
 .form-control,
 .form-select {
     background: rgba(255, 255, 255, 0.05);
@@ -363,6 +379,7 @@ p {
     letter-spacing: 0.5px;
 }
 
+/* Стеклянная карточка */
 .glass-card {
     background: var(--bg-card);
     border: 1px solid var(--border-subtle);
@@ -379,6 +396,7 @@ p {
         background: var(--bg-card-hover);
     }
 
+/* Заголовки секций */
 .section-header {
     text-align: center;
     margin-bottom: 60px;
@@ -412,6 +430,7 @@ p {
     margin-bottom: 0.5rem;
 }
 
+/* Футер */
 footer {
     background: rgba(0, 0, 0, 0.5) !important;
     color: var(--text-gold) !important;
@@ -432,6 +451,7 @@ footer {
         font-size: 1.2rem;
     }
 
+/* Алерты */
 .alert {
     background: rgba(255, 255, 255, 0.05);
     border: 1px solid var(--border-subtle);
@@ -452,6 +472,7 @@ footer {
     color: var(--rose);
 }
 
+/* Адаптивность навбара */
 @media (max-width: 991px) {
     .navbar {
         height: auto !important;
@@ -494,6 +515,7 @@ footer {
     }
 }
 
+/* Скроллбар */
 ::-webkit-scrollbar {
     width: 10px;
 }

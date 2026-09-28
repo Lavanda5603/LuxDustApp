@@ -6,6 +6,7 @@
     <div class="container">
         <h2>Админ-панель</h2>
 
+        <!-- Статистика -->
         <div class="row mb-4">
             <div class="col-md-4">
                 <div class="card text-center">
@@ -33,15 +34,20 @@
             </div>
         </div>
 
+        <!-- Кнопка добавления товара -->
         <a href="/Admin/Create" class="btn btn-success mb-4">Добавить товар</a>
 
+        <!-- Панель поиска и фильтрации -->
         <div class="admin-search-panel">
             <div class="row g-3">
+                <!-- Поиск по названию -->
                 <div class="col-md-5">
                     <label class="form-label-lux">Поиск по названию</label>
                     <input type="text" id="adminSearchInput" class="form-control"
                            placeholder="Поиск по названию" autocomplete="off" />
                 </div>
+
+                <!-- Фильтр по бренду -->
                 <div class="col-md-3">
                     <label class="form-label-lux">Бренд</label>
                     <select id="adminBrandFilter" class="form-select">
@@ -54,6 +60,8 @@
                             }
                     </select>
                 </div>
+
+                <!-- Фильтр по категории -->
                 <div class="col-md-4">
                     <label class="form-label-lux">Категория</label>
                     <select id="adminCategoryFilter" class="form-select">
@@ -68,17 +76,20 @@
                 </div>
             </div>
 
+            <!-- Быстрые фильтры -->
             <div class="catalog-filters mt-3">
                 <a href="#" class="filter-btn active" data-filter="">Все товары</a>
                 <a href="#" class="filter-btn" data-filter="new">Новинки</a>
                 <a href="#" class="filter-btn" data-filter="sale">Акции</a>
             </div>
 
+            <!-- Счётчик найденных -->
             <p class="catalog-count mt-3 mb-0">
                 Найдено: <strong id="adminFoundCount">@ViewBag.TotalProducts</strong>
             </p>
         </div>
 
+        <!-- Таблица товаров -->
         <table class="table mt-3">
             <thead>
                 <tr>

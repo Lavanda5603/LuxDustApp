@@ -1,8 +1,15 @@
-﻿let appliedPromo = null;
+﻿// promo.js - Промокоды и подарочные карты на странице оформления заказа
 
+let appliedPromo = null;
+let appliedGiftCards = [];
+
+// Применяю промокод
 function applyPromo() {
     const input = document.getElementById('promoCodeInput');
     const message = document.getElementById('promoMessage');
+
+    if (!input || !message) return;
+
     const code = input.value.trim();
 
     if (!code) {
@@ -29,12 +36,14 @@ function applyPromo() {
                 return;
             }
 
+            // Промокод применён
             message.textContent = data.message;
             message.className = 'promo-message success';
             appliedPromo = data;
 
             const promoRow = document.getElementById('promoRow');
             if (promoRow) promoRow.style.display = 'flex';
+
             const promoDiscountEl = document.getElementById('promoDiscount');
             if (promoDiscountEl) promoDiscountEl.textContent = data.discount;
 
@@ -51,6 +60,7 @@ function applyPromo() {
         });
 }
 
+// Сбрасываю промокод
 function resetPromo() {
     const promoRow = document.getElementById('promoRow');
     if (promoRow) promoRow.style.display = 'none';
@@ -63,6 +73,7 @@ function resetPromo() {
     recalcTotal();
 }
 
+// Пересчитываю итоговую сумму заказа
 function recalcTotal() {
     const varTotalEl = document.getElementById('varTotal');
     const deliveryPriceEl = document.getElementById('deliveryPrice');
@@ -81,11 +92,13 @@ function recalcTotal() {
     if (totalPriceEl) totalPriceEl.textContent = total;
 }
 
-let appliedGiftCards = [];
-
+// Применяю подарочную карту
 function applyGiftCard() {
     const input = document.getElementById('giftCardInput');
     const message = document.getElementById('giftCardMessage');
+
+    if (!input || !message) return;
+
     const code = input.value.trim().toUpperCase();
 
     if (!code) {
@@ -94,6 +107,7 @@ function applyGiftCard() {
         return;
     }
 
+    // Проверяю, не применена ли уже эта карта
     if (appliedGiftCards.some(c => c.code === code)) {
         message.textContent = 'Эта карта уже применена';
         message.className = 'promo-message error';
@@ -124,6 +138,7 @@ function applyGiftCard() {
                 return;
             }
 
+            // Карта применена
             message.textContent = '';
             appliedGiftCards.push({ code: data.code, amount: data.amount });
 
@@ -132,9 +147,11 @@ function applyGiftCard() {
             const giftCardRow = document.getElementById('giftCardRow');
             if (giftCardRow) giftCardRow.style.display = 'flex';
 
+            // Пересчитываю сумму всех применённых карт
             const totalApplied = appliedGiftCards.reduce((s, c) => s + c.amount, 0);
             if (giftCardDiscountEl) giftCardDiscountEl.textContent = totalApplied;
 
+            // Скрытое поле для отправки на сервер
             const appliedInput = document.getElementById('appliedGiftCardsInput');
             if (appliedInput) appliedInput.value = appliedGiftCards.map(c => c.code).join(',');
 
@@ -147,6 +164,7 @@ function applyGiftCard() {
         });
 }
 
+// Отрисовываю список применённых подарочных карт
 function renderAppliedGiftCards() {
     const container = document.getElementById('appliedGiftCards');
     if (!container) return;
@@ -160,6 +178,7 @@ function renderAppliedGiftCards() {
     `).join('');
 }
 
+// Удаляю подарочную карту из списка
 function removeGiftCard(index) {
     appliedGiftCards.splice(index, 1);
 
@@ -167,6 +186,7 @@ function removeGiftCard(index) {
     const totalApplied = appliedGiftCards.reduce((s, c) => s + c.amount, 0);
     if (giftCardDiscountEl) giftCardDiscountEl.textContent = totalApplied;
 
+    // Скрываю строку "Подарочные карты", если их больше нет
     if (appliedGiftCards.length === 0) {
         const giftCardRow = document.getElementById('giftCardRow');
         if (giftCardRow) giftCardRow.style.display = 'none';

@@ -5,6 +5,8 @@
 
     <div class="container">
         <div class="row">
+
+            <!-- Левая колонка: категории и подкатегории -->
             <div class="col-md-3">
                 <h4>Категории</h4>
                 <ul class="list-group">
@@ -37,6 +39,7 @@
                 </ul>
             </div>
 
+            <!-- Правая колонка: товары -->
             <div class="col-md-9">
                 <h2>
                     @if (!string.IsNullOrEmpty(ViewBag.CurrentSubcategory))
@@ -52,7 +55,8 @@
                     <span>Все товары</span>
                     }
                 </h2>
-                
+
+                <!-- Фильтры Акции/Новинки/Все -->
                 <div class="row g-2 mb-3">
                     <div class="col-12">
                         <div class="catalog-filters">
@@ -69,6 +73,7 @@
                     </div>
                 </div>
 
+                <!-- Поиск и фильтр по цене -->
                 <div class="row g-2 mb-4">
                     <input type="hidden" id="currentCategory" value="@ViewBag.CurrentCategory" />
                     <input type="hidden" id="currentSubcategory" value="@ViewBag.CurrentSubcategory" />
@@ -83,12 +88,15 @@
                     </div>
                 </div>
 
+                <!-- Счётчик -->
                 <p class="catalog-count">Найдено товаров: @ViewBag.TotalItems</p>
 
+                <!-- Сетка товаров -->
                 <div id="productsContainer">
                     @await Html.PartialAsync("_ProductCards", Model)
                 </div>
 
+                <!-- Пагинация -->
                 @if (ViewBag.TotalPages > 1)
                 {
                 <nav>
@@ -102,6 +110,7 @@
                         {
                         startPage = Math.Max(1, endPage - 4);
                         }
+                        // Собираю URL для конкретной страницы с сохранением всех фильтров
                         string BuildUrl(int p) => $"/Catalog?category={ViewBag.CurrentCategory}&subcategory={ViewBag.CurrentSubcategory}&search={ViewBag.CurrentSearch}&minPrice={ViewBag.MinPrice}&maxPrice={ViewBag.MaxPrice}&filter={ViewBag.Filter}&page={p}";
                         }
 

@@ -1,4 +1,6 @@
-﻿using LuxDustApp.Data;
+﻿// CheckoutController.cs - Оформление заказа
+
+using LuxDustApp.Data;
 using LuxDustApp.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -18,6 +20,7 @@ namespace LuxDustApp.Controllers
 			_context = context;
 		}
 
+		// Вспомогательный метод для получения ID текущего пользователя
 		private int? GetUserId()
 		{
 			var claim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
@@ -29,6 +32,7 @@ namespace LuxDustApp.Controllers
 			var userId = GetUserId();
 			if (userId == null) return RedirectToAction("Login", "Account");
 
+			// Загружаю товары в корзине пользователя
 			var cartItems = _context.Carts.Where(c => c.UserId == userId).Include(c => c.Product).ToList();
 			if (!cartItems.Any()) return RedirectToAction("Cart", "Quiz");
 
@@ -48,9 +52,39 @@ namespace LuxDustApp.Controllers
 			var cartItems = _context.Carts.Where(c => c.UserId == userId).Include(c => c.Product).ToList();
 			if (!cartItems.Any()) return RedirectToAction("Cart", "Quiz");
 
+			// При доставке курьером адрес обязателен
+			if (deliveryMethod == "Курьер" && string.IsNullOrWhiteSpace(address))
+			{
+				ModelState.AddModelError("address", "Укажите адрес доставки");
+				return View("Index", cartItems);
+			}
+
+			// Телефон обязателен
+			if (string.IsNullOrWhiteSpace(phone))
+			{
+				ModelState.AddModelError("phone", "Укажите телефон");
+				return View("Index", cartItems);
+			}
+
+			// Дата доставки не может быть в прошлом
+			if (deliveryDate.Date < DateTime.UtcNow.Date)
+			{
+				ModelState.AddModelError("deliveryDate", "Дата доставки не может быть в прошлом");
+				return View("Index", cartItems);
+			}
+
+			// Дата доставки не может быть позже, чем через 5 дней
+			if (deliveryDate.Date > DateTime.UtcNow.Date.AddDays(5))
+			{
+				ModelState.AddModelError("deliveryDate", "Дата доставки не может быть позже, чем через 5 дней");
+				return View("Index", cartItems);
+			}
+
+			// Считаю общую стоимость товаров и доставки
 			int totalPrice = cartItems.Sum(c => c.Product.Price * c.Quantity);
 			int deliveryPrice = deliveryMethod == "Курьер" ? 300 : 0;
 
+			// Применяю промокод
 			int promoDiscount = 0;
 			string? promoCode = null;
 
@@ -65,6 +99,7 @@ namespace LuxDustApp.Controllers
 				}
 			}
 
+			// Применяю подарочные карты
 			int giftCardTotal = 0;
 			var giftCardEntries = new List<(GiftCard card, int amount)>();
 
@@ -89,9 +124,11 @@ namespace LuxDustApp.Controllers
 				}
 			}
 
+			// Итоговая сумма заказа
 			int finalTotal = totalPrice + deliveryPrice - promoDiscount - giftCardTotal;
 			if (finalTotal < 0) finalTotal = 0;
 
+			// Создаю заказ
 			var order = new Order
 			{
 				UserId = userId.Value,
@@ -113,6 +150,7 @@ namespace LuxDustApp.Controllers
 			_context.Orders.Add(order);
 			_context.SaveChanges();
 
+			// Добавляю товары в заказ
 			foreach (var item in cartItems)
 			{
 				_context.OrderItems.Add(new OrderItem
@@ -125,6 +163,7 @@ namespace LuxDustApp.Controllers
 			}
 			_context.SaveChanges();
 
+			// Списываю средства с подарочных карт
 			foreach (var (card, amount) in giftCardEntries)
 			{
 				card.RemainingAmount -= amount;
@@ -145,6 +184,7 @@ namespace LuxDustApp.Controllers
 			}
 			_context.SaveChanges();
 
+			// Очищаю корзину
 			_context.Carts.RemoveRange(cartItems);
 			_context.SaveChanges();
 
@@ -156,6 +196,7 @@ namespace LuxDustApp.Controllers
 			var order = _context.Orders.FirstOrDefault(o => o.Id == id);
 			if (order == null) return NotFound();
 
+			// Обновляю статус заказа в зависимости от даты доставки
 			var today = DateTime.UtcNow.Date;
 			var deliveryDate = order.DeliveryDate.Date;
 

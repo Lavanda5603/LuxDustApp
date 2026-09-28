@@ -8,6 +8,7 @@
 
 		@if (Model != null && Model.Any())
 		{
+		<!-- Таблица товаров -->
 		<table class="table">
 			<thead>
 				<tr>
@@ -20,18 +21,22 @@
 			</thead>
 			<tbody>
 				@{
+				// Считаю общую сумму
 				int total = 0;
 				}
+
 				@foreach (var item in Model)
 				{
 				var itemTotal = item.Product.Price * item.Quantity;
 				total += itemTotal;
+
 				<tr>
 					<td>
 						<a href="/Catalog/Details/@item.ProductId" class="profile-link">@item.Product.Name</a>
 					</td>
 					<td>@item.Product.Price руб.</td>
 					<td>
+						<!-- Кнопки + / − для количества -->
 						<div class="qty-controls">
 							<button type="button" class="qty-btn" onclick="updateQuantity(@item.Id, -1, this)">−</button>
 							<span class="qty-value" data-cart-id="@item.Id">@item.Quantity</span>
@@ -58,6 +63,7 @@
 		}
 		else
 		{
+		<!-- Если корзина пустая -->
 		<p>Ваша корзина пуста. <a href="/Quiz/Step1">Пройти анкету</a> и получить подборку.</p>
 		}
 	</div>

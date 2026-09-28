@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿// AccountController.cs - Управление пользователями, регистрацией и профилем
+
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using LuxDustApp.Data;
@@ -11,6 +13,7 @@ using BCrypt.Net;
 using System.IO;
 using Microsoft.AspNetCore.Http;
 using System;
+using System.Collections.Generic;
 
 namespace LuxDustApp.Controllers
 {
@@ -23,24 +26,44 @@ namespace LuxDustApp.Controllers
 			_context = context;
 		}
 
+		// Вспомогательный метод для получения ID текущего пользователя
+		private int? GetUserId()
+		{
+			var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+			return userIdClaim != null ? int.Parse(userIdClaim) : null;
+		}
+
 		public IActionResult Profile()
 		{
-			var userIdClaim = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
-			if (userIdClaim == null) return RedirectToAction("Login");
-			var userId = int.Parse(userIdClaim);
+			var userId = GetUserId();
+			if (userId == null) return RedirectToAction("Login");
 
-			var profile = _context.Profiles.FirstOrDefault(p => p.UserId == userId);
+			// Загружаю анкету пользователя
+			var profile = _context.Profiles.FirstOrDefault(p => p.UserId == userId.Value);
 
+			// Загружаю историю подборок (последние 10)
 			var recommendations = _context.Recommendations
-				.Where(r => r.UserId == userId).Include(r => r.Product).OrderByDescending(r => r.RecommendedAt).Take(10).ToList();
+				.Where(r => r.UserId == userId.Value)
+				.Include(r => r.Product)
+				.OrderByDescending(r => r.RecommendedAt)
+				.Take(10)
+				.ToList();
 
+			// Загружаю избранное
 			var favorites = _context.Favorites
-				.Where(f => f.UserId == userId).Include(f => f.Product).ToList();
+				.Where(f => f.UserId == userId.Value)
+				.Include(f => f.Product)
+				.ToList();
 
+			// Загружаю заказы пользователя
 			var orders = _context.Orders
-				.Where(o => o.UserId == userId).Include(o => o.Items).ThenInclude(oi => oi.Product)
-				.OrderByDescending(o => o.CreatedAt).ToList();
+				.Where(o => o.UserId == userId.Value)
+				.Include(o => o.Items)
+				.ThenInclude(oi => oi.Product)
+				.OrderByDescending(o => o.CreatedAt)
+				.ToList();
 
+			// Обновляю статусы заказов в зависимости от даты доставки
 			foreach (var order in orders)
 			{
 				var today = DateTime.UtcNow.Date;
@@ -68,15 +91,14 @@ namespace LuxDustApp.Controllers
 
 			_context.SaveChanges();
 
-			ViewBag.Orders = orders;
-
+			// Передаю данные в представление
 			ViewBag.Profile = profile;
 			ViewBag.Recommendations = recommendations;
 			ViewBag.Favorites = favorites;
 			ViewBag.Orders = orders;
-			var user = _context.Users.FirstOrDefault(u => u.Id == userId);
 
-			ViewBag.UserName = User.Identity.Name;
+			var user = _context.Users.FirstOrDefault(u => u.Id == userId.Value);
+			ViewBag.UserName = User.Identity?.Name;
 			ViewBag.User = user;
 
 			return View();
@@ -91,14 +113,17 @@ namespace LuxDustApp.Controllers
 		[HttpPost]
 		public IActionResult Register(RegisterViewModel model)
 		{
+			// Проверяю валидацию модели (имя, email, пароль)
 			if (!ModelState.IsValid) return View(model);
 
+			// Проверяю, нет ли уже пользователя с таким email
 			if (_context.Users.Any(u => u.Email == model.Email))
 			{
 				ModelState.AddModelError("Email", "Пользователь с таким email уже существует");
 				return View(model);
 			}
 
+			// Хэширую пароль через BCrypt
 			var passwordHash = BCrypt.Net.BCrypt.HashPassword(model.Password);
 
 			var user = new User
@@ -132,6 +157,7 @@ namespace LuxDustApp.Controllers
 				return View(model);
 			}
 
+			// Формирую claims для cookie-аутентификации
 			var claims = new List<Claim>
 			{
 				new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
@@ -154,12 +180,6 @@ namespace LuxDustApp.Controllers
 		{
 			await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
 			return RedirectToAction("Index", "Home");
-		}
-
-		private int? GetUserId()
-		{
-			var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-			return userIdClaim != null ? int.Parse(userIdClaim) : null;
 		}
 
 		[HttpGet]
@@ -188,9 +208,31 @@ namespace LuxDustApp.Controllers
 			var userId = GetUserId();
 			if (userId == null) return RedirectToAction("Login");
 
+			// Дата рождения не может быть в будущем
 			if (model.BirthDate.HasValue && model.BirthDate.Value.Date > DateTime.UtcNow.Date)
 			{
 				ModelState.AddModelError("BirthDate", "Дата рождения не может быть в будущем");
+				return View(model);
+			}
+
+			// Дата рождения не может быть слишком старой (больше 120 лет)
+			if (model.BirthDate.HasValue && model.BirthDate.Value.Year < DateTime.UtcNow.Year - 120)
+			{
+				ModelState.AddModelError("BirthDate", "Проверьте дату рождения");
+				return View(model);
+			}
+
+			// Размер файла аватара не больше 5 МБ
+			if (model.AvatarFile != null && model.AvatarFile.Length > 5 * 1024 * 1024)
+			{
+				ModelState.AddModelError("AvatarFile", "Размер файла не должен превышать 5 МБ");
+				return View(model);
+			}
+
+			// Тип файла аватара — только изображения
+			if (model.AvatarFile != null && !IsImageFile(model.AvatarFile.FileName))
+			{
+				ModelState.AddModelError("AvatarFile", "Разрешены только изображения (JPG, JPEG, PNG)");
 				return View(model);
 			}
 
@@ -218,6 +260,15 @@ namespace LuxDustApp.Controllers
 			return RedirectToAction("Profile");
 		}
 
+		// Проверяю, является ли файл изображением
+		private bool IsImageFile(string fileName)
+		{
+			var allowedExtensions = new[] { ".jpg", ".jpeg", ".png" };
+			var extension = Path.GetExtension(fileName).ToLower();
+			return allowedExtensions.Contains(extension);
+		}
+
+		// Сохраняю аватар в папку wwwroot/images/avatars
 		private string SaveAvatar(IFormFile file)
 		{
 			var uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images", "avatars");

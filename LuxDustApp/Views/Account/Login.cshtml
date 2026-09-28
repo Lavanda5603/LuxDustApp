@@ -7,19 +7,24 @@
 <div class="container" style="max-width: 500px;">
     <h2>Вход</h2>
 
+    <!-- Форма входа -->
     <form method="post" action="/Account/Login">
+
+        <!-- Email -->
         <div class="mb-3">
-            <label>Email</label>
-            <input type="email" name="Email" class="form-control" />
-            <span class="text-danger">@Html.ValidationMessage("Email")</span>
+            <label class="form-label-lux">Email</label>
+            <input type="email" asp-for="Email" class="form-control" />
+            <span asp-validation-for="Email" class="text-danger"></span>
         </div>
 
+        <!-- Пароль -->
         <div class="mb-3">
-            <label>Пароль</label>
-            <input type="password" name="Password" class="form-control" />
-            <span class="text-danger">@Html.ValidationMessage("Password")</span>
+            <label class="form-label-lux">Пароль</label>
+            <input type="password" asp-for="Password" class="form-control" />
+            <span asp-validation-for="Password" class="text-danger"></span>
         </div>
 
+        <!-- Общая ошибка (неверный email или пароль) -->
         @if (ViewData.ModelState[""] != null && ViewData.ModelState[""].Errors.Count > 0)
         {
         <div class="alert alert-danger">

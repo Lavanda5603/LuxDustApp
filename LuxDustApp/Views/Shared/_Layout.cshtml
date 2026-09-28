@@ -4,33 +4,57 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@ViewData["Title"] - LuxDust</title>
+
+    <!-- Bootstrap 5.3 (CDN) -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Мои стили -->
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/pages.css" asp-append-version="true" />
+
+    <!-- Дополнительные стили для конкретной страницы -->
     @await RenderSectionAsync("Styles", required: false)
+
+    <!-- PWA -->
     <link rel="manifest" href="/manifest.json" />
     <meta name="theme-color" content="#1a0b1f" />
 </head>
 <body>
+    <!-- Навигация -->
     <nav class="navbar navbar-expand-lg">
         <div class="container navbar-container">
             <a class="navbar-brand" href="/">LuxDust</a>
+
+            <!-- Кнопка для мобильной версии -->
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
             </button>
+
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
+
+                    <!-- Основные ссылки -->
                     <li class="nav-item"><a class="nav-link" href="/Quiz/Step1">Анкета</a></li>
                     <li class="nav-item"><a class="nav-link" href="/Quiz/Cart">Корзина</a></li>
                     <li class="nav-item"><a class="nav-link" href="/Catalog">Каталог</a></li>
                     <li class="nav-item"><a class="nav-link" href="/GiftCards">Подарочные карты</a></li>
+
+                    <!-- Ссылки для авторизованного пользователя -->
                     @if (User.Identity.IsAuthenticated)
                     {
-                    <li class="nav-item"><a class="nav-link" href="/Account/Profile">Личный кабинет</a></li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/Account/Profile">Личный кабинет</a>
+                    </li>
+
+                    <!-- Админка только для админов -->
                     @if (User.IsInRole("Admin"))
                     {
-                    <li class="nav-item"><a class="nav-link" href="/Admin">Админка</a></li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/Admin">Админка</a>
+                    </li>
                     }
+
+                    <!-- Выход с подтверждением -->
                     <li class="nav-item">
                         <a class="nav-link" href="#" onclick="if(confirm('Вы уверены, что хотите выйти?')) { window.location.href='/Account/Logout'; } return false;">
                             Выйти (@User.Identity.Name)
@@ -39,10 +63,13 @@
                     }
                     else
                     {
+                    <!-- Ссылки для неавторизованных -->
                     <li class="nav-item"><a class="nav-link" href="/Account/Login">Войти</a></li>
                     <li class="nav-item"><a class="nav-link" href="/Account/Register">Регистрация</a></li>
                     }
                 </ul>
+
+                <!-- Кнопка установки PWA (показывается, когда браузер разрешает) -->
                 <button id="installPwaBtn" class="btn btn-sm" style="display:none; margin-left: 10px;">
                     Установить
                 </button>
@@ -50,16 +77,21 @@
         </div>
     </nav>
 
+    <!-- Основной контент -->
     <main>
         @RenderBody()
     </main>
 
+    <!-- Футер -->
     <footer class="text-center">
         &copy; 2026 LuxDust — искусство совершенства
     </footer>
 
+    <!-- Скрипты -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js"></script>
+
+    <!-- Скрипты для конкретной страницы -->
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

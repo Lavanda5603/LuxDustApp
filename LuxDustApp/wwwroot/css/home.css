@@ -1,4 +1,8 @@
-﻿.hero-section {
+﻿/* home.css - Стили для главной страницы (герой, промо, тренды, превью) */
+
+/* Герой-секция */
+
+.hero-section {
 	position: relative;
 	min-height: 100vh;
 	display: flex;
@@ -7,6 +11,7 @@
 	padding: 0;
 }
 
+/* Декоративное свечение справа сверху */
 .hero-bg-glow {
 	position: absolute;
 	top: -20%;
@@ -59,6 +64,7 @@
 	position: relative;
 }
 
+/* Контейнер для анимированной капли */
 .drop-container {
 	position: relative;
 	width: 420px;
@@ -91,6 +97,7 @@
 	pointer-events: none;
 }
 
+/* Заглушка, если картинка не загрузилась */
 .drop-fallback {
 	position: relative;
 	z-index: 2;
@@ -99,10 +106,11 @@
 	background: linear-gradient(135deg, rgba(232, 168, 160, 0.5) 0%, rgba(212, 175, 55, 0.4) 100%);
 	border-radius: 50% 50% 50% 0;
 	transform: rotate(-45deg);
-	animation: float 6s ease-in-out infinite;
+	animation: float-fallback 6s ease-in-out infinite;
 	box-shadow: 0 0 80px rgba(232, 168, 160, 0.3);
 }
 
+/* Анимации */
 @keyframes float {
 	0%, 100% {
 		transform: translateY(0);
@@ -123,10 +131,6 @@
 	}
 }
 
-.drop-fallback {
-	animation: float-fallback 6s ease-in-out infinite;
-}
-
 @keyframes pulse {
 	0%, 100% {
 		opacity: 0.6;
@@ -139,6 +143,7 @@
 	}
 }
 
+/* Бегущая строка */
 .marquee {
 	position: absolute;
 	bottom: 40px;
@@ -172,6 +177,8 @@
 	}
 }
 
+/* Секция "Как это работает" */
+
 .how-section {
 	padding: 100px 0;
 	position: relative;
@@ -186,6 +193,7 @@
 	flex-wrap: wrap;
 }
 
+	/* Золотая линия между шагами */
 	.how-timeline::before {
 		content: '';
 		position: absolute;
@@ -222,10 +230,11 @@
 	color: var(--gold);
 	box-shadow: 0 0 30px rgba(212, 175, 55, 0.3);
 	transition: all 0.4s ease;
-	animation: pulse-icon 3s ease-in-out infinite;
+	animation: pulse-glow 3s ease-in-out infinite;
 }
 
-@keyframes pulse-icon {
+/* Анимация свечения для иконок шагов */
+@keyframes pulse-glow {
 	0%, 100% {
 		box-shadow: 0 0 30px rgba(212, 175, 55, 0.3);
 	}
@@ -259,6 +268,8 @@
 	display: none;
 }
 
+/* Секция цифр */
+
 .stats-section {
 	background: rgba(0, 0, 0, 0.2);
 	padding: 60px 0;
@@ -277,6 +288,8 @@
 	font-size: 0.9rem;
 	letter-spacing: 1px;
 }
+
+/* Секция акций и новинок */
 
 .promo-section {
 	padding: 100px 0;
@@ -337,6 +350,7 @@
 	flex-grow: 1;
 }
 
+/* Горизонтальный скролл карточек */
 .promo-scroll {
 	display: flex;
 	gap: 1.2rem;
@@ -408,6 +422,7 @@
 		font-weight: 700;
 	}
 
+	/* Карточка внутри промо-скролла */
 	.promo-scroll-item .catalog-card {
 		display: flex;
 		gap: 1rem;
@@ -441,7 +456,7 @@
 		}
 
 		.promo-scroll-item .catalog-card-image .no-image {
-			color: #d4af37;
+			color: var(--gold);
 			opacity: 0.4;
 			font-size: 3rem;
 			font-family: 'Playfair Display', serif;
@@ -453,6 +468,7 @@
 	margin-bottom: 2rem;
 }
 
+/* Кнопка на промо-карточке */
 .promo-card .btn-lux-outline {
 	padding: 0.6rem 1.5rem;
 	font-size: 0.8rem;
@@ -468,6 +484,8 @@
 		box-shadow: 0 10px 30px rgba(212, 175, 55, 0.5);
 		color: var(--bg-dark) !important;
 	}
+
+/* Секция трендов */
 
 .trends-section {
 	padding: 100px 0;
@@ -508,8 +526,10 @@
 .trend-image-wrapper {
 	height: 200px;
 	overflow: hidden;
+	position: relative;
 }
 
+	/* Затемнение снизу изображения */
 	.trend-image-wrapper::after {
 		content: '';
 		position: absolute;
@@ -537,6 +557,8 @@
 	font-size: 0.95rem;
 	margin: 0;
 }
+
+/* Секция особенностей */
 
 .features-section {
 	background: rgba(0, 0, 0, 0.2);
@@ -575,10 +597,6 @@
 		background: var(--bg-card-hover);
 	}
 
-		.feature-item:hover::before {
-			opacity: 1;
-		}
-
 .feature-icon-lux {
 	font-size: 2.5rem;
 	color: var(--gold);
@@ -607,6 +625,8 @@
 	margin: 0;
 }
 
+/* Секция превью */
+
 .preview-section {
 	padding: 100px 0;
 }
@@ -622,6 +642,7 @@
 	overflow: hidden;
 }
 
+	/* Золотая линия сверху карточки */
 	.product-preview::before {
 		content: '';
 		position: absolute;
@@ -632,6 +653,7 @@
 		background: linear-gradient(90deg, transparent, var(--gold), transparent);
 	}
 
+	/* Цвет линии зависит от рейтинга совместимости */
 	.product-preview.score-high::before {
 		background: linear-gradient(90deg, transparent, #d4af37, transparent);
 	}
@@ -691,6 +713,7 @@
 	font-style: italic;
 }
 
+	/* Галочка перед причиной */
 	.product-reason::before {
 		content: '✓ ';
 		color: var(--gold);
@@ -706,6 +729,8 @@
 	.preview-note strong {
 		color: var(--gold);
 	}
+
+/* Сta-секция */
 
 .cta-section {
 	padding: 120px 0;
@@ -765,6 +790,8 @@
 	}
 }
 
+/* Адаптивность */
+
 @media (max-width: 991px) {
 	.how-timeline::before {
 		display: none;
@@ -773,9 +800,7 @@
 	.how-step {
 		min-width: 100%;
 	}
-}
 
-@media (max-width: 991px) {
 	.features-grid {
 		gap: 1.2rem;
 	}
@@ -796,27 +821,6 @@
 
 	.feature-icon-lux {
 		font-size: 2rem;
-	}
-}
-
-@media (max-width: 576px) {
-	.feature-item {
-		width: 150px;
-		height: 150px;
-		padding: 1rem 0.8rem;
-	}
-
-		.feature-item h5 {
-			font-size: 0.9rem;
-		}
-
-		.feature-item p {
-			font-size: 0.7rem;
-		}
-
-	.feature-icon-lux {
-		font-size: 1.6rem;
-		margin-bottom: 0.5rem;
 	}
 }
 
@@ -865,6 +869,29 @@
 	}
 }
 
+@media (max-width: 576px) {
+	.feature-item {
+		width: 150px;
+		height: 150px;
+		padding: 1rem 0.8rem;
+	}
+
+		.feature-item h5 {
+			font-size: 0.9rem;
+		}
+
+		.feature-item p {
+			font-size: 0.7rem;
+		}
+
+	.feature-icon-lux {
+		font-size: 1.6rem;
+		margin-bottom: 0.5rem;
+	}
+}
+
+/* Промо-карточки с разделителем */
+
 .promo-cards-wrapper {
 	display: flex;
 	align-items: stretch;
@@ -882,6 +909,7 @@
 	width: 40px;
 }
 
+	/* Вертикальная линия между карточками */
 	.promo-divider::before {
 		content: '';
 		position: absolute;
@@ -900,13 +928,14 @@
 		font-size: 1.6rem;
 		background: transparent;
 		padding: 0;
-		animation: pulse-icon 3s ease-in-out infinite;
+		animation: pulse-scale 3s ease-in-out infinite;
 		box-shadow: none;
 		filter: none;
 		text-shadow: none;
 	}
 
-@keyframes pulse-icon {
+/* Анимация масштаба для разделителя и иконок подарочных карт */
+@keyframes pulse-scale {
 	0%, 100% {
 		transform: scale(1);
 		opacity: 0.7;
@@ -936,6 +965,7 @@
 		filter: none;
 	}
 
+		/* Горизонтальная линия между карточками на мобильных */
 		.promo-divider::before {
 			top: 50%;
 			bottom: auto;

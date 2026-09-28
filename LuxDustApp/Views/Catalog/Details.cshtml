@@ -6,6 +6,8 @@
 <div class="container">
     <div class="product-details">
         <div class="row">
+
+            <!-- Основная информация о товаре -->
             <div class="col-lg-8">
                 <p class="product-brand-large">@Model.Brand</p>
                 <h2>@Model.Name</h2>
@@ -13,6 +15,7 @@
 
                 <p class="product-description">@Model.Description</p>
 
+                <!-- Сетка характеристик -->
                 <div class="product-info-grid">
                     @if (!string.IsNullOrEmpty(Model.Category))
                     {
@@ -58,6 +61,7 @@
                     }
                 </div>
 
+                <!-- Кнопки -->
                 <div class="product-actions">
                     <button type="button" class="btn btn-primary" onclick="addToCart(@Model.Id, this)">В корзину</button>
                     <button type="button" class="btn btn-outline-secondary" onclick="addToFavorites(@Model.Id, this)">В избранное</button>
@@ -65,15 +69,30 @@
                 </div>
             </div>
 
+            <!-- Боковая колонка -->
             <div class="col-lg-4">
                 <div class="product-side-block">
+
+                    <!-- Блок «Почему этот товар» -->
                     <div class="product-info-item product-info-highlight">
                         <span class="label">Почему этот товар</span>
                         <span class="value">
-                            Подобран по вашему типу кожи «@Model.SkinType», решает проблему «@Model.Problem» и подходит для сезона «@Model.Season».
+                            @if (!string.IsNullOrEmpty(Model.SkinType) && !string.IsNullOrEmpty(Model.Problem) && !string.IsNullOrEmpty(Model.Season))
+                            {
+                            @:Подобран по вашему типу кожи «@Model.SkinType», решает проблему «@Model.Problem» и подходит для сезона «@Model.Season».
+                            }
+                            else if (!string.IsNullOrEmpty(Model.SkinType) && !string.IsNullOrEmpty(Model.Problem))
+                            {
+                            @:Подобран по вашему типу кожи «@Model.SkinType» и решает проблему «@Model.Problem».
+                            }
+                            else
+                            {
+                            @:Подойдёт для вашего типа кожи и решает ваши задачи.
+                            }
                         </span>
                     </div>
 
+                    <!-- Фото товара -->
                     <div class="product-info-item product-info-visual">
                         @if (!string.IsNullOrEmpty(Model.ImageUrl))
                         {
@@ -86,6 +105,7 @@
                         }
                     </div>
 
+                    <!-- Декоративные звёздочки -->
                     <div class="product-decor">
                         <span>✦</span>
                         <span>✦</span>
@@ -97,6 +117,7 @@
     </div>
 </div>
 
+<!-- Модальное окно для просмотра фото -->
 <div id="imageModal" class="image-modal" onclick="closeImage()">
     <span class="image-modal-close" onclick="closeImage()">×</span>
     <img id="imageModalContent" class="image-modal-content" />

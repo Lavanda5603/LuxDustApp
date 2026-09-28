@@ -6,21 +6,25 @@
 <div class="container">
     <h2>Спасибо за покупку</h2>
 
+    <!-- Блок с кодом карты -->
     <div class="giftcard-success">
         <div class="giftcard-success-icon">✦</div>
 
         <p class="giftcard-success-label">Ваш код подарочной карты</p>
 
+        <!-- Код карты (для копирования) -->
         <div class="giftcard-code" id="giftCardCode">@Model.Code</div>
 
         <button type="button" class="btn btn-secondary btn-sm" onclick="copyGiftCode()">Скопировать код</button>
 
+        <!-- Информация о карте -->
         <div class="giftcard-success-info">
             <p><strong>Номинал:</strong> @Model.Amount ₽</p>
             <p><strong>Остаток:</strong> @Model.RemainingAmount ₽</p>
             <p><strong>Действует до:</strong> @Model.ExpiresAt?.ToString("dd.MM.yyyy")</p>
         </div>
 
+        <!-- Кнопки навигации -->
         <div class="giftcard-success-actions">
             <a href="/Catalog" class="btn btn-primary">В каталог</a>
             <a href="/GiftCards/MyCards" class="btn btn-secondary">Мои карты</a>

@@ -6,6 +6,7 @@
 <div class="container">
     <h2>Личный кабинет</h2>
 
+    <!-- Шапка профиля с аватаром и основной информацией -->
     <div class="profile-header">
         <div class="profile-avatar">
             @if (user != null && !string.IsNullOrEmpty(user.AvatarUrl))
@@ -14,6 +15,7 @@
             }
             else
             {
+            <!-- Первая буква имени -->
             <div class="avatar-placeholder">
                 @(user?.Name?.Substring(0, 1).ToUpper() ?? "?")
             </div>
@@ -36,6 +38,7 @@
         </div>
     </div>
 
+    <!-- Данные анкеты -->
     <div class="card mb-4">
         <div class="card-header">
             <h4>Ваши данные из анкеты</h4>
@@ -47,28 +50,39 @@
             <div class="row">
                 <div class="col-md-6">
                     <p><strong>Тип кожи:</strong> @profile.SkinType</p>
-                    <p><strong>Возраст:</strong> @profile.Age</p>
+                    <p>
+                        <strong>Возраст:</strong>
+                        @{
+                        // Преобразую число в диапазон для отображения
+                        string ageRange = profile.Age switch
+                        {
+                        <= 20 => "до 20",
+                        <= 30 => "20–30",
+                        <= 40 => "30–40",
+                        <= 50 => "40–50",
+                        _ => "50+"
+                        };
+                        }
+                        @ageRange
+                    </p>
                     <p><strong>Бюджет:</strong> @profile.Budget руб.</p>
                     <p><strong>Проблемы:</strong> @profile.Problems</p>
                     <p><strong>Другое (проблемы):</strong> @(profile.ProblemsOther ?? "—")</p>
                     <p><strong>Другое (аллергии):</strong> @(profile.AllergiesOther ?? "—")</p>
-                    <p><strong>Уровень стресса:</strong> @(profile.StressLevel ?? "—")</p>
-                    <p><strong>Тип питания:</strong> @(profile.DietType ?? "—")</p>
-                    <p><strong>Предпочтение по текстуре:</strong> @(profile.TexturePreference ?? "—")</p>
                 </div>
                 <div class="col-md-6">
                     <p><strong>Любимые бренды:</strong> @profile.FavoriteBrands</p>
                     <p><strong>Цель ухода:</strong> @profile.Goal</p>
-                    <p><strong>Уровень стресса:</strong> @profile.StressLevel</p>
-                    <p><strong>Тип питания:</strong> @profile.DietType</p>
+                    <p><strong>Уровень стресса:</strong> @(profile.StressLevel ?? "—")</p>
+                    <p><strong>Тип питания:</strong> @(profile.DietType ?? "—")</p>
                     <p><strong>Чувствительность к солнцу:</strong> @(profile.SunSensitivity ? "Да" : "Нет")</p>
                     <p><strong>Склонность к отёкам:</strong> @(profile.TendencyToEdema ? "Да" : "Нет")</p>
                     <p><strong>Профессиональный уход:</strong> @(profile.HasProfessionalCare ? "Да" : "Нет")</p>
-                    <p><strong>Предпочтение по текстуре:</strong> @profile.TexturePreference</p>
+                    <p><strong>Предпочтение по текстуре:</strong> @(profile.TexturePreference ?? "—")</p>
                     <p><strong>Готовность к многоступенчатому уходу:</strong> @(profile.ReadyForMultiStep ? "Да" : "Нет")</p>
                 </div>
             </div>
-            <a href="/Quiz/Step1" class="btn btn-primary mt-3">@(ViewBag.Profile != null ? "Изменить анкету" : "Заполнить анкету")</a>
+            <a href="/Quiz/Step1" class="btn btn-primary mt-3">Изменить анкету</a>
             }
             else
             {
@@ -77,6 +91,7 @@
         </div>
     </div>
 
+    <!-- История подборок -->
     <div class="card mb-4">
         <div class="card-header">
             <h4>История подборок</h4>
@@ -108,6 +123,7 @@
         </div>
     </div>
 
+    <!-- Подарочные карты -->
     <div class="card mb-4">
         <div class="card-header">
             <h4>Мои подарочные карты</h4>
@@ -118,6 +134,7 @@
         </div>
     </div>
 
+    <!-- Избранное -->
     <div class="card mb-4">
         <div class="card-header">
             <h4>Избранное</h4>
@@ -147,6 +164,7 @@
         </div>
     </div>
 
+    <!-- Мои заказы -->
     <div class="card mb-4">
         <div class="card-header">
             <h4>Мои заказы</h4>

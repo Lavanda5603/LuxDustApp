@@ -1,4 +1,7 @@
-﻿document.addEventListener('DOMContentLoaded', function () {
+﻿// admin-search.js - Живой поиск и фильтрация в админ-панели
+
+document.addEventListener('DOMContentLoaded', function () {
+    // Нахожу все элементы фильтрации
     const searchInput = document.getElementById('adminSearchInput');
     const brandFilter = document.getElementById('adminBrandFilter');
     const categoryFilter = document.getElementById('adminCategoryFilter');
@@ -6,11 +9,13 @@
     const productsBody = document.getElementById('adminProductsBody');
     const foundCount = document.getElementById('adminFoundCount');
 
+    // Если это не страница админки, выхожу
     if (!searchInput || !productsBody) return;
 
     let currentFilter = '';
     let debounceTimer = null;
 
+    // Функция обновления таблицы через AJAX
     function updateProducts() {
         const query = searchInput.value.trim();
         const brand = brandFilter ? brandFilter.value : '';
@@ -22,6 +27,8 @@
             .then(r => r.text())
             .then(html => {
                 productsBody.innerHTML = html;
+
+                // Считаю количество найденных товаров
                 const rows = productsBody.querySelectorAll('tr');
                 const empty = productsBody.querySelector('td[colspan="6"]');
                 if (foundCount) {
@@ -31,14 +38,17 @@
             .catch(err => console.error('Ошибка поиска:', err));
     }
 
+    // Живой поиск с задержкой (debounce) 200 мс
     searchInput.addEventListener('input', function () {
         clearTimeout(debounceTimer);
         debounceTimer = setTimeout(updateProducts, 200);
     });
 
+    // Фильтр по бренду и категории
     if (brandFilter) brandFilter.addEventListener('change', updateProducts);
     if (categoryFilter) categoryFilter.addEventListener('change', updateProducts);
 
+    // Кнопки быстрых фильтров (Все / Новинки / Акции)
     filterButtons.forEach(btn => {
         btn.addEventListener('click', function (e) {
             e.preventDefault();

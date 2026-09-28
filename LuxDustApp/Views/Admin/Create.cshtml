@@ -6,6 +6,7 @@
 <div class="container">
     <h2>Добавить товар</h2>
 
+    <!-- Общие ошибки валидации -->
     @if (!ViewData.ModelState.IsValid)
     {
     <div class="alert alert-danger">
@@ -16,12 +17,16 @@
     </div>
     }
 
+    <!-- Форма создания товара с загрузкой фото -->
     <form method="post" action="/Admin/Create" enctype="multipart/form-data" class="admin-form">
+
+        <!-- Название -->
         <div class="mb-3">
             <label class="form-label-lux">Название</label>
             <input type="text" asp-for="Product.Name" class="form-control" required />
         </div>
 
+        <!-- Бренд с автоподсказками -->
         <div class="mb-3">
             <label class="form-label-lux">Бренд</label>
             <input type="text" asp-for="Product.Brand" class="form-control" list="brandsList" required />
@@ -33,6 +38,7 @@
             </datalist>
         </div>
 
+        <!-- Категория с автоподсказками -->
         <div class="mb-3">
             <label class="form-label-lux">Категория</label>
             <input type="text" asp-for="Product.Category" class="form-control" list="categoriesList" required />
@@ -44,6 +50,7 @@
             </datalist>
         </div>
 
+        <!-- Подкатегория (зависит от категории) -->
         <div class="mb-3">
             <label class="form-label-lux">Подкатегория</label>
             <input type="text" asp-for="Product.SubCategory" class="form-control" list="subcategoriesList" />
@@ -58,11 +65,13 @@
             </datalist>
         </div>
 
+        <!-- Цена -->
         <div class="mb-3">
             <label class="form-label-lux">Цена</label>
             <input type="number" asp-for="Product.Price" class="form-control price-no-arrows" min="0" required />
         </div>
 
+        <!-- Тип кожи -->
         <div class="mb-3">
             <label class="form-label-lux">Тип кожи</label>
             <select asp-for="Product.SkinType" class="form-select">
@@ -73,6 +82,7 @@
             </select>
         </div>
 
+        <!-- Проблема -->
         <div class="mb-3">
             <label class="form-label-lux">Проблема</label>
             <select asp-for="Product.Problem" class="form-select">
@@ -83,6 +93,7 @@
             </select>
         </div>
 
+        <!-- Сезон -->
         <div class="mb-3">
             <label class="form-label-lux">Сезон</label>
             <select asp-for="Product.Season" class="form-select">
@@ -93,16 +104,19 @@
             </select>
         </div>
 
+        <!-- Описание -->
         <div class="mb-3">
             <label class="form-label-lux">Описание</label>
             <textarea asp-for="Product.Description" class="form-control"></textarea>
         </div>
 
+        <!-- Фото товара -->
         <div class="mb-3">
             <label class="form-label-lux">Фото товара</label>
             <input type="file" asp-for="ImageFile" class="form-control" accept="image/*" />
         </div>
 
+        <!-- Флаги: Новинка, Акция -->
         <div class="mb-3 form-check">
             <input type="checkbox" asp-for="Product.IsNew" class="form-check-input" id="isNewCheck" />
             <label class="form-check-label" for="isNewCheck">Новинка</label>

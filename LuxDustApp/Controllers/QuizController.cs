@@ -1,4 +1,6 @@
-﻿using LuxDustApp.Data;
+﻿// QuizController.cs - Управление анкетой, подбором, корзиной и избранным
+
+using LuxDustApp.Data;
 using LuxDustApp.Models;
 using LuxDustApp.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -19,9 +21,17 @@ namespace LuxDustApp.Controllers
 			_context = context;
 		}
 
+		// Вспомогательный метод для получения ID текущего пользователя
+		private int? GetUserId()
+		{
+			var userIdClaim = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+			return userIdClaim != null ? int.Parse(userIdClaim) : null;
+		}
+
 		public IActionResult Step1()
 		{
-			if (!User.Identity.IsAuthenticated)
+			// Если пользователь не авторизован, отправляю его на регистрацию
+			if (User.Identity?.IsAuthenticated != true)
 			{
 				return RedirectToAction("Register", "Account");
 			}
@@ -31,17 +41,26 @@ namespace LuxDustApp.Controllers
 		[HttpPost]
 		public IActionResult Results(Profile profile)
 		{
-			var userIdClaim = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
-			if (userIdClaim == null) return RedirectToAction("Login", "Account");
-			var userId = int.Parse(userIdClaim);
+			// Проверяю, авторизован ли пользователь
+			var userId = GetUserId();
+			if (userId == null) return RedirectToAction("Login", "Account");
 
+			// Если ключевые поля пустые, возвращаю на анкету с ошибкой
+			if (string.IsNullOrEmpty(profile.SkinType) || profile.Age <= 0 || profile.Budget <= 0)
+			{
+				ModelState.AddModelError("", "Пожалуйста, заполните все обязательные поля анкеты.");
+				return View("Step1", profile);
+			}
+
+			// Запускаю алгоритм подбора и получаю подборку с причинами
 			var bundle = _recommendationService.GetRecommendationsWithReasons(profile);
 
+			// Сохраняю каждую рекомендацию в историю
 			foreach (var kvp in bundle.TopReasons)
 			{
 				_context.Recommendations.Add(new Recommendation
 				{
-					UserId = userId,
+					UserId = userId.Value,
 					ProductId = kvp.Key.Id,
 					Score = kvp.Value.Score,
 					Reasons = kvp.Value.Reasons,
@@ -50,15 +69,18 @@ namespace LuxDustApp.Controllers
 			}
 			_context.SaveChanges();
 
-			var existingProfile = _context.Profiles.FirstOrDefault(p => p.UserId == userId);
+			// Проверяю, есть ли у пользователя уже анкета
+			var existingProfile = _context.Profiles.FirstOrDefault(p => p.UserId == userId.Value);
 			if (existingProfile == null)
 			{
-				profile.UserId = userId;
+				// Если анкеты нет, создаю новую
+				profile.UserId = userId.Value;
 				profile.UpdatedAt = System.DateTime.UtcNow;
 				_context.Profiles.Add(profile);
 			}
 			else
 			{
+				// Если анкета есть, обновляю все поля
 				existingProfile.SkinType = profile.SkinType;
 				existingProfile.Age = profile.Age;
 				existingProfile.Budget = profile.Budget;
@@ -83,17 +105,17 @@ namespace LuxDustApp.Controllers
 
 		public IActionResult AddToFavorites(int productId)
 		{
-			var userIdClaim = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
-			if (userIdClaim == null) return Json(new { success = false, message = "Не авторизован" });
-			var userId = int.Parse(userIdClaim);
+			var userId = GetUserId();
+			if (userId == null) return Json(new { success = false, message = "Не авторизован" });
 
-			var existing = _context.Favorites.FirstOrDefault(f => f.UserId == userId && f.ProductId == productId);
+			// Проверяю, нет ли уже этого товара в избранном
+			var existing = _context.Favorites.FirstOrDefault(f => f.UserId == userId.Value && f.ProductId == productId);
 
 			if (existing == null)
 			{
 				_context.Favorites.Add(new Favorite
 				{
-					UserId = userId,
+					UserId = userId.Value,
 					ProductId = productId,
 					AddedAt = System.DateTime.UtcNow
 				});
@@ -105,21 +127,23 @@ namespace LuxDustApp.Controllers
 
 		public IActionResult AddToCart(int productId)
 		{
-			var userIdClaim = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
-			if (userIdClaim == null) return Json(new { success = false, message = "Не авторизован" });
-			var userId = int.Parse(userIdClaim);
+			var userId = GetUserId();
+			if (userId == null) return Json(new { success = false, message = "Не авторизован" });
 
-			var existing = _context.Carts.FirstOrDefault(c => c.UserId == userId && c.ProductId == productId);
+			// Проверяю, есть ли уже этот товар в корзине
+			var existing = _context.Carts.FirstOrDefault(c => c.UserId == userId.Value && c.ProductId == productId);
 
 			if (existing != null)
 			{
+				// Если есть, увеличиваю количество
 				existing.Quantity += 1;
 			}
 			else
 			{
+				// Если нет, добавляю новый товар
 				_context.Carts.Add(new Cart
 				{
-					UserId = userId,
+					UserId = userId.Value,
 					ProductId = productId,
 					Quantity = 1,
 					AddedAt = System.DateTime.UtcNow
@@ -132,16 +156,17 @@ namespace LuxDustApp.Controllers
 
 		public IActionResult Cart()
 		{
-			var userIdClaim = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
-			if (userIdClaim == null) return RedirectToAction("Login", "Account");
-			var userId = int.Parse(userIdClaim);
+			var userId = GetUserId();
+			if (userId == null) return RedirectToAction("Login", "Account");
 
-			var cartItems = _context.Carts.Where(c => c.UserId == userId).Include(c => c.Product).ToList();
+			// Загружаю все товары в корзине пользователя
+			var cartItems = _context.Carts.Where(c => c.UserId == userId.Value).Include(c => c.Product).ToList();
 			return View(cartItems);
 		}
 
 		public IActionResult RemoveFromCart(int cartId)
 		{
+			// Нахожу товар в корзине и удаляю его
 			var item = _context.Carts.FirstOrDefault(c => c.Id == cartId);
 			if (item != null)
 			{
@@ -154,13 +179,14 @@ namespace LuxDustApp.Controllers
 		[HttpPost]
 		public IActionResult UpdateQuantity(int cartId, int delta)
 		{
-			var userIdClaim = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
-			if (userIdClaim == null) return Json(new { success = false });
-			var userId = int.Parse(userIdClaim);
+			var userId = GetUserId();
+			if (userId == null) return Json(new { success = false });
 
-			var item = _context.Carts.FirstOrDefault(c => c.Id == cartId && c.UserId == userId);
+			// Нахожу товар в корзине текущего пользователя
+			var item = _context.Carts.FirstOrDefault(c => c.Id == cartId && c.UserId == userId.Value);
 			if (item == null) return Json(new { success = false });
 
+			// Обновляю количество с ограничениями (от 1 до 99)
 			item.Quantity += delta;
 			if (item.Quantity < 1) item.Quantity = 1;
 			if (item.Quantity > 99) item.Quantity = 99;

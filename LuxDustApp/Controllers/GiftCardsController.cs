@@ -1,4 +1,6 @@
-﻿using LuxDustApp.Data;
+﻿// GiftCardsController.cs - Управление подарочными картами
+
+using LuxDustApp.Data;
 using LuxDustApp.Models;
 using LuxDustApp.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -19,6 +21,7 @@ namespace LuxDustApp.Controllers
 			_giftCardService = giftCardService;
 		}
 
+		// Вспомогательный метод для получения ID текущего пользователя
 		private int? GetUserId()
 		{
 			var claim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
@@ -41,8 +44,12 @@ namespace LuxDustApp.Controllers
 			if (userId == null)
 				return RedirectToAction("Login", "Account");
 
+			// Сумма должна быть положительной и одной из допустимых
+			if (amount <= 0)
+				return BadRequest("Сумма должна быть больше 0");
+
 			if (amount != 1000 && amount != 3000 && amount != 5000)
-				return BadRequest();
+				return BadRequest("Допустимые номиналы: 1000, 3000, 5000 руб.");
 
 			var card = new GiftCard
 			{
@@ -68,6 +75,7 @@ namespace LuxDustApp.Controllers
 			if (userId == null)
 				return RedirectToAction("Login", "Account");
 
+			// Проверяю, что карта принадлежит текущему пользователю
 			var card = _context.GiftCards.FirstOrDefault(g => g.Id == id && g.OwnerUserId == userId);
 			if (card == null) return NotFound();
 
@@ -82,7 +90,9 @@ namespace LuxDustApp.Controllers
 				return RedirectToAction("Login", "Account");
 
 			var cards = _context.GiftCards
-				.Where(g => g.OwnerUserId == userId).OrderByDescending(g => g.CreatedAt).ToList();
+				.Where(g => g.OwnerUserId == userId)
+				.OrderByDescending(g => g.CreatedAt)
+				.ToList();
 
 			return View(cards);
 		}

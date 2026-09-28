@@ -8,16 +8,20 @@
 
         @if (Model != null && Model.Any())
         {
+        <!-- Список карт -->
         <div class="giftcards-list">
             @foreach (var card in Model)
             {
             <div class="giftcard-item">
                 <div class="giftcard-item-code">@card.Code</div>
+
                 <div class="giftcard-item-info">
                     <p><strong>Номинал:</strong> @card.Amount ₽</p>
                     <p><strong>Остаток:</strong> @card.RemainingAmount ₽</p>
                     <p><strong>Действует до:</strong> @card.ExpiresAt?.ToString("dd.MM.yyyy")</p>
                 </div>
+
+                <!-- Статус: активна или использована -->
                 <div class="giftcard-item-status @(card.IsActive && card.RemainingAmount > 0 ? " active" : "used" )">
                     @(card.IsActive && card.RemainingAmount > 0 ? "Активна" : "Использована")
                 </div>
@@ -27,6 +31,7 @@
         }
         else
         {
+        <!-- Заглушка, если карт нет -->
         <p>У вас пока нет подарочных карт. <a href="/GiftCards" class="profile-link">Купить карту</a></p>
         }
     </div>

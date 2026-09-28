@@ -1,4 +1,6 @@
-﻿document.addEventListener('DOMContentLoaded', function () {
+﻿// catalog-search.js - Живой поиск и фильтр по цене в каталоге
+
+document.addEventListener('DOMContentLoaded', function () {
     const searchInput = document.getElementById('searchInput');
     const minPrice = document.getElementById('minPrice');
     const maxPrice = document.getElementById('maxPrice');
@@ -8,6 +10,9 @@
 
     if (!searchInput) return;
 
+    let debounceTimer = null;
+
+    // Функция обновления списка товаров через AJAX
     function updateProducts() {
         const query = searchInput.value;
         const min = minPrice.value;
@@ -25,8 +30,20 @@
             .catch(error => console.error('Ошибка поиска:', error));
     }
 
-    searchInput.addEventListener('input', updateProducts);
+    // Живой поиск с задержкой 200 мс
+    searchInput.addEventListener('input', function () {
+        clearTimeout(debounceTimer);
+        debounceTimer = setTimeout(updateProducts, 200);
+    });
 
-    minPrice.addEventListener('input', updateProducts);
-    maxPrice.addEventListener('input', updateProducts);
+    // Фильтр по цене — с задержкой 300 мс
+    minPrice.addEventListener('input', function () {
+        clearTimeout(debounceTimer);
+        debounceTimer = setTimeout(updateProducts, 300);
+    });
+
+    maxPrice.addEventListener('input', function () {
+        clearTimeout(debounceTimer);
+        debounceTimer = setTimeout(updateProducts, 300);
+    });
 });

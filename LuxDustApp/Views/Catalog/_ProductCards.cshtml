@@ -2,6 +2,7 @@
 
     @if (Model != null && Model.Any())
     {
+    <!-- Сетка карточек товаров -->
     <div class="row">
         @foreach (var product in Model)
         {
@@ -9,10 +10,13 @@
             <div class="card">
                 <div class="card-body">
                     <div class="catalog-card">
+                        <!-- Информация о товаре слева -->
                         <div class="catalog-card-info">
                             <h5 class="card-title">@product.Name</h5>
                             <p class="card-text">@product.Brand</p>
                             <p class="card-text"><strong>@product.Price руб.</strong></p>
+
+                            <!-- Бейджи Новинка/Акция -->
                             <div class="badges-row">
                                 @if (product.IsNew)
                                 {
@@ -24,6 +28,8 @@
                                 }
                             </div>
                         </div>
+
+                        <!-- Картинка товара справа -->
                         <a href="/Catalog/Details/@product.Id" class="catalog-card-image">
                             @if (!string.IsNullOrEmpty(product.ImageUrl) && product.ImageUrl != "/images/default.jpg")
                             {
@@ -35,6 +41,8 @@
                             }
                         </a>
                     </div>
+
+                    <!-- Кнопки -->
                     <div class="catalog-actions">
                         <a href="/Catalog/Details/@product.Id" class="btn btn-primary btn-sm">Подробнее</a>
                         <button type="button" class="btn btn-outline-secondary btn-sm" onclick="addToCart(@product.Id, this)">В корзину</button>

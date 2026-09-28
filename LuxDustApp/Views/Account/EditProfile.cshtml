@@ -6,23 +6,30 @@
 <div class="container">
     <h2>Редактировать профиль</h2>
 
+    <!-- Форма редактирования профиля с загрузкой аватара -->
     <form method="post" action="/Account/EditProfile" enctype="multipart/form-data" class="admin-form">
+
+        <!-- ФИО -->
         <div class="mb-3">
             <label class="form-label-lux">ФИО</label>
             <input type="text" asp-for="FullName" class="form-control" placeholder="Иванова Мария Сергеевна" />
+            <span asp-validation-for="FullName" class="text-danger"></span>
         </div>
 
+        <!-- Дата рождения -->
         <div class="mb-3">
             <label class="form-label-lux">Дата рождения</label>
             <input type="date" asp-for="BirthDate" class="form-control" max="@DateTime.UtcNow.ToString(" yyyy-MM-dd")" />
             <span asp-validation-for="BirthDate" class="text-danger"></span>
         </div>
 
+        <!-- Город -->
         <div class="mb-3">
             <label class="form-label-lux">Город</label>
             <input type="text" asp-for="City" class="form-control" placeholder="Москва" />
         </div>
 
+        <!-- Текущий аватар -->
         <div class="mb-3">
             <label class="form-label-lux">Текущий аватар</label>
             <div class="avatar-edit-preview">
@@ -44,9 +51,11 @@
             </div>
         </div>
 
+        <!-- Загрузка нового аватара -->
         <div class="mb-3">
             <label class="form-label-lux">Загрузить новый аватар</label>
             <input type="file" asp-for="AvatarFile" class="form-control" accept="image/*" />
+            <span asp-validation-for="AvatarFile" class="text-danger"></span>
         </div>
 
         <button type="submit" class="btn btn-success">Сохранить</button>
